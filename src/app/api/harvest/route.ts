@@ -25,13 +25,13 @@ export async function GET(request: NextRequest): Promise<NextResponse<HarvestDat
       );
     }
 
-    // Get date range
+    // Get date range based on period (default: 24 hours)
     const searchParams = request.nextUrl.searchParams;
-    const dateParam = searchParams.get("date");
+    const periodHours = parseInt(searchParams.get("periodHours") || "24", 10);
 
-    const targetDate = dateParam ? new Date(dateParam) : new Date();
-    const fromDate = new Date(targetDate);
-    fromDate.setDate(fromDate.getDate() - 1);
+    const toDate = new Date();
+    const fromDate = new Date();
+    fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
 
     // Format dates as YYYY-MM-DD
     const formatDate = (date: Date): string => {
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<HarvestDat
     const baseUrl = "https://api.harvestapp.com/v2/time_entries";
     const params = new URLSearchParams({
       from: formatDate(fromDate),
-      to: formatDate(targetDate),
+      to: formatDate(toDate),
     });
 
     const apiUrl = `${baseUrl}?${params.toString()}`;

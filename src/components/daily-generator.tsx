@@ -1,12 +1,27 @@
 "use client";
 
-import { AlertCircle, Calendar, Check, Copy, FileText, Loader2, Sparkles } from "lucide-react";
+import {
+  AlertCircle,
+  Calendar,
+  Check,
+  Clock,
+  Copy,
+  FileText,
+  Loader2,
+  Sparkles,
+} from "lucide-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -18,8 +33,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserConfig } from "@/hooks/use-user-config";
-import { API_ENDPOINTS, GENERATION_MODES } from "@/lib/constants";
-import type { DailyResult, GenerateDailyResponse, GenerationMode } from "@/types";
+import { API_ENDPOINTS, GENERATION_MODES, TIME_PERIODS } from "@/lib/constants";
+import type {
+  DailyResult,
+  GenerateDailyResponse,
+  GenerationMode,
+  TimePeriod,
+} from "@/types";
 
 /**
  * DailyGenerator component for generating Daily Scrum reports.
@@ -28,6 +48,7 @@ export function DailyGenerator() {
   const { config, validation, hasRequiredConfig, getHeaders } = useUserConfig();
 
   const [mode, setMode] = useState<GenerationMode>(config.defaultMode);
+  const [period, setPeriod] = useState<TimePeriod>("24h");
   const [customPrompt, setCustomPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DailyResult | null>(null);
@@ -35,6 +56,7 @@ export function DailyGenerator() {
   const [copied, setCopied] = useState(false);
 
   const selectedMode = GENERATION_MODES.find((m) => m.value === mode);
+  const selectedPeriod = TIME_PERIODS.find((p) => p.value === period);
   const canGenerate = hasRequiredConfig(mode);
 
   const handleGenerate = async () => {
@@ -56,6 +78,8 @@ export function DailyGenerator() {
         },
         body: JSON.stringify({
           mode,
+          period,
+          periodHours: selectedPeriod?.hours ?? 24,
           customPrompt: mode === "combined-custom" ? customPrompt : undefined,
         }),
       });
@@ -118,34 +142,117 @@ export function DailyGenerator() {
 
   return (
     <div className="space-y-6">
-      {/* Mode Selection */}
+      {/* Mode & Period Selection */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            Modo de Geração
+            Configuração do Daily
           </CardTitle>
-          <CardDescription>Escolha as fontes de dados para o seu Daily Scrum</CardDescription>
+          <CardDescription>
+            Escolha as fontes de dados e o período para o seu Daily Scrum
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="mode">Modo</Label>
-            <Select value={mode} onValueChange={(v) => setMode(v as GenerationMode)}>
-              <SelectTrigger id="mode">
-                <SelectValue placeholder="Selecione um modo" />
-              </SelectTrigger>
-              <SelectContent>
-                {GENERATION_MODES.map((m) => (
-                  <SelectItem key={m.value} value={m.value}>
-                    <div className="flex flex-col items-start">
-                      <span>{m.label}</span>
-                      <span className="text-xs text-muted-foreground">{m.description}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        <CardContent className="space-y-6">
+          {/* Mode and Period Grid */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Mode Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="mode" className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                Fonte de Dados
+              </Label>
+              <Select
+                value={mode}
+                onValueChange={(v) => setMode(v as GenerationMode)}
+              >
+                <SelectTrigger id="mode" className="w-full h-auto py-2">
+                  <SelectValue placeholder="Selecione um modo">
+                    {selectedMode && (
+                      <span className="font-medium">{selectedMode.label}</span>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {GENERATION_MODES.map((m) => (
+                    <SelectItem
+                      key={m.value}
+                      value={m.value}
+                      className="py-2.5"
+                    >
+                      <div className="flex flex-col items-start gap-0.5">
+                        <span className="font-medium">{m.label}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {m.description}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Period Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="period" className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                Período
+              </Label>
+              <Select
+                value={period}
+                onValueChange={(v) => setPeriod(v as TimePeriod)}
+              >
+                <SelectTrigger id="period" className="w-full h-auto py-2">
+                  <SelectValue placeholder="Selecione o período">
+                    {selectedPeriod && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">{selectedPeriod.icon}</span>
+                        <span className="font-medium">
+                          {selectedPeriod.label}
+                        </span>
+                      </div>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {TIME_PERIODS.map((p) => (
+                    <SelectItem
+                      key={p.value}
+                      value={p.value}
+                      className="py-2.5"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">{p.icon}</span>
+                        <div className="flex flex-col items-start gap-0.5">
+                          <span className="font-medium">{p.label}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {p.description}
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
+
+          {/* Selected period info badge */}
+          {selectedPeriod && (
+            <div className="flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2">
+              <span className="text-lg">{selectedPeriod.icon}</span>
+              <div className="flex-1">
+                <p className="text-sm font-medium">{selectedPeriod.label}</p>
+                <p className="text-xs text-muted-foreground">
+                  {selectedPeriod.description}
+                </p>
+              </div>
+              <Badge variant="outline" className="gap-1">
+                <Clock className="h-3 w-3" />
+                {selectedPeriod.hours}h
+              </Badge>
+            </div>
+          )}
 
           {/* Custom prompt for combined-custom mode */}
           {mode === "combined-custom" && (
@@ -174,7 +281,8 @@ export function DailyGenerator() {
                     Configuração Incompleta
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Configure nas Configurações: {missingRequirements.join(", ")}
+                    Configure nas Configurações:{" "}
+                    {missingRequirements.join(", ")}
                   </p>
                 </div>
               </div>
@@ -228,7 +336,9 @@ export function DailyGenerator() {
             <div className="flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
               <div>
-                <p className="font-medium text-destructive">Erro ao gerar Daily</p>
+                <p className="font-medium text-destructive">
+                  Erro ao gerar Daily
+                </p>
                 <p className="text-sm text-muted-foreground">{error}</p>
               </div>
             </div>
@@ -251,7 +361,12 @@ export function DailyGenerator() {
                   {new Date(result.generatedAt).toLocaleString("pt-BR")}
                 </CardDescription>
               </div>
-              <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCopy}
+                className="gap-2"
+              >
                 {copied ? (
                   <>
                     <Check className="h-4 w-4 text-green-500" />
@@ -299,10 +414,12 @@ export function DailyGenerator() {
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
                 <Sparkles className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="font-semibold text-lg">Pronto para gerar seu Daily</h3>
+              <h3 className="font-semibold text-lg">
+                Pronto para gerar seu Daily
+              </h3>
               <p className="text-sm text-muted-foreground max-w-sm mt-1">
-                Selecione o modo desejado e clique em &quot;Gerar Daily Scrum&quot; para criar seu
-                relatório automaticamente
+                Selecione o modo desejado e clique em &quot;Gerar Daily
+                Scrum&quot; para criar seu relatório automaticamente
               </p>
             </div>
           </CardContent>

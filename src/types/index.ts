@@ -45,6 +45,11 @@ export type PartialUserConfig = Partial<UserConfig>;
 export type GenerationMode = "azure-only" | "harvest-only" | "combined-auto" | "combined-custom";
 
 /**
+ * Available time periods for data fetching.
+ */
+export type TimePeriod = "24h" | "48h" | "72h" | "7d" | "14d" | "30d";
+
+/**
  * Mode configuration with labels.
  */
 export interface ModeOption {
@@ -53,6 +58,17 @@ export interface ModeOption {
   description: string;
   requiresAzure: boolean;
   requiresHarvest: boolean;
+}
+
+/**
+ * Period configuration with labels.
+ */
+export interface PeriodOption {
+  value: TimePeriod;
+  label: string;
+  description: string;
+  hours: number;
+  icon: string;
 }
 
 // ==========================================
@@ -182,6 +198,8 @@ export interface GenerateDailyRequest {
   mode: GenerationMode;
   customPrompt?: string;
   date?: string; // ISO date string, defaults to today
+  period?: TimePeriod; // Time period for data fetching
+  periodHours?: number; // Number of hours to look back
 }
 
 /**

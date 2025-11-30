@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { DEFAULT_DAILY_PROMPT } from "@/lib/constants";
+import { generateDailyPrompt } from "@/lib/constants";
 import type {
   GenerateDailyRequest,
   GenerateDailyResponse,
@@ -22,12 +22,13 @@ interface DataSources {
 /**
  * Fetches Azure DevOps commits using the same headers from the original request.
  */
-async function fetchAzureData(headers: Headers, date?: string): Promise<ParsedCommit[] | null> {
+async function fetchAzureData(
+  headers: Headers,
+  periodHours: number
+): Promise<ParsedCommit[] | null> {
   try {
     const baseUrl = new URL("/api/azure", "http://localhost:3000");
-    if (date) {
-      baseUrl.searchParams.set("date", date);
-    }
+    baseUrl.searchParams.set("periodHours", periodHours.toString());
 
     // Build internal request with same credentials
     const response = await fetch(baseUrl.toString(), {
@@ -54,13 +55,11 @@ async function fetchAzureData(headers: Headers, date?: string): Promise<ParsedCo
  */
 async function fetchHarvestData(
   headers: Headers,
-  date?: string
+  periodHours: number
 ): Promise<ParsedTimeEntry[] | null> {
   try {
     const baseUrl = new URL("/api/harvest", "http://localhost:3000");
-    if (date) {
-      baseUrl.searchParams.set("date", date);
-    }
+    baseUrl.searchParams.set("periodHours", periodHours.toString());
 
     const response = await fetch(baseUrl.toString(), {
       method: "GET",
@@ -84,7 +83,7 @@ async function fetchHarvestData(
 async function fetchDataByMode(
   mode: GenerationMode,
   headers: Headers,
-  date?: string
+  periodHours: number
 ): Promise<DataSources> {
   const sources: DataSources = {};
 
@@ -94,13 +93,13 @@ async function fetchDataByMode(
   switch (mode) {
     case "azure-only":
       if (hasAzureConfig) {
-        sources.azure = (await fetchAzureData(headers, date)) || undefined;
+        sources.azure = (await fetchAzureData(headers, periodHours)) || undefined;
       }
       break;
 
     case "harvest-only":
       if (hasHarvestConfig) {
-        sources.harvest = (await fetchHarvestData(headers, date)) || undefined;
+        sources.harvest = (await fetchHarvestData(headers, periodHours)) || undefined;
       }
       break;
 
@@ -108,8 +107,8 @@ async function fetchDataByMode(
     case "combined-custom": {
       // Fetch both in parallel
       const [azureData, harvestData] = await Promise.all([
-        hasAzureConfig ? fetchAzureData(headers, date) : Promise.resolve(null),
-        hasHarvestConfig ? fetchHarvestData(headers, date) : Promise.resolve(null),
+        hasAzureConfig ? fetchAzureData(headers, periodHours) : Promise.resolve(null),
+        hasHarvestConfig ? fetchHarvestData(headers, periodHours) : Promise.resolve(null),
       ]);
 
       if (azureData) sources.azure = azureData;
@@ -126,13 +125,13 @@ async function fetchDataByMode(
 // ==========================================
 
 /**
- * Builds the prompt for the AI model based on available data.
+ * Builds the prompt for the AI model based on available data and period.
  */
-function buildPrompt(sources: DataSources, customPrompt?: string): string {
+function buildPrompt(sources: DataSources, periodHours: number, customPrompt?: string): string {
   const parts: string[] = [];
 
-  // Add system prompt
-  parts.push(customPrompt || DEFAULT_DAILY_PROMPT);
+  // Add system prompt (custom or dynamic based on period)
+  parts.push(customPrompt || generateDailyPrompt(periodHours));
   parts.push("\n---\n");
   parts.push("## Dados disponíveis:\n");
 
@@ -199,7 +198,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
   try {
     // Parse request body
     const body: GenerateDailyRequest = await request.json();
-    const { mode, customPrompt, date } = body;
+    const { mode, customPrompt, periodHours = 24 } = body;
 
     // Validate mode
     if (!mode) {
@@ -227,7 +226,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
     }
 
     // Fetch data based on mode
-    const sources = await fetchDataByMode(mode, request.headers, date);
+    const sources = await fetchDataByMode(mode, request.headers, periodHours);
 
     // Check if we have any data
     const hasAzureData = sources.azure && sources.azure.length > 0;
@@ -245,12 +244,16 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       );
     }
 
-    // Build prompt
-    const prompt = buildPrompt(sources, mode === "combined-custom" ? customPrompt : undefined);
+    // Build prompt with period context
+    const prompt = buildPrompt(
+      sources,
+      periodHours,
+      mode === "combined-custom" ? customPrompt : undefined
+    );
 
     // Initialize Gemini AI
     const genAI = new GoogleGenerativeAI(geminiApiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // Generate content
     const result = await model.generateContent(prompt);

@@ -1,4 +1,52 @@
-import type { ModeOption } from "@/types";
+import type { ModeOption, PeriodOption } from "@/types";
+
+/**
+ * Available time periods for data fetching.
+ */
+export const TIME_PERIODS: PeriodOption[] = [
+  {
+    value: "24h",
+    label: "Últimas 24 horas",
+    description: "Ideal para daily diário",
+    hours: 24,
+    icon: "⚡",
+  },
+  {
+    value: "48h",
+    label: "Últimas 48 horas",
+    description: "Inclui ontem e hoje",
+    hours: 48,
+    icon: "📅",
+  },
+  {
+    value: "72h",
+    label: "Últimas 72 horas",
+    description: "Útil após fim de semana",
+    hours: 72,
+    icon: "🗓️",
+  },
+  {
+    value: "7d",
+    label: "Última semana",
+    description: "Resumo semanal",
+    hours: 168,
+    icon: "📊",
+  },
+  {
+    value: "14d",
+    label: "Últimas 2 semanas",
+    description: "Visão de sprint",
+    hours: 336,
+    icon: "🏃",
+  },
+  {
+    value: "30d",
+    label: "Último mês",
+    description: "Relatório mensal",
+    hours: 720,
+    icon: "📈",
+  },
+];
 
 /**
  * Available generation modes with labels and descriptions.
@@ -49,29 +97,119 @@ export const API_ENDPOINTS = {
 } as const;
 
 /**
- * Default prompt for AI generation.
+ * Generates dynamic prompt based on the selected period.
+ * Adjusts the language and context based on timeframe.
  */
-export const DEFAULT_DAILY_PROMPT = `
-Você é um assistente que ajuda desenvolvedores a criar relatórios de Daily Scrum (Standup).
-Com base nos dados fornecidos, gere um relatório profissional e conciso em português brasileiro.
+export function generateDailyPrompt(periodHours: number): string {
+  // Determine the appropriate time context based on period
+  const getTimeContext = (): {
+    timeDescription: string;
+    reportType: string;
+    focusAreas: string;
+  } => {
+    if (periodHours <= 24) {
+      return {
+        timeDescription: "nas últimas 24 horas",
+        reportType: "Daily Scrum diário",
+        focusAreas: "Foque nas atividades do dia e próximos passos imediatos.",
+      };
+    }
+    if (periodHours <= 48) {
+      return {
+        timeDescription: "nos últimos 2 dias",
+        reportType: "Daily Scrum",
+        focusAreas: "Agrupe atividades por dia quando possível.",
+      };
+    }
+    if (periodHours <= 72) {
+      return {
+        timeDescription: "nos últimos 3 dias",
+        reportType: "Daily Scrum pós fim de semana",
+        focusAreas: "Ideal para resumir atividades após um período de pausa. Agrupe por dia.",
+      };
+    }
+    if (periodHours <= 168) {
+      return {
+        timeDescription: "na última semana",
+        reportType: "Resumo Semanal",
+        focusAreas: "Organize por áreas de trabalho ou projetos. Destaque marcos importantes.",
+      };
+    }
+    if (periodHours <= 336) {
+      return {
+        timeDescription: "nas últimas 2 semanas",
+        reportType: "Resumo de Sprint",
+        focusAreas: "Foque em entregas, progresso de features e métricas de produtividade.",
+      };
+    }
+    return {
+      timeDescription: "no último mês",
+      reportType: "Relatório Mensal",
+      focusAreas: "Apresente uma visão executiva com principais conquistas e métricas.",
+    };
+  };
+
+  const { timeDescription, reportType, focusAreas } = getTimeContext();
+
+  // Dynamic section headers based on period
+  const getSectionHeaders = (): { done: string; next: string; blockers: string } => {
+    if (periodHours <= 48) {
+      return {
+        done: "🎯 O que fiz",
+        next: "📋 O que vou fazer",
+        blockers: "🚧 Impedimentos",
+      };
+    }
+    if (periodHours <= 168) {
+      return {
+        done: "🎯 O que foi realizado",
+        next: "📋 Próximos passos",
+        blockers: "🚧 Impedimentos e riscos",
+      };
+    }
+    return {
+      done: "🎯 Principais conquistas",
+      next: "📋 Planejamento",
+      blockers: "🚧 Desafios e pontos de atenção",
+    };
+  };
+
+  const sections = getSectionHeaders();
+
+  return `
+Você é um assistente que ajuda desenvolvedores a criar relatórios de ${reportType}.
+Com base nos dados fornecidos ${timeDescription}, gere um relatório profissional e conciso em português brasileiro.
+
+${focusAreas}
 
 O relatório deve conter 3 seções:
 
-## 🎯 O que fiz ontem/hoje
+## ${sections.done}
 - Liste as atividades realizadas de forma clara e objetiva
 - Agrupe commits relacionados quando possível
 - Mencione o tempo gasto em cada atividade principal (se disponível)
+${periodHours > 48 ? "- Organize cronologicamente ou por projeto/área" : ""}
 
-## 📋 O que vou fazer
+## ${sections.next}
 - Sugira próximos passos lógicos baseados nas atividades realizadas
 - Seja específico mas não invente tarefas
+${periodHours > 168 ? "- Inclua metas e objetivos para o próximo período" : ""}
 
-## 🚧 Impedimentos
+## ${sections.blockers}
 - Liste possíveis impedimentos ou bloqueios identificados
 - Se não houver impedimentos aparentes, indique "Nenhum impedimento no momento"
+${periodHours > 168 ? "- Inclua riscos potenciais identificados" : ""}
 
 Mantenha o tom profissional e objetivo. Use bullet points para facilitar a leitura.
+${periodHours > 168 ? "Inclua um breve resumo executivo no início." : ""}
 `;
+}
+
+/**
+ * Default prompt for AI generation (legacy - for backward compatibility).
+ * @deprecated Use generateDailyPrompt(periodHours) instead
+ */
+export const DEFAULT_DAILY_PROMPT = generateDailyPrompt(24);
 
 /**
  * Tutorial texts for configuration help.

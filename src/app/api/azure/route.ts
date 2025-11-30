@@ -28,17 +28,16 @@ export async function GET(request: NextRequest): Promise<NextResponse<AzureDataR
       );
     }
 
-    // Get date range (last 24 hours by default)
+    // Get date range based on period (default: 24 hours)
     const searchParams = request.nextUrl.searchParams;
-    const dateParam = searchParams.get("date");
+    const periodHours = parseInt(searchParams.get("periodHours") || "24", 10);
 
-    const targetDate = dateParam ? new Date(dateParam) : new Date();
-    const fromDate = new Date(targetDate);
-    fromDate.setDate(fromDate.getDate() - 1);
-    fromDate.setHours(0, 0, 0, 0);
-
-    const toDate = new Date(targetDate);
+    const toDate = new Date();
     toDate.setHours(23, 59, 59, 999);
+
+    const fromDate = new Date();
+    fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
+    fromDate.setHours(0, 0, 0, 0);
 
     // Build Azure DevOps API URL
     const baseUrl = `https://dev.azure.com/${encodeURIComponent(organization)}/${encodeURIComponent(project)}/_apis/git/repositories/${encodeURIComponent(repository)}/commits`;
