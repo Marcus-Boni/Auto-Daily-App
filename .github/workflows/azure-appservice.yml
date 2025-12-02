@@ -59,15 +59,18 @@ jobs:
       - name: 📦 Create deployment package
         run: |
           # Create standalone output for deployment
-          cp -r .next/standalone ./deploy
+          mkdir -p deploy
+          cp -r .next/standalone/* ./deploy/
           cp -r .next/static ./deploy/.next/static
           cp -r public ./deploy/public
+          # Create zip for deployment
+          cd deploy && zip -r ../deploy.zip . && cd ..
           
       - name: 📤 Upload artifact for deployment
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: deploy
+          path: deploy.zip
           retention-days: 1
 
   # =============================================
@@ -88,7 +91,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-          path: deploy
 
       - name: 🔐 Login to Azure
         uses: azure/login@v2
@@ -100,7 +102,8 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: deploy
+          package: deploy.zip
+          type: zip
 
       - name: 🔓 Logout from Azure
         run: az logout
