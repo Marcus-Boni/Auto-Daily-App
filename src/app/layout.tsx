@@ -17,8 +17,29 @@ export const metadata: Metadata = {
   title: "Auto Daily App - Gerador de Daily Scrum",
   description:
     "Gere relatórios de Daily Scrum automaticamente usando Azure DevOps, Harvest e Google Gemini AI",
-  keywords: ["daily scrum", "standup", "azure devops", "harvest", "gemini", "ai"],
+  keywords: [
+    "daily scrum",
+    "standup",
+    "azure devops",
+    "harvest",
+    "gemini",
+    "ai",
+  ],
   authors: [{ name: "Auto Daily App" }],
+  manifest: "/manifest.json",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-touch-icon.svg", type: "image/svg+xml" }],
+  },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Auto Daily",
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +49,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
         <Toaster position="top-right" richColors closeButton />
       </body>

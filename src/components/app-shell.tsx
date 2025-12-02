@@ -30,7 +30,8 @@ export function AppShell() {
     );
   }
 
-  const isFirstTime = !validation.hasAzureConfig && !validation.hasHarvestConfig;
+  const isFirstTime =
+    !validation.hasAzureConfig && !validation.hasHarvestConfig;
 
   return (
     <div className="min-h-screen bg-background">
@@ -41,8 +42,12 @@ export function AppShell() {
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold tracking-tight">Auto Daily</h1>
-              <p className="text-xs text-muted-foreground">Gerador de Daily Scrum com IA</p>
+              <h1 className="text-lg font-semibold tracking-tight">
+                Auto Daily
+              </h1>
+              <p className="text-xs text-muted-foreground">
+                Gerador de Daily Scrum com IA
+              </p>
             </div>
           </div>
 
@@ -59,7 +64,10 @@ export function AppShell() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue={isFirstTime ? "settings" : "generator"} className="space-y-6">
+        <Tabs
+          defaultValue={isFirstTime ? "settings" : "generator"}
+          className="space-y-6"
+        >
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="generator" className="gap-2">
               <Sparkles className="h-4 w-4" />
@@ -87,11 +95,22 @@ export function AppShell() {
       <footer className="border-t py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>
-            Auto Daily App — Gerado com <span className="text-primary">♥</span> usando Next.js,
-            Tailwind e Google Gemini AI
+            AutoDaily AI é uma ferramenta profissional que automatiza relatórios
+            de Daily Scrum com dados do Azure DevOps, Harvest e Google Gemini.
+            Veja mais no{" "}
+            <a
+              className="text-primary underline-offset-4 hover:underline"
+              href="https://github.com/Marcus-Boni"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+            .
           </p>
           <p className="mt-1 text-xs">
-            Suas credenciais são armazenadas localmente no seu navegador
+            Suas credenciais ficam seguras no navegador e são enviadas apenas
+            via cabeçalhos HTTP.
           </p>
         </div>
       </footer>
