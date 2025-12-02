@@ -60,10 +60,23 @@ jobs:
         run: |
           # Create standalone output for deployment
           mkdir -p deploy
+          
+          # Copy the complete standalone output
           cp -r .next/standalone/* ./deploy/
-          mkdir -p ./deploy/.next
+          
+          # The standalone already has .next folder with server code
+          # We need to add the static files which are outside standalone
           cp -r .next/static ./deploy/.next/static
+          
+          # Copy public folder for static assets
           cp -r public ./deploy/public
+          
+          # Debug: Show structure being deployed
+          echo "=== Deploy folder structure ==="
+          find ./deploy -type f -name "*.js" | head -20
+          echo "=== .next folder contents ==="
+          ls -la ./deploy/.next/
+          
           # Create zip for deployment
           cd deploy && zip -r ../deploy.zip . && cd ..
           
