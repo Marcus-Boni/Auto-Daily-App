@@ -1,7 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { fetchAzureCommits } from "@/lib/azure-service";
 import { generateDailyPrompt, generateProfessionalPrompt } from "@/lib/constants";
+import { fetchHarvestEntries } from "@/lib/harvest-service";
 import type {
   GenerateDailyRequest,
   GenerateDailyResponse,
@@ -16,63 +18,70 @@ interface DataSources {
   harvest?: ParsedTimeEntry[];
 }
 
-function getBaseUrl(request: NextRequest): string {
-  const protocol = request.headers.get("x-forwarded-proto") || "http";
-  const host = request.headers.get("host") || "localhost:3000";
-  return `${protocol}://${host}`;
-}
-
 async function fetchAzureData(
   request: NextRequest,
   periodHours: number
 ): Promise<ParsedCommit[] | null> {
-  try {
-    const baseUrl = getBaseUrl(request);
-    const url = new URL("/api/azure", baseUrl);
-    url.searchParams.set("periodHours", periodHours.toString());
+  const pat = request.headers.get("x-azure-pat") || "";
+  const organization = request.headers.get("x-azure-organization") || "";
+  const project = request.headers.get("x-azure-project") || "";
+  const repository = request.headers.get("x-azure-repository") || "";
+  const userEmail = request.headers.get("x-azure-user-email") || "";
 
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      headers: {
-        "x-azure-pat": request.headers.get("x-azure-pat") || "",
-        "x-azure-organization": request.headers.get("x-azure-organization") || "",
-        "x-azure-project": request.headers.get("x-azure-project") || "",
-        "x-azure-repository": request.headers.get("x-azure-repository") || "",
-        "x-azure-user-email": request.headers.get("x-azure-user-email") || "",
-      },
-    });
-
-    const data = await response.json();
-    return data.success ? data.commits : null;
-  } catch (error) {
-    console.error("Error fetching Azure data:", error);
+  if (!pat) {
     return null;
   }
+
+  console.log(`[Generate API] Fetching Azure data directly via service`);
+
+  const result = await fetchAzureCommits(
+    {
+      pat,
+      organization,
+      project,
+      repository,
+      userEmail: userEmail || undefined,
+    },
+    periodHours
+  );
+
+  if (!result.success) {
+    console.error(`[Generate API] Azure error: ${result.error} - ${result.details}`);
+    return null;
+  }
+
+  console.log(`[Generate API] Azure returned ${result.commits?.length || 0} commits`);
+  return result.commits || null;
 }
 
 async function fetchHarvestData(
   request: NextRequest,
   periodHours: number
 ): Promise<ParsedTimeEntry[] | null> {
-  try {
-    const baseUrl = getBaseUrl(request);
-    const url = new URL("/api/harvest", baseUrl);
-    url.searchParams.set("periodHours", periodHours.toString());
+  const token = request.headers.get("x-harvest-token") || "";
+  const accountId = request.headers.get("x-harvest-account-id") || "";
 
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      headers: {
-        "x-harvest-token": request.headers.get("x-harvest-token") || "",
-        "x-harvest-account-id": request.headers.get("x-harvest-account-id") || "",
-      },
-    });
-
-    const data = await response.json();
-    return data.success ? data.entries : null;
-  } catch (error) {
-    console.error("Error fetching Harvest data:", error);
+  if (!token) {
     return null;
   }
+
+  console.log(`[Generate API] Fetching Harvest data directly via service`);
+
+  const result = await fetchHarvestEntries(
+    {
+      token,
+      accountId,
+    },
+    periodHours
+  );
+
+  if (!result.success) {
+    console.error(`[Generate API] Harvest error: ${result.error} - ${result.details}`);
+    return null;
+  }
+
+  console.log(`[Generate API] Harvest returned ${result.entries?.length || 0} entries`);
+  return result.entries || null;
 }
 
 async function fetchDataByMode(

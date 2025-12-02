@@ -1,128 +1,48 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import type { AzureCommitsResponse, AzureDataResponse, ParsedCommit } from "@/types";
+import { fetchAzureCommits } from "@/lib/azure-service";
+import type { AzureDataResponse } from "@/types";
 
 export async function GET(request: NextRequest): Promise<NextResponse<AzureDataResponse>> {
-  try {
-    const azurePat = request.headers.get("x-azure-pat");
-    const organization = request.headers.get("x-azure-organization");
-    const project = request.headers.get("x-azure-project");
-    const repository = request.headers.get("x-azure-repository");
-    const userEmail = request.headers.get("x-azure-user-email");
+  const azurePat = request.headers.get("x-azure-pat") || "";
+  const organization = request.headers.get("x-azure-organization") || "";
+  const project = request.headers.get("x-azure-project") || "";
+  const repository = request.headers.get("x-azure-repository") || "";
+  const userEmail = request.headers.get("x-azure-user-email") || "";
 
-    if (!azurePat || !organization || !project || !repository) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Configuração incompleta",
-          details: "PAT, Organização, Projeto e Repositório são obrigatórios",
-        },
-        { status: 400 }
-      );
-    }
+  const searchParams = request.nextUrl.searchParams;
+  const periodHours = parseInt(searchParams.get("periodHours") || "24", 10);
 
-    const searchParams = request.nextUrl.searchParams;
-    const periodHours = parseInt(searchParams.get("periodHours") || "24", 10);
+  const result = await fetchAzureCommits(
+    {
+      pat: azurePat,
+      organization,
+      project,
+      repository,
+      userEmail: userEmail || undefined,
+    },
+    periodHours
+  );
 
-    const now = new Date();
-
-    const toDate = new Date(now);
-    toDate.setHours(23, 59, 59, 999);
-
-    const fromDate = new Date(now);
-    if (periodHours === 0) {
-      fromDate.setHours(0, 0, 0, 0);
-    } else {
-      fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
-      fromDate.setHours(0, 0, 0, 0);
-    }
-
-    const baseUrl = `https://dev.azure.com/${encodeURIComponent(organization)}/${encodeURIComponent(project)}/_apis/git/repositories/${encodeURIComponent(repository)}/commits`;
-
-    const params = new URLSearchParams({
-      "api-version": "7.1",
-      "searchCriteria.fromDate": fromDate.toISOString(),
-      "searchCriteria.toDate": toDate.toISOString(),
-      $top: "100",
-    });
-
-    if (userEmail) {
-      params.append("searchCriteria.author", userEmail);
-    }
-
-    const apiUrl = `${baseUrl}?${params.toString()}`;
-
-    const authHeader = `Basic ${Buffer.from(`:${azurePat}`).toString("base64")}`;
-
-    const response = await fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        Authorization: authHeader,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`[Azure API] Error ${response.status}: ${errorText}`);
-
-      if (response.status === 401) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: "Token inválido ou expirado",
-            details:
-              "Verifique seu Personal Access Token do Azure DevOps. Ele pode ter expirado ou não ter permissões suficientes (Code > Read).",
-          },
-          { status: 401 }
-        );
-      }
-
-      if (response.status === 404) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: "Recurso não encontrado",
-            details: "Verifique o nome da organização, projeto e repositório",
-          },
-          { status: 404 }
-        );
-      }
-
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Erro ao buscar commits",
-          details: errorText,
-        },
-        { status: response.status }
-      );
-    }
-
-    const data: AzureCommitsResponse = await response.json();
-
-    const commits: ParsedCommit[] = data.value.map((commit) => ({
-      id: commit.commitId.substring(0, 8),
-      message: commit.comment.split("\n")[0],
-      author: commit.author.name,
-      date: new Date(commit.author.date).toLocaleString("pt-BR"),
-      changes: `+${commit.changeCounts?.Add || 0} ~${commit.changeCounts?.Edit || 0} -${commit.changeCounts?.Delete || 0}`,
-    }));
-
-    return NextResponse.json({
-      success: true,
-      commits,
-    });
-  } catch (error) {
-    console.error("Azure API Error:", error);
+  if (!result.success) {
+    const status = result.error?.includes("Token")
+      ? 401
+      : result.error?.includes("não encontrado")
+        ? 404
+        : 500;
 
     return NextResponse.json(
       {
         success: false,
-        error: "Erro interno do servidor",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
+        error: result.error || "Erro desconhecido",
+        details: result.details,
       },
-      { status: 500 }
+      { status }
     );
   }
+
+  return NextResponse.json({
+    success: true,
+    commits: result.commits || [],
+  });
 }
