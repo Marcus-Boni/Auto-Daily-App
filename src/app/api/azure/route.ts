@@ -24,12 +24,18 @@ export async function GET(request: NextRequest): Promise<NextResponse<AzureDataR
     const searchParams = request.nextUrl.searchParams;
     const periodHours = parseInt(searchParams.get("periodHours") || "24", 10);
 
-    const toDate = new Date();
+    const now = new Date();
+
+    const toDate = new Date(now);
     toDate.setHours(23, 59, 59, 999);
 
-    const fromDate = new Date();
-    fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
-    fromDate.setHours(0, 0, 0, 0);
+    const fromDate = new Date(now);
+    if (periodHours === 0) {
+      fromDate.setHours(0, 0, 0, 0);
+    } else {
+      fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
+      fromDate.setHours(0, 0, 0, 0);
+    }
 
     const baseUrl = `https://dev.azure.com/${encodeURIComponent(organization)}/${encodeURIComponent(project)}/_apis/git/repositories/${encodeURIComponent(repository)}/commits`;
 
@@ -58,13 +64,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<AzureDataR
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error(`[Azure API] Error ${response.status}: ${errorText}`);
 
       if (response.status === 401) {
         return NextResponse.json(
           {
             success: false,
             error: "Token inválido ou expirado",
-            details: "Verifique seu Personal Access Token do Azure DevOps",
+            details:
+              "Verifique seu Personal Access Token do Azure DevOps. Ele pode ter expirado ou não ter permissões suficientes (Code > Read).",
           },
           { status: 401 }
         );

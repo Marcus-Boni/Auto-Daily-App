@@ -16,22 +16,29 @@ interface DataSources {
   harvest?: ParsedTimeEntry[];
 }
 
+function getBaseUrl(request: NextRequest): string {
+  const protocol = request.headers.get("x-forwarded-proto") || "http";
+  const host = request.headers.get("host") || "localhost:3000";
+  return `${protocol}://${host}`;
+}
+
 async function fetchAzureData(
-  headers: Headers,
+  request: NextRequest,
   periodHours: number
 ): Promise<ParsedCommit[] | null> {
   try {
-    const baseUrl = new URL("/api/azure", "http://localhost:3000");
-    baseUrl.searchParams.set("periodHours", periodHours.toString());
+    const baseUrl = getBaseUrl(request);
+    const url = new URL("/api/azure", baseUrl);
+    url.searchParams.set("periodHours", periodHours.toString());
 
-    const response = await fetch(baseUrl.toString(), {
+    const response = await fetch(url.toString(), {
       method: "GET",
       headers: {
-        "x-azure-pat": headers.get("x-azure-pat") || "",
-        "x-azure-organization": headers.get("x-azure-organization") || "",
-        "x-azure-project": headers.get("x-azure-project") || "",
-        "x-azure-repository": headers.get("x-azure-repository") || "",
-        "x-azure-user-email": headers.get("x-azure-user-email") || "",
+        "x-azure-pat": request.headers.get("x-azure-pat") || "",
+        "x-azure-organization": request.headers.get("x-azure-organization") || "",
+        "x-azure-project": request.headers.get("x-azure-project") || "",
+        "x-azure-repository": request.headers.get("x-azure-repository") || "",
+        "x-azure-user-email": request.headers.get("x-azure-user-email") || "",
       },
     });
 
@@ -44,18 +51,19 @@ async function fetchAzureData(
 }
 
 async function fetchHarvestData(
-  headers: Headers,
+  request: NextRequest,
   periodHours: number
 ): Promise<ParsedTimeEntry[] | null> {
   try {
-    const baseUrl = new URL("/api/harvest", "http://localhost:3000");
-    baseUrl.searchParams.set("periodHours", periodHours.toString());
+    const baseUrl = getBaseUrl(request);
+    const url = new URL("/api/harvest", baseUrl);
+    url.searchParams.set("periodHours", periodHours.toString());
 
-    const response = await fetch(baseUrl.toString(), {
+    const response = await fetch(url.toString(), {
       method: "GET",
       headers: {
-        "x-harvest-token": headers.get("x-harvest-token") || "",
-        "x-harvest-account-id": headers.get("x-harvest-account-id") || "",
+        "x-harvest-token": request.headers.get("x-harvest-token") || "",
+        "x-harvest-account-id": request.headers.get("x-harvest-account-id") || "",
       },
     });
 
@@ -69,32 +77,32 @@ async function fetchHarvestData(
 
 async function fetchDataByMode(
   mode: GenerationMode,
-  headers: Headers,
+  request: NextRequest,
   periodHours: number
 ): Promise<DataSources> {
   const sources: DataSources = {};
 
-  const hasAzureConfig = headers.get("x-azure-pat");
-  const hasHarvestConfig = headers.get("x-harvest-token");
+  const hasAzureConfig = request.headers.get("x-azure-pat");
+  const hasHarvestConfig = request.headers.get("x-harvest-token");
 
   switch (mode) {
     case "azure-only":
       if (hasAzureConfig) {
-        sources.azure = (await fetchAzureData(headers, periodHours)) || undefined;
+        sources.azure = (await fetchAzureData(request, periodHours)) || undefined;
       }
       break;
 
     case "harvest-only":
       if (hasHarvestConfig) {
-        sources.harvest = (await fetchHarvestData(headers, periodHours)) || undefined;
+        sources.harvest = (await fetchHarvestData(request, periodHours)) || undefined;
       }
       break;
 
     case "combined-auto":
     case "combined-custom": {
       const [azureData, harvestData] = await Promise.all([
-        hasAzureConfig ? fetchAzureData(headers, periodHours) : Promise.resolve(null),
-        hasHarvestConfig ? fetchHarvestData(headers, periodHours) : Promise.resolve(null),
+        hasAzureConfig ? fetchAzureData(request, periodHours) : Promise.resolve(null),
+        hasHarvestConfig ? fetchHarvestData(request, periodHours) : Promise.resolve(null),
       ]);
 
       if (azureData) sources.azure = azureData;
@@ -209,7 +217,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       );
     }
 
-    const sources = await fetchDataByMode(mode, request.headers, periodHours);
+    const sources = await fetchDataByMode(mode, request, periodHours);
 
     const hasAzureData = sources.azure && sources.azure.length > 0;
     const hasHarvestData = sources.harvest && sources.harvest.length > 0;
