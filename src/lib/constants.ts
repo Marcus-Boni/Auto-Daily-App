@@ -1,8 +1,5 @@
 import type { ModeOption, PeriodOption, ReportFormatOption } from "@/types";
 
-/**
- * Available report formats.
- */
 export const REPORT_FORMATS: ReportFormatOption[] = [
   {
     value: "standard",
@@ -18,9 +15,6 @@ export const REPORT_FORMATS: ReportFormatOption[] = [
   },
 ];
 
-/**
- * Available time periods for data fetching.
- */
 export const TIME_PERIODS: PeriodOption[] = [
   {
     value: "24h",
@@ -66,9 +60,6 @@ export const TIME_PERIODS: PeriodOption[] = [
   },
 ];
 
-/**
- * Available generation modes with labels and descriptions.
- */
 export const GENERATION_MODES: ModeOption[] = [
   {
     value: "azure-only",
@@ -100,26 +91,15 @@ export const GENERATION_MODES: ModeOption[] = [
   },
 ];
 
-/**
- * LocalStorage key for user configuration.
- */
 export const STORAGE_KEY = "auto-daily-config";
 
-/**
- * API endpoints.
- */
 export const API_ENDPOINTS = {
   generate: "/api/generate",
   azure: "/api/azure",
   harvest: "/api/harvest",
 } as const;
 
-/**
- * Generates a professional, concise report prompt based on the selected period.
- * This format is more executive-friendly and focuses on impact and results.
- */
 export function generateProfessionalPrompt(periodHours: number): string {
-  // Determine the appropriate time context based on period
   const getTimeContext = (): {
     timeDescription: string;
     reportType: string;
@@ -202,12 +182,7 @@ ${periodHours > 168 ? "- Inclua insights sobre produtividade e tendências" : ""
 `;
 }
 
-/**
- * Generates dynamic prompt based on the selected period (Standard format).
- * Adjusts the language and context based on timeframe.
- */
 export function generateDailyPrompt(periodHours: number): string {
-  // Determine the appropriate time context based on period
   const getTimeContext = (): {
     timeDescription: string;
     reportType: string;
@@ -257,7 +232,6 @@ export function generateDailyPrompt(periodHours: number): string {
 
   const { timeDescription, reportType, focusAreas } = getTimeContext();
 
-  // Dynamic section headers based on period
   const getSectionHeaders = (): { done: string; next: string; blockers: string } => {
     if (periodHours <= 48) {
       return {
@@ -311,15 +285,8 @@ ${periodHours > 168 ? "Inclua um breve resumo executivo no início." : ""}
 `;
 }
 
-/**
- * Default prompt for AI generation (legacy - for backward compatibility).
- * @deprecated Use generateDailyPrompt(periodHours) instead
- */
 export const DEFAULT_DAILY_PROMPT = generateDailyPrompt(24);
 
-/**
- * Tutorial texts for configuration help.
- */
 export const TUTORIALS = {
   azurePat: {
     title: "Como obter o Personal Access Token (PAT) do Azure DevOps",

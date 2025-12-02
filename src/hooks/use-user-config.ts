@@ -4,49 +4,32 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { ConfigValidation, GenerationMode, PartialUserConfig, UserConfig } from "@/types";
 
-// ==========================================
-// Default Configuration
-// ==========================================
-
 const DEFAULT_CONFIG: UserConfig = {
-  // Azure DevOps
   azurePat: "",
   azureOrganization: "",
   azureProject: "",
   azureRepositoryId: "",
   azureUserEmail: "",
 
-  // Harvest
   harvestAccountId: "",
   harvestToken: "",
 
-  // App Settings
   defaultMode: "combined-auto",
   language: "pt-BR",
 };
-
-// ==========================================
-// Store Interface
-// ==========================================
 
 interface UserConfigStore {
   config: UserConfig;
   isHydrated: boolean;
 
-  // Actions
   updateConfig: (updates: PartialUserConfig) => void;
   resetConfig: () => void;
   setHydrated: (state: boolean) => void;
 
-  // Computed
   getValidation: () => ConfigValidation;
   hasRequiredConfig: (mode: GenerationMode) => boolean;
   getHeaders: () => Record<string, string>;
 }
-
-// ==========================================
-// Validation Logic
-// ==========================================
 
 function validateConfig(config: UserConfig): ConfigValidation {
   const errors: Record<keyof UserConfig, string | undefined> = {
@@ -61,7 +44,6 @@ function validateConfig(config: UserConfig): ConfigValidation {
     language: undefined,
   };
 
-  // Validate Azure config
   const hasAzurePat = config.azurePat.length > 0;
   const hasAzureOrg = config.azureOrganization.length > 0;
   const hasAzureProject = config.azureProject.length > 0;
@@ -79,7 +61,6 @@ function validateConfig(config: UserConfig): ConfigValidation {
 
   const hasAzureConfig = hasAzurePat && hasAzureOrg && hasAzureProject && hasAzureRepo;
 
-  // Validate Harvest config
   const hasHarvestAccount = config.harvestAccountId.length > 0;
   const hasHarvestToken = config.harvestToken.length > 0;
 
@@ -92,7 +73,6 @@ function validateConfig(config: UserConfig): ConfigValidation {
 
   const hasHarvestConfig = hasHarvestAccount && hasHarvestToken;
 
-  // Overall validation
   const isValid = Object.values(errors).every((e) => e === undefined);
 
   return {
@@ -100,14 +80,9 @@ function validateConfig(config: UserConfig): ConfigValidation {
     errors,
     hasAzureConfig,
     hasHarvestConfig,
-    // Gemini is always available (server-side API key)
     hasGeminiConfig: true,
   };
 }
-
-// ==========================================
-// Zustand Store
-// ==========================================
 
 export const useUserConfigStore = create<UserConfigStore>()(
   persist(
@@ -163,10 +138,6 @@ export const useUserConfigStore = create<UserConfigStore>()(
     }
   )
 );
-
-// ==========================================
-// Custom Hook for easier access
-// ==========================================
 
 export function useUserConfig() {
   const store = useUserConfigStore();

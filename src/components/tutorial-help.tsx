@@ -18,10 +18,6 @@ interface TutorialHelpProps {
   tutorial: TutorialStep;
 }
 
-/**
- * TutorialHelp component displays expandable tutorial instructions
- * for obtaining API keys and tokens.
- */
 export function TutorialHelp({ tutorial }: TutorialHelpProps) {
   return (
     <Accordion type="single" collapsible className="w-full">

@@ -23,10 +23,6 @@ interface SecretInputProps {
   error?: string;
 }
 
-/**
- * SecretInput component for sensitive data like API keys and tokens.
- * Features toggle visibility and optional tutorial help.
- */
 export function SecretInput({
   id,
   label,

@@ -5,22 +5,12 @@ import { toast } from "sonner";
 import { ConfigStatus } from "@/components/config-status";
 import { SecretInput } from "@/components/secret-input";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserConfig } from "@/hooks/use-user-config";
 import { TUTORIALS } from "@/lib/constants";
 
-/**
- * SettingsPanel component for configuring API credentials.
- * All credentials are stored in LocalStorage only.
- */
 export function SettingsPanel() {
   const { config, updateConfig, resetConfig, validation } = useUserConfig();
 
@@ -37,19 +27,11 @@ export function SettingsPanel() {
 
   return (
     <div className="space-y-6">
-      {/* Header with status */}
       <div className="flex flex-wrap items-center gap-2">
-        <ConfigStatus
-          label="Azure DevOps"
-          isConfigured={validation.hasAzureConfig}
-        />
-        <ConfigStatus
-          label="Harvest"
-          isConfigured={validation.hasHarvestConfig}
-        />
+        <ConfigStatus label="Azure DevOps" isConfigured={validation.hasAzureConfig} />
+        <ConfigStatus label="Harvest" isConfigured={validation.hasHarvestConfig} />
       </div>
 
-      {/* Azure DevOps Configuration */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
@@ -87,15 +69,11 @@ export function SettingsPanel() {
               <Input
                 id="azure-org"
                 value={config.azureOrganization}
-                onChange={(e) =>
-                  updateConfig({ azureOrganization: e.target.value })
-                }
+                onChange={(e) => updateConfig({ azureOrganization: e.target.value })}
                 placeholder="nome-da-organizacao"
               />
               {validation.errors.azureOrganization && (
-                <p className="text-sm text-destructive">
-                  {validation.errors.azureOrganization}
-                </p>
+                <p className="text-sm text-destructive">{validation.errors.azureOrganization}</p>
               )}
             </div>
 
@@ -108,9 +86,7 @@ export function SettingsPanel() {
                 placeholder="nome-do-projeto"
               />
               {validation.errors.azureProject && (
-                <p className="text-sm text-destructive">
-                  {validation.errors.azureProject}
-                </p>
+                <p className="text-sm text-destructive">{validation.errors.azureProject}</p>
               )}
             </div>
           </div>
@@ -121,15 +97,11 @@ export function SettingsPanel() {
               <Input
                 id="azure-repo"
                 value={config.azureRepositoryId}
-                onChange={(e) =>
-                  updateConfig({ azureRepositoryId: e.target.value })
-                }
+                onChange={(e) => updateConfig({ azureRepositoryId: e.target.value })}
                 placeholder="nome-do-repositorio"
               />
               {validation.errors.azureRepositoryId && (
-                <p className="text-sm text-destructive">
-                  {validation.errors.azureRepositoryId}
-                </p>
+                <p className="text-sm text-destructive">{validation.errors.azureRepositoryId}</p>
               )}
             </div>
 
@@ -139,20 +111,15 @@ export function SettingsPanel() {
                 id="azure-user"
                 type="text"
                 value={config.azureUserEmail}
-                onChange={(e) =>
-                  updateConfig({ azureUserEmail: e.target.value })
-                }
+                onChange={(e) => updateConfig({ azureUserEmail: e.target.value })}
                 placeholder="Nome do usuário"
               />
-              <p className="text-xs text-muted-foreground">
-                Filtra commits apenas do seu usuário
-              </p>
+              <p className="text-xs text-muted-foreground">Filtra commits apenas do seu usuário</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Harvest Configuration */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
@@ -189,21 +156,16 @@ export function SettingsPanel() {
             <Input
               id="harvest-account"
               value={config.harvestAccountId}
-              onChange={(e) =>
-                updateConfig({ harvestAccountId: e.target.value })
-              }
+              onChange={(e) => updateConfig({ harvestAccountId: e.target.value })}
               placeholder="123456"
             />
             {validation.errors.harvestAccountId && (
-              <p className="text-sm text-destructive">
-                {validation.errors.harvestAccountId}
-              </p>
+              <p className="text-sm text-destructive">{validation.errors.harvestAccountId}</p>
             )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Actions */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Button
           variant="outline"
@@ -220,14 +182,12 @@ export function SettingsPanel() {
         </Button>
       </div>
 
-      {/* Security Notice */}
       <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-4">
         <p className="text-sm text-muted-foreground">
-          <strong className="text-foreground">🔒 Segurança:</strong> Suas
-          credenciais são salvas apenas no seu navegador (LocalStorage) e nunca
-          são enviadas para nossos servidores. Elas são usadas apenas para se
-          comunicar diretamente com as APIs do Azure DevOps, Harvest e Google
-          Gemini.
+          <strong className="text-foreground">🔒 Segurança:</strong> Suas credenciais são salvas
+          apenas no seu navegador (LocalStorage) e nunca são enviadas para nossos servidores. Elas
+          são usadas apenas para se comunicar diretamente com as APIs do Azure DevOps, Harvest e
+          Google Gemini.
         </p>
       </div>
     </div>

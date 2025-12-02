@@ -17,14 +17,7 @@ export const metadata: Metadata = {
   title: "Auto Daily App - Gerador de Daily Scrum",
   description:
     "Gere relatórios de Daily Scrum automaticamente usando Azure DevOps, Harvest e Google Gemini AI",
-  keywords: [
-    "daily scrum",
-    "standup",
-    "azure devops",
-    "harvest",
-    "gemini",
-    "ai",
-  ],
+  keywords: ["daily scrum", "standup", "azure devops", "harvest", "gemini", "ai"],
   authors: [{ name: "Auto Daily App" }],
 };
 
@@ -35,9 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
         <Toaster position="top-right" richColors closeButton />
       </body>

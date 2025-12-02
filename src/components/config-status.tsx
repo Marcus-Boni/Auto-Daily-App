@@ -9,10 +9,6 @@ interface ConfigStatusProps {
   isRequired?: boolean;
 }
 
-/**
- * ConfigStatus component shows the configuration status
- * of a service integration.
- */
 export function ConfigStatus({ label, isConfigured, isRequired = false }: ConfigStatusProps) {
   if (isConfigured) {
     return (

@@ -11,18 +11,11 @@ import type {
   ReportFormat,
 } from "@/types";
 
-// ==========================================
-// Strategy Pattern - Data Fetchers
-// ==========================================
-
 interface DataSources {
   azure?: ParsedCommit[];
   harvest?: ParsedTimeEntry[];
 }
 
-/**
- * Fetches Azure DevOps commits using the same headers from the original request.
- */
 async function fetchAzureData(
   headers: Headers,
   periodHours: number
@@ -31,7 +24,6 @@ async function fetchAzureData(
     const baseUrl = new URL("/api/azure", "http://localhost:3000");
     baseUrl.searchParams.set("periodHours", periodHours.toString());
 
-    // Build internal request with same credentials
     const response = await fetch(baseUrl.toString(), {
       method: "GET",
       headers: {
@@ -51,9 +43,6 @@ async function fetchAzureData(
   }
 }
 
-/**
- * Fetches Harvest time entries using the same headers from the original request.
- */
 async function fetchHarvestData(
   headers: Headers,
   periodHours: number
@@ -78,9 +67,6 @@ async function fetchHarvestData(
   }
 }
 
-/**
- * Strategy to determine which data sources to fetch based on mode.
- */
 async function fetchDataByMode(
   mode: GenerationMode,
   headers: Headers,
@@ -106,7 +92,6 @@ async function fetchDataByMode(
 
     case "combined-auto":
     case "combined-custom": {
-      // Fetch both in parallel
       const [azureData, harvestData] = await Promise.all([
         hasAzureConfig ? fetchAzureData(headers, periodHours) : Promise.resolve(null),
         hasHarvestConfig ? fetchHarvestData(headers, periodHours) : Promise.resolve(null),
@@ -121,13 +106,6 @@ async function fetchDataByMode(
   return sources;
 }
 
-// ==========================================
-// Prompt Builder
-// ==========================================
-
-/**
- * Gets the appropriate system prompt based on format and period.
- */
 function getSystemPrompt(
   periodHours: number,
   reportFormat: ReportFormat,
@@ -142,9 +120,6 @@ function getSystemPrompt(
     : generateDailyPrompt(periodHours);
 }
 
-/**
- * Builds the prompt for the AI model based on available data, period, and format.
- */
 function buildPrompt(
   sources: DataSources,
   periodHours: number,
@@ -153,12 +128,10 @@ function buildPrompt(
 ): string {
   const parts: string[] = [];
 
-  // Add system prompt (custom or dynamic based on period and format)
   parts.push(getSystemPrompt(periodHours, reportFormat, customPrompt));
   parts.push("\n---\n");
   parts.push("## Dados disponíveis:\n");
 
-  // Add Azure commits if available
   if (sources.azure && sources.azure.length > 0) {
     parts.push("### Commits do Azure DevOps:\n");
     for (const commit of sources.azure) {
@@ -171,11 +144,9 @@ function buildPrompt(
     parts.push("_Nenhum commit encontrado no período._\n");
   }
 
-  // Add Harvest entries if available
   if (sources.harvest && sources.harvest.length > 0) {
     parts.push("\n### Registros de Tempo (Harvest):\n");
 
-    // Group by project
     const byProject = sources.harvest.reduce(
       (acc, entry) => {
         if (!acc[entry.project]) {
@@ -209,21 +180,11 @@ function buildPrompt(
   return parts.join("\n");
 }
 
-// ==========================================
-// Main API Handler
-// ==========================================
-
-/**
- * POST /api/generate
- * Generates a Daily Scrum report using AI based on Azure DevOps and/or Harvest data.
- */
 export async function POST(request: NextRequest): Promise<NextResponse<GenerateDailyResponse>> {
   try {
-    // Parse request body
     const body: GenerateDailyRequest = await request.json();
     const { mode, customPrompt, periodHours = 24, reportFormat = "standard" } = body;
 
-    // Validate mode
     if (!mode) {
       return NextResponse.json(
         {
@@ -234,7 +195,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       );
     }
 
-    // Get Gemini API key from environment variable
     const geminiApiKey = process.env.GEMINI_API_KEY;
 
     if (!geminiApiKey) {
@@ -249,10 +209,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       );
     }
 
-    // Fetch data based on mode
     const sources = await fetchDataByMode(mode, request.headers, periodHours);
 
-    // Check if we have any data
     const hasAzureData = sources.azure && sources.azure.length > 0;
     const hasHarvestData = sources.harvest && sources.harvest.length > 0;
 
@@ -268,7 +226,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       );
     }
 
-    // Build prompt with period and format context
     const prompt = buildPrompt(
       sources,
       periodHours,
@@ -276,11 +233,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       mode === "combined-custom" ? customPrompt : undefined
     );
 
-    // Initialize Gemini AI
     const genAI = new GoogleGenerativeAI(geminiApiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    // Generate content
     const result = await model.generateContent(prompt);
     const response = result.response;
     const daily = response.text();
@@ -293,7 +248,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
   } catch (error) {
     console.error("Generate API Error:", error);
 
-    // Handle specific Gemini errors
     if (error instanceof Error) {
       if (error.message.includes("API_KEY_INVALID")) {
         return NextResponse.json(

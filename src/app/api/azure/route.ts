@@ -2,21 +2,14 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import type { AzureCommitsResponse, AzureDataResponse, ParsedCommit } from "@/types";
 
-/**
- * GET /api/azure
- * Fetches commits from Azure DevOps for the authenticated user.
- * Credentials are passed via HTTP headers for security.
- */
 export async function GET(request: NextRequest): Promise<NextResponse<AzureDataResponse>> {
   try {
-    // Extract credentials from headers
     const azurePat = request.headers.get("x-azure-pat");
     const organization = request.headers.get("x-azure-organization");
     const project = request.headers.get("x-azure-project");
     const repository = request.headers.get("x-azure-repository");
     const userEmail = request.headers.get("x-azure-user-email");
 
-    // Validate required headers
     if (!azurePat || !organization || !project || !repository) {
       return NextResponse.json(
         {
@@ -28,7 +21,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<AzureDataR
       );
     }
 
-    // Get date range based on period (default: 24 hours)
     const searchParams = request.nextUrl.searchParams;
     const periodHours = parseInt(searchParams.get("periodHours") || "24", 10);
 
@@ -39,7 +31,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<AzureDataR
     fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
     fromDate.setHours(0, 0, 0, 0);
 
-    // Build Azure DevOps API URL
     const baseUrl = `https://dev.azure.com/${encodeURIComponent(organization)}/${encodeURIComponent(project)}/_apis/git/repositories/${encodeURIComponent(repository)}/commits`;
 
     const params = new URLSearchParams({
@@ -49,17 +40,14 @@ export async function GET(request: NextRequest): Promise<NextResponse<AzureDataR
       $top: "100",
     });
 
-    // Add author filter if email is provided
     if (userEmail) {
       params.append("searchCriteria.author", userEmail);
     }
 
     const apiUrl = `${baseUrl}?${params.toString()}`;
 
-    // Create Basic Auth header
     const authHeader = `Basic ${Buffer.from(`:${azurePat}`).toString("base64")}`;
 
-    // Fetch commits from Azure DevOps
     const response = await fetch(apiUrl, {
       method: "GET",
       headers: {
@@ -105,10 +93,9 @@ export async function GET(request: NextRequest): Promise<NextResponse<AzureDataR
 
     const data: AzureCommitsResponse = await response.json();
 
-    // Parse commits into a cleaner format
     const commits: ParsedCommit[] = data.value.map((commit) => ({
       id: commit.commitId.substring(0, 8),
-      message: commit.comment.split("\n")[0], // First line only
+      message: commit.comment.split("\n")[0],
       author: commit.author.name,
       date: new Date(commit.author.date).toLocaleString("pt-BR"),
       changes: `+${commit.changeCounts?.Add || 0} ~${commit.changeCounts?.Edit || 0} -${commit.changeCounts?.Delete || 0}`,

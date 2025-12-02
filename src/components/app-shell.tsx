@@ -7,13 +7,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserConfig } from "@/hooks/use-user-config";
 
-/**
- * Main application component with tab navigation.
- */
 export function AppShell() {
   const { isHydrated, validation } = useUserConfig();
 
-  // Show loading while hydrating from LocalStorage
   if (!isHydrated) {
     return (
       <div className="min-h-screen bg-background">
@@ -34,13 +30,10 @@ export function AppShell() {
     );
   }
 
-  // Check if first-time user (no config)
-  const isFirstTime =
-    !validation.hasAzureConfig && !validation.hasHarvestConfig;
+  const isFirstTime = !validation.hasAzureConfig && !validation.hasHarvestConfig;
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-3">
@@ -48,12 +41,8 @@ export function AppShell() {
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold tracking-tight">
-                Auto Daily
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                Gerador de Daily Scrum com IA
-              </p>
+              <h1 className="text-lg font-semibold tracking-tight">Auto Daily</h1>
+              <p className="text-xs text-muted-foreground">Gerador de Daily Scrum com IA</p>
             </div>
           </div>
 
@@ -69,12 +58,8 @@ export function AppShell() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <Tabs
-          defaultValue={isFirstTime ? "settings" : "generator"}
-          className="space-y-6"
-        >
+        <Tabs defaultValue={isFirstTime ? "settings" : "generator"} className="space-y-6">
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="generator" className="gap-2">
               <Sparkles className="h-4 w-4" />
@@ -99,12 +84,11 @@ export function AppShell() {
         </Tabs>
       </main>
 
-      {/* Footer */}
       <footer className="border-t py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>
-            Auto Daily App — Gerado com <span className="text-primary">♥</span>{" "}
-            usando Next.js, Tailwind e Google Gemini AI
+            Auto Daily App — Gerado com <span className="text-primary">♥</span> usando Next.js,
+            Tailwind e Google Gemini AI
           </p>
           <p className="mt-1 text-xs">
             Suas credenciais são armazenadas localmente no seu navegador

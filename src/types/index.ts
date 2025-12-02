@@ -1,54 +1,23 @@
-// ==========================================
-// Auto Daily App - Type Definitions
-// ==========================================
-
-// ==========================================
-// User Configuration Types
-// ==========================================
-
-/**
- * User configuration stored in LocalStorage.
- * Contains all credentials and settings for Azure DevOps and Harvest integrations.
- */
 export interface UserConfig {
-  // Azure DevOps Configuration
   azurePat: string;
   azureOrganization: string;
   azureProject: string;
   azureRepositoryId: string;
   azureUserEmail: string;
 
-  // Harvest Configuration
   harvestAccountId: string;
   harvestToken: string;
 
-  // App Settings
   defaultMode: GenerationMode;
   language: "pt-BR" | "en-US";
 }
 
-/**
- * Partial user config for updates.
- */
 export type PartialUserConfig = Partial<UserConfig>;
 
-// ==========================================
-// Generation Mode Types
-// ==========================================
-
-/**
- * Available generation modes for the Daily Scrum report.
- */
 export type GenerationMode = "azure-only" | "harvest-only" | "combined-auto" | "combined-custom";
 
-/**
- * Available time periods for data fetching.
- */
 export type TimePeriod = "24h" | "48h" | "72h" | "7d" | "14d" | "30d";
 
-/**
- * Mode configuration with labels.
- */
 export interface ModeOption {
   value: GenerationMode;
   label: string;
@@ -57,9 +26,6 @@ export interface ModeOption {
   requiresHarvest: boolean;
 }
 
-/**
- * Period configuration with labels.
- */
 export interface PeriodOption {
   value: TimePeriod;
   label: string;
@@ -68,14 +34,8 @@ export interface PeriodOption {
   icon: string;
 }
 
-/**
- * Available report formats.
- */
 export type ReportFormat = "standard" | "professional";
 
-/**
- * Report format configuration with labels.
- */
 export interface ReportFormatOption {
   value: ReportFormat;
   label: string;
@@ -83,13 +43,6 @@ export interface ReportFormatOption {
   icon: string;
 }
 
-// ==========================================
-// Azure DevOps Types
-// ==========================================
-
-/**
- * Azure DevOps commit information.
- */
 export interface AzureCommit {
   commitId: string;
   comment: string;
@@ -106,17 +59,11 @@ export interface AzureCommit {
   url: string;
 }
 
-/**
- * Azure DevOps API response for commits.
- */
 export interface AzureCommitsResponse {
   count: number;
   value: AzureCommit[];
 }
 
-/**
- * Parsed commit data for display.
- */
 export interface ParsedCommit {
   id: string;
   message: string;
@@ -125,13 +72,6 @@ export interface ParsedCommit {
   changes: string;
 }
 
-// ==========================================
-// Harvest Types
-// ==========================================
-
-/**
- * Harvest time entry.
- */
 export interface HarvestTimeEntry {
   id: number;
   spent_date: string;
@@ -173,9 +113,6 @@ export interface HarvestTimeEntry {
   };
 }
 
-/**
- * Harvest API response for time entries.
- */
 export interface HarvestTimeEntriesResponse {
   time_entries: HarvestTimeEntry[];
   per_page: number;
@@ -186,9 +123,6 @@ export interface HarvestTimeEntriesResponse {
   page: number;
 }
 
-/**
- * Parsed time entry for display.
- */
 export interface ParsedTimeEntry {
   id: number;
   project: string;
@@ -199,25 +133,15 @@ export interface ParsedTimeEntry {
   date: string;
 }
 
-// ==========================================
-// API Request/Response Types
-// ==========================================
-
-/**
- * Generate daily request payload.
- */
 export interface GenerateDailyRequest {
   mode: GenerationMode;
   customPrompt?: string;
-  date?: string; // ISO date string, defaults to today
-  period?: TimePeriod; // Time period for data fetching
-  periodHours?: number; // Number of hours to look back
-  reportFormat?: ReportFormat; // Report format (standard or professional)
+  date?: string;
+  period?: TimePeriod;
+  periodHours?: number;
+  reportFormat?: ReportFormat;
 }
 
-/**
- * Generate daily response.
- */
 export interface GenerateDailyResponse {
   success: boolean;
   daily?: string;
@@ -229,9 +153,6 @@ export interface GenerateDailyResponse {
   };
 }
 
-/**
- * Azure data fetch response.
- */
 export interface AzureDataResponse {
   success: boolean;
   commits?: ParsedCommit[];
@@ -239,9 +160,6 @@ export interface AzureDataResponse {
   details?: string;
 }
 
-/**
- * Harvest data fetch response.
- */
 export interface HarvestDataResponse {
   success: boolean;
   entries?: ParsedTimeEntry[];
@@ -249,21 +167,11 @@ export interface HarvestDataResponse {
   details?: string;
 }
 
-// ==========================================
-// UI State Types
-// ==========================================
-
-/**
- * Loading state for async operations.
- */
 export interface LoadingState {
   isLoading: boolean;
   message?: string;
 }
 
-/**
- * Result state for daily generation.
- */
 export interface DailyResult {
   content: string;
   generatedAt: string;
@@ -274,21 +182,11 @@ export interface DailyResult {
   };
 }
 
-// ==========================================
-// Validation Types
-// ==========================================
-
-/**
- * Validation result for a single field.
- */
 export interface FieldValidation {
   isValid: boolean;
   message?: string;
 }
 
-/**
- * Validation result for the entire config.
- */
 export interface ConfigValidation {
   isValid: boolean;
   errors: Record<keyof UserConfig, string | undefined>;

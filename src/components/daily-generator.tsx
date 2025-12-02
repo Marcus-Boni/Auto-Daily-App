@@ -17,13 +17,7 @@ import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -35,12 +29,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserConfig } from "@/hooks/use-user-config";
-import {
-  API_ENDPOINTS,
-  GENERATION_MODES,
-  REPORT_FORMATS,
-  TIME_PERIODS,
-} from "@/lib/constants";
+import { API_ENDPOINTS, GENERATION_MODES, REPORT_FORMATS, TIME_PERIODS } from "@/lib/constants";
 import type {
   DailyResult,
   GenerateDailyResponse,
@@ -49,9 +38,6 @@ import type {
   TimePeriod,
 } from "@/types";
 
-/**
- * DailyGenerator component for generating Daily Scrum reports.
- */
 export function DailyGenerator() {
   const { config, validation, hasRequiredConfig, getHeaders } = useUserConfig();
 
@@ -150,7 +136,6 @@ export function DailyGenerator() {
 
   return (
     <div className="space-y-6">
-      {/* Mode & Period Selection */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -162,37 +147,24 @@ export function DailyGenerator() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Mode and Period Grid */}
           <div className="grid gap-4 sm:grid-cols-2">
-            {/* Mode Selection */}
             <div className="space-y-2">
               <Label htmlFor="mode" className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 Fonte de Dados
               </Label>
-              <Select
-                value={mode}
-                onValueChange={(v) => setMode(v as GenerationMode)}
-              >
+              <Select value={mode} onValueChange={(v) => setMode(v as GenerationMode)}>
                 <SelectTrigger id="mode" className="w-full h-auto py-2">
                   <SelectValue placeholder="Selecione um modo">
-                    {selectedMode && (
-                      <span className="font-medium">{selectedMode.label}</span>
-                    )}
+                    {selectedMode && <span className="font-medium">{selectedMode.label}</span>}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {GENERATION_MODES.map((m) => (
-                    <SelectItem
-                      key={m.value}
-                      value={m.value}
-                      className="py-2.5"
-                    >
+                    <SelectItem key={m.value} value={m.value} className="py-2.5">
                       <div className="flex flex-col items-start gap-0.5">
                         <span className="font-medium">{m.label}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {m.description}
-                        </span>
+                        <span className="text-xs text-muted-foreground">{m.description}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -200,42 +172,30 @@ export function DailyGenerator() {
               </Select>
             </div>
 
-            {/* Period Selection */}
             <div className="space-y-2">
               <Label htmlFor="period" className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 Período
               </Label>
-              <Select
-                value={period}
-                onValueChange={(v) => setPeriod(v as TimePeriod)}
-              >
+              <Select value={period} onValueChange={(v) => setPeriod(v as TimePeriod)}>
                 <SelectTrigger id="period" className="w-full h-auto py-2">
                   <SelectValue placeholder="Selecione o período">
                     {selectedPeriod && (
                       <div className="flex items-center gap-2">
                         <span className="text-base">{selectedPeriod.icon}</span>
-                        <span className="font-medium">
-                          {selectedPeriod.label}
-                        </span>
+                        <span className="font-medium">{selectedPeriod.label}</span>
                       </div>
                     )}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {TIME_PERIODS.map((p) => (
-                    <SelectItem
-                      key={p.value}
-                      value={p.value}
-                      className="py-2.5"
-                    >
+                    <SelectItem key={p.value} value={p.value} className="py-2.5">
                       <div className="flex items-center gap-2">
                         <span className="text-base">{p.icon}</span>
                         <div className="flex flex-col items-start gap-0.5">
                           <span className="font-medium">{p.label}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {p.description}
-                          </span>
+                          <span className="text-xs text-muted-foreground">{p.description}</span>
                         </div>
                       </div>
                     </SelectItem>
@@ -245,7 +205,6 @@ export function DailyGenerator() {
             </div>
           </div>
 
-          {/* Report Format Selection */}
           <div className="space-y-3">
             <Label className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-muted-foreground" />
@@ -282,15 +241,12 @@ export function DailyGenerator() {
                       </div>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground pl-6">
-                    {format.description}
-                  </p>
+                  <p className="text-xs text-muted-foreground pl-6">{format.description}</p>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Selected config summary */}
           <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2">
             {selectedPeriod && (
               <>
@@ -311,7 +267,6 @@ export function DailyGenerator() {
             )}
           </div>
 
-          {/* Custom prompt for combined-custom mode */}
           {mode === "combined-custom" && (
             <div className="space-y-2">
               <Label htmlFor="custom-prompt">Instrução Adicional</Label>
@@ -328,7 +283,6 @@ export function DailyGenerator() {
             </div>
           )}
 
-          {/* Missing requirements warning */}
           {missingRequirements.length > 0 && (
             <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-3">
               <div className="flex items-start gap-2">
@@ -338,15 +292,13 @@ export function DailyGenerator() {
                     Configuração Incompleta
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Configure nas Configurações:{" "}
-                    {missingRequirements.join(", ")}
+                    Configure nas Configurações: {missingRequirements.join(", ")}
                   </p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Generate Button */}
           <Button
             onClick={handleGenerate}
             disabled={!canGenerate || isLoading}
@@ -368,7 +320,6 @@ export function DailyGenerator() {
         </CardContent>
       </Card>
 
-      {/* Loading Skeleton */}
       {isLoading && (
         <Card>
           <CardHeader>
@@ -386,16 +337,13 @@ export function DailyGenerator() {
         </Card>
       )}
 
-      {/* Error Display */}
       {error && !isLoading && (
         <Card className="border-destructive/50">
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
               <div>
-                <p className="font-medium text-destructive">
-                  Erro ao gerar Daily
-                </p>
+                <p className="font-medium text-destructive">Erro ao gerar Daily</p>
                 <p className="text-sm text-muted-foreground">{error}</p>
               </div>
             </div>
@@ -403,7 +351,6 @@ export function DailyGenerator() {
         </Card>
       )}
 
-      {/* Result Display */}
       {result && !isLoading && (
         <Card>
           <CardHeader>
@@ -418,12 +365,7 @@ export function DailyGenerator() {
                   {new Date(result.generatedAt).toLocaleString("pt-BR")}
                 </CardDescription>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopy}
-                className="gap-2"
-              >
+              <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2">
                 {copied ? (
                   <>
                     <Check className="h-4 w-4 text-green-500" />
@@ -439,7 +381,6 @@ export function DailyGenerator() {
             </div>
           </CardHeader>
           <CardContent>
-            {/* Source badges */}
             <div className="flex flex-wrap gap-2 mb-4">
               {result.sources?.azure && result.sources.azure.length > 0 && (
                 <Badge variant="secondary" className="gap-1">
@@ -455,7 +396,6 @@ export function DailyGenerator() {
               )}
             </div>
 
-            {/* Markdown content */}
             <div className="prose prose-sm dark:prose-invert max-w-none rounded-lg bg-muted/30 p-4">
               <ReactMarkdown>{result.content}</ReactMarkdown>
             </div>
@@ -463,7 +403,6 @@ export function DailyGenerator() {
         </Card>
       )}
 
-      {/* Empty state */}
       {!result && !isLoading && !error && (
         <Card className="border-dashed">
           <CardContent className="pt-6">
@@ -471,12 +410,10 @@ export function DailyGenerator() {
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
                 <Sparkles className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="font-semibold text-lg">
-                Pronto para gerar seu Daily
-              </h3>
+              <h3 className="font-semibold text-lg">Pronto para gerar seu Daily</h3>
               <p className="text-sm text-muted-foreground max-w-sm mt-1">
-                Selecione o modo desejado e clique em &quot;Gerar Daily
-                Scrum&quot; para criar seu relatório automaticamente
+                Selecione o modo desejado e clique em &quot;Gerar Daily Scrum&quot; para criar seu
+                relatório automaticamente
               </p>
             </div>
           </CardContent>

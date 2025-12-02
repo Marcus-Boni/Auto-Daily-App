@@ -2,18 +2,11 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import type { HarvestDataResponse, HarvestTimeEntriesResponse, ParsedTimeEntry } from "@/types";
 
-/**
- * GET /api/harvest
- * Fetches time entries from Harvest for the authenticated user.
- * Credentials are passed via HTTP headers for security.
- */
 export async function GET(request: NextRequest): Promise<NextResponse<HarvestDataResponse>> {
   try {
-    // Extract credentials from headers
     const harvestToken = request.headers.get("x-harvest-token");
     const accountId = request.headers.get("x-harvest-account-id");
 
-    // Validate required headers
     if (!harvestToken || !accountId) {
       return NextResponse.json(
         {
@@ -25,7 +18,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<HarvestDat
       );
     }
 
-    // Get date range based on period (default: 24 hours)
     const searchParams = request.nextUrl.searchParams;
     const periodHours = parseInt(searchParams.get("periodHours") || "24", 10);
 
@@ -33,12 +25,10 @@ export async function GET(request: NextRequest): Promise<NextResponse<HarvestDat
     const fromDate = new Date();
     fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
 
-    // Format dates as YYYY-MM-DD
     const formatDate = (date: Date): string => {
       return date.toISOString().split("T")[0];
     };
 
-    // Build Harvest API URL
     const baseUrl = "https://api.harvestapp.com/v2/time_entries";
     const params = new URLSearchParams({
       from: formatDate(fromDate),
@@ -47,7 +37,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<HarvestDat
 
     const apiUrl = `${baseUrl}?${params.toString()}`;
 
-    // Fetch time entries from Harvest
     const response = await fetch(apiUrl, {
       method: "GET",
       headers: {
@@ -95,7 +84,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<HarvestDat
 
     const data: HarvestTimeEntriesResponse = await response.json();
 
-    // Parse time entries into a cleaner format
     const entries: ParsedTimeEntry[] = data.time_entries.map((entry) => ({
       id: entry.id,
       project: entry.project.name,
