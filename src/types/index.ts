@@ -22,9 +22,6 @@ export interface UserConfig {
   harvestAccountId: string;
   harvestToken: string;
 
-  // Google Gemini Configuration
-  geminiApiKey: string;
-
   // App Settings
   defaultMode: GenerationMode;
   language: "pt-BR" | "en-US";

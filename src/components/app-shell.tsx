@@ -35,7 +35,8 @@ export function AppShell() {
   }
 
   // Check if first-time user (no config)
-  const isFirstTime = !validation.hasGeminiConfig;
+  const isFirstTime =
+    !validation.hasAzureConfig && !validation.hasHarvestConfig;
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,8 +83,8 @@ export function AppShell() {
             <TabsTrigger value="settings" className="gap-2">
               <Settings className="h-4 w-4" />
               Configurações
-              {!validation.hasGeminiConfig && (
-                <span className="ml-1 flex h-2 w-2 rounded-full bg-destructive" />
+              {!validation.hasAzureConfig && !validation.hasHarvestConfig && (
+                <span className="ml-1 flex h-2 w-2 rounded-full bg-yellow-500" />
               )}
             </TabsTrigger>
           </TabsList>

@@ -234,17 +234,18 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       );
     }
 
-    // Get Gemini API key from headers
-    const geminiApiKey = request.headers.get("x-gemini-api-key");
+    // Get Gemini API key from environment variable
+    const geminiApiKey = process.env.GEMINI_API_KEY;
 
     if (!geminiApiKey) {
+      console.error("GEMINI_API_KEY environment variable is not configured");
       return NextResponse.json(
         {
           success: false,
-          error: "API Key do Gemini não configurada",
-          details: "Configure a API Key nas configurações do aplicativo",
+          error: "Serviço de IA indisponível",
+          details: "Entre em contato com o administrador do sistema",
         },
-        { status: 400 }
+        { status: 503 }
       );
     }
 

@@ -142,9 +142,6 @@ export function DailyGenerator() {
     if (selectedMode?.requiresHarvest && !validation.hasHarvestConfig) {
       requirements.push("Harvest");
     }
-    if (!validation.hasGeminiConfig) {
-      requirements.push("Gemini AI");
-    }
 
     return requirements;
   };

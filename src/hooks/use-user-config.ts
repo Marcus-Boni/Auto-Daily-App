@@ -20,9 +20,6 @@ const DEFAULT_CONFIG: UserConfig = {
   harvestAccountId: "",
   harvestToken: "",
 
-  // Gemini
-  geminiApiKey: "",
-
   // App Settings
   defaultMode: "combined-auto",
   language: "pt-BR",
@@ -60,7 +57,6 @@ function validateConfig(config: UserConfig): ConfigValidation {
     azureUserEmail: undefined,
     harvestAccountId: undefined,
     harvestToken: undefined,
-    geminiApiKey: undefined,
     defaultMode: undefined,
     language: undefined,
   };
@@ -96,22 +92,16 @@ function validateConfig(config: UserConfig): ConfigValidation {
 
   const hasHarvestConfig = hasHarvestAccount && hasHarvestToken;
 
-  // Validate Gemini config
-  const hasGeminiConfig = config.geminiApiKey.length > 0;
-
-  if (!hasGeminiConfig) {
-    errors.geminiApiKey = "API Key do Gemini é obrigatória para gerar dailies";
-  }
-
   // Overall validation
-  const isValid = Object.values(errors).every((e) => e === undefined) && hasGeminiConfig;
+  const isValid = Object.values(errors).every((e) => e === undefined);
 
   return {
     isValid,
     errors,
     hasAzureConfig,
     hasHarvestConfig,
-    hasGeminiConfig,
+    // Gemini is always available (server-side API key)
+    hasGeminiConfig: true,
   };
 }
 
@@ -141,15 +131,12 @@ export const useUserConfigStore = create<UserConfigStore>()(
 
         switch (mode) {
           case "azure-only":
-            return validation.hasAzureConfig && validation.hasGeminiConfig;
+            return validation.hasAzureConfig;
           case "harvest-only":
-            return validation.hasHarvestConfig && validation.hasGeminiConfig;
+            return validation.hasHarvestConfig;
           case "combined-auto":
           case "combined-custom":
-            return (
-              (validation.hasAzureConfig || validation.hasHarvestConfig) &&
-              validation.hasGeminiConfig
-            );
+            return validation.hasAzureConfig || validation.hasHarvestConfig;
           default:
             return false;
         }
@@ -165,7 +152,6 @@ export const useUserConfigStore = create<UserConfigStore>()(
           "x-azure-user-email": config.azureUserEmail,
           "x-harvest-account-id": config.harvestAccountId,
           "x-harvest-token": config.harvestToken,
-          "x-gemini-api-key": config.geminiApiKey,
         };
       },
     }),

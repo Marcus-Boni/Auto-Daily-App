@@ -373,15 +373,4 @@ export const TUTORIALS = {
     ],
     warning: "⚠️ Anote o Account ID junto com o Token!",
   },
-  geminiApiKey: {
-    title: "Como obter a API Key do Google Gemini",
-    steps: [
-      "Acesse https://aistudio.google.com/app/apikey",
-      "Faça login com sua conta Google",
-      "Clique em 'Create API Key'",
-      "Selecione ou crie um projeto do Google Cloud",
-      "Copie a API Key gerada",
-    ],
-    warning: "⚠️ A API Key é gratuita com limites generosos. Mantenha-a segura!",
-  },
 } as const;
