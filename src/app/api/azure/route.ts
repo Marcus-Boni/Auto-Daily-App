@@ -10,6 +10,16 @@ export async function GET(request: NextRequest): Promise<NextResponse<AzureDataR
   const repository = request.headers.get("x-azure-repository") || "";
   const userEmail = request.headers.get("x-azure-user-email") || "";
 
+  // Debug logging for production
+  console.log("[Azure API Route] Headers received:", {
+    hasPat: !!azurePat && azurePat.length > 0,
+    patLength: azurePat.length,
+    organization,
+    project,
+    repository,
+    userEmail: userEmail || "(not provided)",
+  });
+
   const searchParams = request.nextUrl.searchParams;
   const periodHours = parseInt(searchParams.get("periodHours") || "24", 10);
 

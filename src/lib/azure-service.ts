@@ -47,7 +47,31 @@ export async function fetchAzureCommits(
       `[Azure Service] Searching commits from ${fromDate.toISOString()} to ${toDate.toISOString()}`
     );
 
-    const baseUrl = `https://dev.azure.com/${encodeURIComponent(organization)}/${encodeURIComponent(project)}/_apis/git/repositories/${encodeURIComponent(repository)}/commits`;
+    // Log raw values for debugging
+    console.log("[Azure Service] Config values:", {
+      organization,
+      project,
+      repository,
+      userEmail: userEmail || "(none)",
+    });
+
+    // Helper function to safely decode URI components that might be double-encoded
+    // Some environments (like Azure App Service) may pre-encode header values
+    const safeEncode = (value: string): string => {
+      try {
+        // First, try to decode in case it's already encoded
+        const decoded = decodeURIComponent(value);
+        // Then encode it properly
+        return encodeURIComponent(decoded);
+      } catch {
+        // If decoding fails, the value wasn't encoded, so just encode it
+        return encodeURIComponent(value);
+      }
+    };
+
+    // The project name may contain special characters that need URL encoding
+    // We need to encode each path segment for the URL
+    const baseUrl = `https://dev.azure.com/${safeEncode(organization)}/${safeEncode(project)}/_apis/git/repositories/${safeEncode(repository)}/commits`;
 
     const params = new URLSearchParams({
       "api-version": "7.1",
@@ -76,10 +100,10 @@ export async function fetchAzureCommits(
 
     // Check content type before trying to parse JSON
     const contentType = response.headers.get("content-type") || "";
-    
+
     if (!response.ok) {
       let errorDetails = `Status: ${response.status}`;
-      
+
       if (contentType.includes("application/json")) {
         try {
           const errorData = await response.json();
@@ -91,7 +115,7 @@ export async function fetchAzureCommits(
         // Response is HTML or other format
         errorDetails = `Server returned non-JSON response (${contentType})`;
       }
-      
+
       console.error(`[Azure Service] Error ${response.status}: ${errorDetails}`);
 
       if (response.status === 401) {
