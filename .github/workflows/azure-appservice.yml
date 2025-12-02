@@ -61,6 +61,7 @@ jobs:
           # Create standalone output for deployment
           mkdir -p deploy
           cp -r .next/standalone/* ./deploy/
+          mkdir -p ./deploy/.next
           cp -r .next/static ./deploy/.next/static
           cp -r public ./deploy/public
           # Create zip for deployment
