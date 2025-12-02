@@ -46,3 +46,7 @@ next-env.d.ts
 # Azure logs
 azure-logs/
 azure-logs.zip
+
+# Azure logs
+azure-logs*
+*.zip
