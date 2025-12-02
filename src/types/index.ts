@@ -71,6 +71,21 @@ export interface PeriodOption {
   icon: string;
 }
 
+/**
+ * Available report formats.
+ */
+export type ReportFormat = "standard" | "professional";
+
+/**
+ * Report format configuration with labels.
+ */
+export interface ReportFormatOption {
+  value: ReportFormat;
+  label: string;
+  description: string;
+  icon: string;
+}
+
 // ==========================================
 // Azure DevOps Types
 // ==========================================
@@ -200,6 +215,7 @@ export interface GenerateDailyRequest {
   date?: string; // ISO date string, defaults to today
   period?: TimePeriod; // Time period for data fetching
   periodHours?: number; // Number of hours to look back
+  reportFormat?: ReportFormat; // Report format (standard or professional)
 }
 
 /**

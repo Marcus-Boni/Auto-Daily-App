@@ -1,4 +1,22 @@
-import type { ModeOption, PeriodOption } from "@/types";
+import type { ModeOption, PeriodOption, ReportFormatOption } from "@/types";
+
+/**
+ * Available report formats.
+ */
+export const REPORT_FORMATS: ReportFormatOption[] = [
+  {
+    value: "standard",
+    label: "Formato Padrão",
+    description: "O que fiz, O que vou fazer, Impedimentos",
+    icon: "📋",
+  },
+  {
+    value: "professional",
+    label: "Relatório Profissional",
+    description: "Resumo executivo, conciso e organizado",
+    icon: "💼",
+  },
+];
 
 /**
  * Available time periods for data fetching.
@@ -97,7 +115,95 @@ export const API_ENDPOINTS = {
 } as const;
 
 /**
- * Generates dynamic prompt based on the selected period.
+ * Generates a professional, concise report prompt based on the selected period.
+ * This format is more executive-friendly and focuses on impact and results.
+ */
+export function generateProfessionalPrompt(periodHours: number): string {
+  // Determine the appropriate time context based on period
+  const getTimeContext = (): {
+    timeDescription: string;
+    reportType: string;
+  } => {
+    if (periodHours <= 24) {
+      return {
+        timeDescription: "nas últimas 24 horas",
+        reportType: "Relatório Diário de Atividades",
+      };
+    }
+    if (periodHours <= 48) {
+      return {
+        timeDescription: "nos últimos 2 dias",
+        reportType: "Relatório de Atividades",
+      };
+    }
+    if (periodHours <= 72) {
+      return {
+        timeDescription: "nos últimos 3 dias",
+        reportType: "Relatório de Atividades",
+      };
+    }
+    if (periodHours <= 168) {
+      return {
+        timeDescription: "na última semana",
+        reportType: "Relatório Semanal",
+      };
+    }
+    if (periodHours <= 336) {
+      return {
+        timeDescription: "nas últimas 2 semanas",
+        reportType: "Relatório de Sprint",
+      };
+    }
+    return {
+      timeDescription: "no último mês",
+      reportType: "Relatório Mensal Executivo",
+    };
+  };
+
+  const { timeDescription, reportType } = getTimeContext();
+
+  return `
+Você é um assistente especializado em criar relatórios profissionais e executivos para desenvolvedores.
+Com base nos dados fornecidos ${timeDescription}, gere um ${reportType} em português brasileiro.
+
+**DIRETRIZES DO RELATÓRIO:**
+
+1. **Formato**: Relatório executivo, conciso e orientado a resultados
+2. **Tom**: Profissional, objetivo e direto ao ponto
+3. **Foco**: Impacto, entregas e progresso mensurável
+
+**ESTRUTURA DO RELATÓRIO:**
+
+## 📊 Resumo Executivo
+Um parágrafo breve (2-3 frases) resumindo as principais atividades e conquistas do período.
+
+## ✅ Entregas e Progresso
+- Liste as atividades concluídas de forma clara e mensurável
+- Agrupe por projeto ou área quando fizer sentido
+- Destaque o impacto de cada entrega quando possível
+- Use métricas quando disponíveis (ex: "3 features implementadas", "5 bugs corrigidos")
+
+## 🔄 Em Andamento
+- Liste brevemente itens em progresso (se aplicável)
+- Indique o status atual de cada item
+
+## 📝 Observações
+- Pontos relevantes que merecem atenção
+- Apenas inclua se houver algo significativo a mencionar
+- Caso não haja, omita esta seção
+
+**REGRAS:**
+- Seja conciso: prefira frases curtas e diretas
+- Evite jargões técnicos desnecessários
+- Não invente informações
+- Use bullet points para facilitar a leitura
+- Mantenha o relatório em no máximo 300 palavras
+${periodHours > 168 ? "- Inclua insights sobre produtividade e tendências" : ""}
+`;
+}
+
+/**
+ * Generates dynamic prompt based on the selected period (Standard format).
  * Adjusts the language and context based on timeframe.
  */
 export function generateDailyPrompt(periodHours: number): string {

@@ -2,8 +2,10 @@
 
 import {
   AlertCircle,
+  Briefcase,
   Calendar,
   Check,
+  ClipboardList,
   Clock,
   Copy,
   FileText,
@@ -33,11 +35,17 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserConfig } from "@/hooks/use-user-config";
-import { API_ENDPOINTS, GENERATION_MODES, TIME_PERIODS } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  GENERATION_MODES,
+  REPORT_FORMATS,
+  TIME_PERIODS,
+} from "@/lib/constants";
 import type {
   DailyResult,
   GenerateDailyResponse,
   GenerationMode,
+  ReportFormat,
   TimePeriod,
 } from "@/types";
 
@@ -49,6 +57,7 @@ export function DailyGenerator() {
 
   const [mode, setMode] = useState<GenerationMode>(config.defaultMode);
   const [period, setPeriod] = useState<TimePeriod>("24h");
+  const [reportFormat, setReportFormat] = useState<ReportFormat>("standard");
   const [customPrompt, setCustomPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DailyResult | null>(null);
@@ -57,6 +66,7 @@ export function DailyGenerator() {
 
   const selectedMode = GENERATION_MODES.find((m) => m.value === mode);
   const selectedPeriod = TIME_PERIODS.find((p) => p.value === period);
+  const selectedFormat = REPORT_FORMATS.find((f) => f.value === reportFormat);
   const canGenerate = hasRequiredConfig(mode);
 
   const handleGenerate = async () => {
@@ -80,6 +90,7 @@ export function DailyGenerator() {
           mode,
           period,
           periodHours: selectedPeriod?.hours ?? 24,
+          reportFormat,
           customPrompt: mode === "combined-custom" ? customPrompt : undefined,
         }),
       });
@@ -237,22 +248,71 @@ export function DailyGenerator() {
             </div>
           </div>
 
-          {/* Selected period info badge */}
-          {selectedPeriod && (
-            <div className="flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2">
-              <span className="text-lg">{selectedPeriod.icon}</span>
-              <div className="flex-1">
-                <p className="text-sm font-medium">{selectedPeriod.label}</p>
-                <p className="text-xs text-muted-foreground">
-                  {selectedPeriod.description}
-                </p>
-              </div>
-              <Badge variant="outline" className="gap-1">
-                <Clock className="h-3 w-3" />
-                {selectedPeriod.hours}h
-              </Badge>
+          {/* Report Format Selection */}
+          <div className="space-y-3">
+            <Label className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              Formato do Relatório
+            </Label>
+            <div className="grid grid-cols-2 gap-3">
+              {REPORT_FORMATS.map((format) => (
+                <button
+                  key={format.value}
+                  type="button"
+                  onClick={() => setReportFormat(format.value)}
+                  className={`
+                    relative flex flex-col items-start gap-1 rounded-lg border p-4 text-left transition-all
+                    hover:border-primary/50 hover:bg-accent/50
+                    ${
+                      reportFormat === format.value
+                        ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                        : "border-border bg-background"
+                    }
+                  `}
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {format.value === "standard" ? (
+                        <ClipboardList className="h-4 w-4 text-primary" />
+                      ) : (
+                        <Briefcase className="h-4 w-4 text-primary" />
+                      )}
+                      <span className="font-medium">{format.label}</span>
+                    </div>
+                    {reportFormat === format.value && (
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
+                        <Check className="h-3 w-3 text-primary-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground pl-6">
+                    {format.description}
+                  </p>
+                </button>
+              ))}
             </div>
-          )}
+          </div>
+
+          {/* Selected config summary */}
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2">
+            {selectedPeriod && (
+              <>
+                <span className="text-lg">{selectedPeriod.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">
+                    {selectedPeriod.label} • {selectedFormat?.label}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {selectedFormat?.description}
+                  </p>
+                </div>
+                <Badge variant="outline" className="gap-1 shrink-0">
+                  <Clock className="h-3 w-3" />
+                  {selectedPeriod.hours}h
+                </Badge>
+              </>
+            )}
+          </div>
 
           {/* Custom prompt for combined-custom mode */}
           {mode === "combined-custom" && (

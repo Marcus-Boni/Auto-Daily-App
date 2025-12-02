@@ -1,13 +1,14 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { generateDailyPrompt } from "@/lib/constants";
+import { generateDailyPrompt, generateProfessionalPrompt } from "@/lib/constants";
 import type {
   GenerateDailyRequest,
   GenerateDailyResponse,
   GenerationMode,
   ParsedCommit,
   ParsedTimeEntry,
+  ReportFormat,
 } from "@/types";
 
 // ==========================================
@@ -125,13 +126,35 @@ async function fetchDataByMode(
 // ==========================================
 
 /**
- * Builds the prompt for the AI model based on available data and period.
+ * Gets the appropriate system prompt based on format and period.
  */
-function buildPrompt(sources: DataSources, periodHours: number, customPrompt?: string): string {
+function getSystemPrompt(
+  periodHours: number,
+  reportFormat: ReportFormat,
+  customPrompt?: string
+): string {
+  if (customPrompt) {
+    return customPrompt;
+  }
+
+  return reportFormat === "professional"
+    ? generateProfessionalPrompt(periodHours)
+    : generateDailyPrompt(periodHours);
+}
+
+/**
+ * Builds the prompt for the AI model based on available data, period, and format.
+ */
+function buildPrompt(
+  sources: DataSources,
+  periodHours: number,
+  reportFormat: ReportFormat,
+  customPrompt?: string
+): string {
   const parts: string[] = [];
 
-  // Add system prompt (custom or dynamic based on period)
-  parts.push(customPrompt || generateDailyPrompt(periodHours));
+  // Add system prompt (custom or dynamic based on period and format)
+  parts.push(getSystemPrompt(periodHours, reportFormat, customPrompt));
   parts.push("\n---\n");
   parts.push("## Dados disponíveis:\n");
 
@@ -181,7 +204,7 @@ function buildPrompt(sources: DataSources, periodHours: number, customPrompt?: s
   }
 
   parts.push("\n---\n");
-  parts.push("Com base nesses dados, gere o relatório de Daily Scrum:");
+  parts.push("Com base nesses dados, gere o relatório conforme as instruções acima:");
 
   return parts.join("\n");
 }
@@ -198,7 +221,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
   try {
     // Parse request body
     const body: GenerateDailyRequest = await request.json();
-    const { mode, customPrompt, periodHours = 24 } = body;
+    const { mode, customPrompt, periodHours = 24, reportFormat = "standard" } = body;
 
     // Validate mode
     if (!mode) {
@@ -244,10 +267,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       );
     }
 
-    // Build prompt with period context
+    // Build prompt with period and format context
     const prompt = buildPrompt(
       sources,
       periodHours,
+      reportFormat,
       mode === "combined-custom" ? customPrompt : undefined
     );
 
