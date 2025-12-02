@@ -3,6 +3,7 @@
 import { Github, Settings, Sparkles } from "lucide-react";
 import { DailyGenerator } from "@/components/daily-generator";
 import { SettingsPanel } from "@/components/settings-panel";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserConfig } from "@/hooks/use-user-config";
@@ -16,7 +17,10 @@ export function AppShell() {
         <header className="border-b">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">
             <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-8 w-8 rounded-full" />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-9 w-9 rounded-full" />
+              <Skeleton className="h-9 w-9 rounded-full" />
+            </div>
           </div>
         </header>
         <main className="container mx-auto px-4 py-8">
@@ -51,15 +55,18 @@ export function AppShell() {
             </div>
           </div>
 
-          <a
-            href="https://github.com/Marcus-Boni"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-            aria-label="GitHub"
-          >
-            <Github className="h-5 w-5" />
-          </a>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <a
+              href="https://github.com/Marcus-Boni"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              aria-label="GitHub"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+          </div>
         </div>
       </header>
 
