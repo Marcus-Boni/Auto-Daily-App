@@ -70,12 +70,29 @@ export async function fetchAzureCommits(
       headers: {
         Authorization: authHeader,
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
     });
 
+    // Check content type before trying to parse JSON
+    const contentType = response.headers.get("content-type") || "";
+    
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`[Azure Service] Error ${response.status}: ${errorText}`);
+      let errorDetails = `Status: ${response.status}`;
+      
+      if (contentType.includes("application/json")) {
+        try {
+          const errorData = await response.json();
+          errorDetails = JSON.stringify(errorData);
+        } catch {
+          errorDetails = await response.text();
+        }
+      } else {
+        // Response is HTML or other format
+        errorDetails = `Server returned non-JSON response (${contentType})`;
+      }
+      
+      console.error(`[Azure Service] Error ${response.status}: ${errorDetails}`);
 
       if (response.status === 401) {
         return {
@@ -97,7 +114,17 @@ export async function fetchAzureCommits(
       return {
         success: false,
         error: "Erro ao buscar commits",
-        details: errorText,
+        details: errorDetails,
+      };
+    }
+
+    // Verify response is JSON before parsing
+    if (!contentType.includes("application/json")) {
+      console.error(`[Azure Service] Unexpected content type: ${contentType}`);
+      return {
+        success: false,
+        error: "Resposta inesperada do Azure DevOps",
+        details: `O servidor retornou ${contentType} ao invés de JSON`,
       };
     }
 

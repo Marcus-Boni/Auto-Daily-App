@@ -1,0 +1,421 @@
+2025-12-02T02:59:19.8838922Z    _____                               
+2025-12-02T02:59:19.8841255Z   /  _  \ __________ _________   ____  
+2025-12-02T02:59:19.8841335Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-12-02T02:59:19.8841368Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-12-02T02:59:19.8841396Z \____|__  /_____ \____/ |__|    \___  >
+2025-12-02T02:59:19.8841509Z         \/      \/                  \/ 
+2025-12-02T02:59:19.8841539Z A P P   S E R V I C E   O N   L I N U X
+2025-12-02T02:59:19.8841565Z 
+2025-12-02T02:59:19.8841600Z Documentation    : http://aka.ms/webapp-linux
+2025-12-02T02:59:19.8841633Z NodeJS quickstart: https://aka.ms/node-qs
+2025-12-02T02:59:19.8848830Z NodeJS Version   : v20.19.5
+2025-12-02T02:59:19.8848891Z Instance Name    : lw1sdlwk0007MQ
+2025-12-02T02:59:19.8848991Z Instance Id      : a2fa831d16021d925a0f99f667df2ce8bca2429815f806880f0aa167f21a611f
+2025-12-02T02:59:19.8849020Z 
+2025-12-02T02:59:19.8849051Z Note: Any data outside '/home' is not persisted
+2025-12-02T02:59:26.1742635Z Starting OpenBSD Secure Shell server: sshd.
+2025-12-02T02:59:26.2062341Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-12-02T02:59:26.2718563Z Updating certificates in /etc/ssl/certs...
+2025-12-02T02:59:54.6450823Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-12-02T02:59:54.6527212Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-12-02T02:59:54.9926964Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-12-02T02:59:55.0893308Z 4 added, 0 removed; done.
+2025-12-02T02:59:55.0894234Z Running hooks in /etc/ca-certificates/update.d...
+2025-12-02T02:59:55.1124685Z done.
+2025-12-02T02:59:55.1494300Z CA certificates copied and updated successfully.
+2025-12-02T02:59:55.3625497Z Starting periodic command scheduler: cron.
+2025-12-02T02:59:55.7384537Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-12-02T02:59:55.8166021Z Could not find operation ID in manifest. Generating an operation id...
+2025-12-02T02:59:55.8166595Z Build Operation ID: 36b79ddc-05fb-467e-89f9-aacb171d956a
+2025-12-02T02:59:57.2351529Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-12-02T02:59:57.3884738Z Writing output script to '/opt/startup/startup.sh'
+2025-12-02T02:59:57.6023217Z Running #!/bin/sh
+2025-12-02T02:59:57.6028238Z 
+2025-12-02T02:59:57.6028374Z # Enter the source directory to make sure the script runs where the user expects
+2025-12-02T02:59:57.6028425Z cd "/home/site/wwwroot"
+2025-12-02T02:59:57.6028453Z 
+2025-12-02T02:59:57.6029351Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-12-02T02:59:57.6029404Z if [ -z "$PORT" ]; then
+2025-12-02T02:59:57.6029430Z 		export PORT=8080
+2025-12-02T02:59:57.6029588Z fi
+2025-12-02T02:59:57.6029616Z 
+2025-12-02T02:59:57.6054714Z echo Found tar.gz based node_modules.
+2025-12-02T02:59:57.6054776Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-12-02T02:59:57.6054809Z echo "Removing existing modules directory from root..."
+2025-12-02T02:59:57.6054837Z rm -fr /node_modules
+2025-12-02T02:59:57.6054865Z mkdir -p /node_modules
+2025-12-02T02:59:57.6054935Z echo Extracting modules...
+2025-12-02T02:59:57.6054964Z $extractionCommand
+2025-12-02T02:59:57.6054996Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-12-02T02:59:57.6055025Z export PATH=/node_modules/.bin:$PATH
+2025-12-02T02:59:57.6055053Z if [ -d node_modules ]; then
+2025-12-02T02:59:57.6055082Z     mv -f node_modules _del_node_modules || true
+2025-12-02T02:59:57.6055109Z fi
+2025-12-02T02:59:57.6055167Z 
+2025-12-02T02:59:57.6055195Z if [ -d /node_modules ]; then
+2025-12-02T02:59:57.6055223Z     ln -sfn /node_modules ./node_modules 
+2025-12-02T02:59:57.6055249Z fi
+2025-12-02T02:59:57.6055301Z 
+2025-12-02T02:59:57.6055332Z echo "Done."
+2025-12-02T02:59:57.6206070Z PATH="$PATH:/home/site/wwwroot" node server.js
+2025-12-02T02:59:57.6386911Z Found tar.gz based node_modules.
+2025-12-02T02:59:57.6399103Z Removing existing modules directory from root...
+2025-12-02T02:59:57.6757052Z Extracting modules...
+2025-12-02T03:00:11.0515693Z Done.
+2025-12-02T03:00:15.1766551Z    ▲ Next.js 16.0.4
+2025-12-02T03:00:15.1930175Z    - Local:         http://localhost:3000
+2025-12-02T03:00:15.1937731Z    - Network:       http://0.0.0.0:3000
+2025-12-02T03:00:15.1946460Z 
+2025-12-02T03:00:15.1953273Z  ✓ Starting...
+2025-12-02T03:00:15.3369109Z Error: Could not find a production build in the './.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-02T03:00:15.3369821Z     at ignore-listed frames
+2025-12-02T03:07:32.9604492Z    _____                               
+2025-12-02T03:07:32.9605185Z   /  _  \ __________ _________   ____  
+2025-12-02T03:07:32.9605217Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-12-02T03:07:32.9605242Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-12-02T03:07:32.9605276Z \____|__  /_____ \____/ |__|    \___  >
+2025-12-02T03:07:32.9605297Z         \/      \/                  \/ 
+2025-12-02T03:07:32.9605318Z A P P   S E R V I C E   O N   L I N U X
+2025-12-02T03:07:32.9605338Z 
+2025-12-02T03:07:32.9605360Z Documentation    : http://aka.ms/webapp-linux
+2025-12-02T03:07:32.9605387Z NodeJS quickstart: https://aka.ms/node-qs
+2025-12-02T03:07:32.9605515Z NodeJS Version   : v20.19.5
+2025-12-02T03:07:32.9605539Z Instance Name    : lw1sdlwk0007MQ
+2025-12-02T03:07:32.9605566Z Instance Id      : a2fa831d16021d925a0f99f667df2ce8bca2429815f806880f0aa167f21a611f
+2025-12-02T03:07:32.9605586Z 
+2025-12-02T03:07:32.9605610Z Note: Any data outside '/home' is not persisted
+2025-12-02T03:07:38.0518610Z Starting OpenBSD Secure Shell server: sshd.
+2025-12-02T03:07:38.0884969Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-12-02T03:07:38.2135525Z Updating certificates in /etc/ssl/certs...
+2025-12-02T03:08:10.2358129Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-12-02T03:08:10.2414141Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-12-02T03:08:10.4979002Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-12-02T03:08:10.5480643Z 4 added, 0 removed; done.
+2025-12-02T03:08:10.5532985Z Running hooks in /etc/ca-certificates/update.d...
+2025-12-02T03:08:10.6271800Z done.
+2025-12-02T03:08:10.8017908Z CA certificates copied and updated successfully.
+2025-12-02T03:08:11.1797182Z Starting periodic command scheduler: cron.
+2025-12-02T03:08:11.3346332Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-12-02T03:08:11.3425065Z Could not find operation ID in manifest. Generating an operation id...
+2025-12-02T03:08:11.3430918Z Build Operation ID: bb552edc-e8ee-4903-8635-48a99ee209f7
+2025-12-02T03:08:12.2939378Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-12-02T03:08:12.4178310Z Writing output script to '/opt/startup/startup.sh'
+2025-12-02T03:08:12.5942916Z Running #!/bin/sh
+2025-12-02T03:08:12.5943550Z 
+2025-12-02T03:08:12.5943590Z # Enter the source directory to make sure the script runs where the user expects
+2025-12-02T03:08:12.5943613Z cd "/home/site/wwwroot"
+2025-12-02T03:08:12.5943724Z 
+2025-12-02T03:08:12.5943750Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-12-02T03:08:12.5943771Z if [ -z "$PORT" ]; then
+2025-12-02T03:08:12.5943792Z 		export PORT=8080
+2025-12-02T03:08:12.5943812Z fi
+2025-12-02T03:08:12.5943831Z 
+2025-12-02T03:08:12.5943853Z echo Found tar.gz based node_modules.
+2025-12-02T03:08:12.5943877Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-12-02T03:08:12.5943901Z echo "Removing existing modules directory from root..."
+2025-12-02T03:08:12.5943922Z rm -fr /node_modules
+2025-12-02T03:08:12.5943943Z mkdir -p /node_modules
+2025-12-02T03:08:12.5944000Z echo Extracting modules...
+2025-12-02T03:08:12.5944022Z $extractionCommand
+2025-12-02T03:08:12.5944045Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-12-02T03:08:12.5944067Z export PATH=/node_modules/.bin:$PATH
+2025-12-02T03:08:12.5944089Z if [ -d node_modules ]; then
+2025-12-02T03:08:12.5944112Z     mv -f node_modules _del_node_modules || true
+2025-12-02T03:08:12.5944132Z fi
+2025-12-02T03:08:12.5944151Z 
+2025-12-02T03:08:12.5944172Z if [ -d /node_modules ]; then
+2025-12-02T03:08:12.5944194Z     ln -sfn /node_modules ./node_modules 
+2025-12-02T03:08:12.5944214Z fi
+2025-12-02T03:08:12.5944233Z 
+2025-12-02T03:08:12.5944279Z echo "Done."
+2025-12-02T03:08:12.6072588Z PATH="$PATH:/home/site/wwwroot" node server.js
+2025-12-02T03:08:12.6420096Z Found tar.gz based node_modules.
+2025-12-02T03:08:12.6495406Z Removing existing modules directory from root...
+2025-12-02T03:08:12.6944749Z Extracting modules...
+2025-12-02T03:08:18.3635239Z Done.
+2025-12-02T03:08:22.9044861Z    ▲ Next.js 16.0.4
+2025-12-02T03:08:22.9124089Z    - Local:         http://localhost:3000
+2025-12-02T03:08:22.9124417Z    - Network:       http://0.0.0.0:3000
+2025-12-02T03:08:22.9124447Z 
+2025-12-02T03:08:22.9124475Z  ✓ Starting...
+2025-12-02T03:08:23.9537911Z  ✓ Ready in 1123ms
+2025-12-02T03:12:38.0805341Z    _____                               
+2025-12-02T03:12:38.0871099Z   /  _  \ __________ _________   ____  
+2025-12-02T03:12:38.0871233Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-12-02T03:12:38.0871269Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-12-02T03:12:38.0871372Z \____|__  /_____ \____/ |__|    \___  >
+2025-12-02T03:12:38.0871410Z         \/      \/                  \/ 
+2025-12-02T03:12:38.0871447Z A P P   S E R V I C E   O N   L I N U X
+2025-12-02T03:12:38.0872878Z 
+2025-12-02T03:12:38.0872931Z Documentation    : http://aka.ms/webapp-linux
+2025-12-02T03:12:38.0872966Z NodeJS quickstart: https://aka.ms/node-qs
+2025-12-02T03:12:38.0873037Z NodeJS Version   : v20.19.5
+2025-12-02T03:12:38.0873068Z Instance Name    : lw1sdlwk0007MQ
+2025-12-02T03:12:38.0873110Z Instance Id      : a2fa831d16021d925a0f99f667df2ce8bca2429815f806880f0aa167f21a611f
+2025-12-02T03:12:38.0873137Z 
+2025-12-02T03:12:38.0873166Z Note: Any data outside '/home' is not persisted
+2025-12-02T03:13:18.2077498Z Starting OpenBSD Secure Shell server: sshd.
+2025-12-02T03:13:18.3587746Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-12-02T03:13:18.8948074Z Updating certificates in /etc/ssl/certs...
+2025-12-02T03:14:30.0803858Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-12-02T03:14:30.0821463Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-12-02T03:14:30.9942125Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-12-02T03:14:31.1953781Z 4 added, 0 removed; done.
+2025-12-02T03:14:31.2150742Z Running hooks in /etc/ca-certificates/update.d...
+2025-12-02T03:14:31.2431682Z done.
+2025-12-02T03:14:31.2989980Z CA certificates copied and updated successfully.
+2025-12-02T03:14:32.1246378Z Starting periodic command scheduler: cron.
+2025-12-02T03:14:33.0128330Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-12-02T03:14:33.0304040Z Could not find operation ID in manifest. Generating an operation id...
+2025-12-02T03:14:33.0373999Z Build Operation ID: 353cfac4-dd7d-4e0c-bc0f-3dbbc18437cb
+2025-12-02T03:14:36.6058492Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-12-02T03:14:37.0081832Z Writing output script to '/opt/startup/startup.sh'
+2025-12-02T03:14:37.8713048Z Running #!/bin/sh
+2025-12-02T03:14:37.8748018Z 
+2025-12-02T03:14:37.8883014Z # Enter the source directory to make sure the script runs where the user expects
+2025-12-02T03:14:37.8883247Z cd "/home/site/wwwroot"
+2025-12-02T03:14:37.8883296Z 
+2025-12-02T03:14:37.8883327Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-12-02T03:14:37.8883357Z if [ -z "$PORT" ]; then
+2025-12-02T03:14:37.8883384Z 		export PORT=8080
+2025-12-02T03:14:37.8883411Z fi
+2025-12-02T03:14:37.8883437Z 
+2025-12-02T03:14:37.8883500Z echo Found tar.gz based node_modules.
+2025-12-02T03:14:37.8883689Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-12-02T03:14:37.8883720Z echo "Removing existing modules directory from root..."
+2025-12-02T03:14:37.8883746Z rm -fr /node_modules
+2025-12-02T03:14:37.8883772Z mkdir -p /node_modules
+2025-12-02T03:14:37.8883799Z echo Extracting modules...
+2025-12-02T03:14:37.8883826Z $extractionCommand
+2025-12-02T03:14:37.8883875Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-12-02T03:14:37.8883903Z export PATH=/node_modules/.bin:$PATH
+2025-12-02T03:14:37.8883957Z if [ -d node_modules ]; then
+2025-12-02T03:14:37.8883985Z     mv -f node_modules _del_node_modules || true
+2025-12-02T03:14:37.8884179Z fi
+2025-12-02T03:14:37.8884205Z 
+2025-12-02T03:14:37.8884255Z if [ -d /node_modules ]; then
+2025-12-02T03:14:37.8884438Z     ln -sfn /node_modules ./node_modules 
+2025-12-02T03:14:37.8884465Z fi
+2025-12-02T03:14:37.8884488Z 
+2025-12-02T03:14:37.8884513Z echo "Done."
+2025-12-02T03:14:37.8884541Z PATH="$PATH:/home/site/wwwroot" node server.js
+2025-12-02T03:14:38.1648641Z Found tar.gz based node_modules.
+2025-12-02T03:14:38.1649319Z Removing existing modules directory from root...
+2025-12-02T03:14:38.8343318Z Extracting modules...
+2025-12-02T03:14:51.3220817Z Done.
+2025-12-02T03:15:05.3282766Z    ▲ Next.js 16.0.4
+2025-12-02T03:15:05.3789001Z    - Local:         http://localhost:3000
+2025-12-02T03:15:05.3813609Z    - Network:       http://0.0.0.0:3000
+2025-12-02T03:15:05.3827154Z 
+2025-12-02T03:15:05.3836559Z  ✓ Starting...
+2025-12-02T03:15:08.7822335Z  ✓ Ready in 3.6s
+2025-12-02T03:36:23.1044477Z    _____                               
+2025-12-02T03:36:23.1195603Z   /  _  \ __________ _________   ____  
+2025-12-02T03:36:23.1196028Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-12-02T03:36:23.1196071Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-12-02T03:36:23.1196102Z \____|__  /_____ \____/ |__|    \___  >
+2025-12-02T03:36:23.1196130Z         \/      \/                  \/ 
+2025-12-02T03:36:23.1196181Z A P P   S E R V I C E   O N   L I N U X
+2025-12-02T03:36:23.1196208Z 
+2025-12-02T03:36:23.1196242Z Documentation    : http://aka.ms/webapp-linux
+2025-12-02T03:36:23.1196293Z NodeJS quickstart: https://aka.ms/node-qs
+2025-12-02T03:36:23.1196329Z NodeJS Version   : v20.19.5
+2025-12-02T03:36:23.1196358Z Instance Name    : lw1sdlwk0007MQ
+2025-12-02T03:36:23.1196399Z Instance Id      : a2fa831d16021d925a0f99f667df2ce8bca2429815f806880f0aa167f21a611f
+2025-12-02T03:36:23.1196425Z 
+2025-12-02T03:36:23.1196454Z Note: Any data outside '/home' is not persisted
+2025-12-02T03:36:28.2295761Z Starting OpenBSD Secure Shell server: sshd.
+2025-12-02T03:36:28.2632213Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-12-02T03:36:28.6791593Z Updating certificates in /etc/ssl/certs...
+2025-12-02T03:37:03.1999794Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-12-02T03:37:03.2233206Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-12-02T03:37:04.1826615Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-12-02T03:37:04.4244755Z 4 added, 0 removed; done.
+2025-12-02T03:37:04.4245911Z Running hooks in /etc/ca-certificates/update.d...
+2025-12-02T03:37:04.4340272Z done.
+2025-12-02T03:37:04.5960498Z CA certificates copied and updated successfully.
+2025-12-02T03:37:04.8218553Z Starting periodic command scheduler: cron.
+2025-12-02T03:37:05.2467724Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-12-02T03:37:05.2741951Z Could not find operation ID in manifest. Generating an operation id...
+2025-12-02T03:37:05.2917920Z Build Operation ID: 2f72d4a0-2a84-4a7f-989a-b23c0553f075
+2025-12-02T03:37:06.5041440Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-12-02T03:37:06.6838065Z Writing output script to '/opt/startup/startup.sh'
+2025-12-02T03:37:06.8837257Z Running #!/bin/sh
+2025-12-02T03:37:06.8837722Z 
+2025-12-02T03:37:06.8837774Z # Enter the source directory to make sure the script runs where the user expects
+2025-12-02T03:37:06.8837820Z cd "/home/site/wwwroot"
+2025-12-02T03:37:06.8837850Z 
+2025-12-02T03:37:06.8837970Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-12-02T03:37:06.8838003Z if [ -z "$PORT" ]; then
+2025-12-02T03:37:06.8838030Z 		export PORT=8080
+2025-12-02T03:37:06.8838056Z fi
+2025-12-02T03:37:06.8838082Z 
+2025-12-02T03:37:06.8838110Z echo Found tar.gz based node_modules.
+2025-12-02T03:37:06.8838141Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-12-02T03:37:06.8838196Z echo "Removing existing modules directory from root..."
+2025-12-02T03:37:06.8838225Z rm -fr /node_modules
+2025-12-02T03:37:06.8838252Z mkdir -p /node_modules
+2025-12-02T03:37:06.8838279Z echo Extracting modules...
+2025-12-02T03:37:06.8838306Z $extractionCommand
+2025-12-02T03:37:06.8838362Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-12-02T03:37:06.8838393Z export PATH=/node_modules/.bin:$PATH
+2025-12-02T03:37:06.8838440Z if [ -d node_modules ]; then
+2025-12-02T03:37:06.8838470Z     mv -f node_modules _del_node_modules || true
+2025-12-02T03:37:06.8838496Z fi
+2025-12-02T03:37:06.8838520Z 
+2025-12-02T03:37:06.8838547Z if [ -d /node_modules ]; then
+2025-12-02T03:37:06.8838575Z     ln -sfn /node_modules ./node_modules 
+2025-12-02T03:37:06.8838601Z fi
+2025-12-02T03:37:06.8838648Z 
+2025-12-02T03:37:06.8838676Z echo "Done."
+2025-12-02T03:37:06.8838704Z PATH="$PATH:/home/site/wwwroot" node server.js
+2025-12-02T03:37:06.8961814Z Found tar.gz based node_modules.
+2025-12-02T03:37:06.9114376Z Removing existing modules directory from root...
+2025-12-02T03:37:06.9433148Z Extracting modules...
+2025-12-02T03:37:15.5654385Z Done.
+2025-12-02T03:37:38.1544817Z    ▲ Next.js 16.0.4
+2025-12-02T03:37:38.1681080Z    - Local:         http://localhost:3000
+2025-12-02T03:37:38.2229161Z    - Network:       http://0.0.0.0:3000
+2025-12-02T03:37:38.2239708Z 
+2025-12-02T03:37:38.2308367Z  ✓ Starting...
+2025-12-02T03:37:42.4241352Z  ✓ Ready in 4.6s
+2025-12-02T03:37:54.3124937Z [Azure API] Error 404: 
+2025-12-02T03:38:34.3926017Z [Azure API] Error 404: 
+2025-12-02T03:38:38.2426003Z [Azure API] Error 404: 
+2025-12-02T03:38:44.1132252Z [Azure API] Error 404: 
+2025-12-02T03:38:46.7835098Z [Azure API] Error 404: 
+2025-12-02T03:39:43.9835594Z [Azure API] Error 404: 
+2025-12-02T03:39:52.5418915Z [Azure API] Error 404: 
+2025-12-02T03:42:21.2381254Z [Azure API] Error 404: 
+2025-12-02T03:43:49.1698003Z [Azure API] Error 404: 
+2025-12-02T03:50:35.9988886Z    _____                               
+2025-12-02T03:50:36.0052711Z   /  _  \ __________ _________   ____  
+2025-12-02T03:50:36.0057829Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-12-02T03:50:36.0057879Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-12-02T03:50:36.0057910Z \____|__  /_____ \____/ |__|    \___  >
+2025-12-02T03:50:36.0057938Z         \/      \/                  \/ 
+2025-12-02T03:50:36.0057984Z A P P   S E R V I C E   O N   L I N U X
+2025-12-02T03:50:36.0058012Z 
+2025-12-02T03:50:36.0058045Z Documentation    : http://aka.ms/webapp-linux
+2025-12-02T03:50:36.0058096Z NodeJS quickstart: https://aka.ms/node-qs
+2025-12-02T03:50:36.0058133Z NodeJS Version   : v20.19.5
+2025-12-02T03:50:36.0058163Z Instance Name    : lw1sdlwk0007MQ
+2025-12-02T03:50:36.0058203Z Instance Id      : a2fa831d16021d925a0f99f667df2ce8bca2429815f806880f0aa167f21a611f
+2025-12-02T03:50:36.0058229Z 
+2025-12-02T03:50:36.0058257Z Note: Any data outside '/home' is not persisted
+2025-12-02T03:50:38.5507346Z Starting OpenBSD Secure Shell server: sshd.
+2025-12-02T03:50:38.5868466Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-12-02T03:50:38.6729378Z Updating certificates in /etc/ssl/certs...
+2025-12-02T03:51:05.2062225Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-12-02T03:51:05.2075735Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-12-02T03:51:05.4989488Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-12-02T03:51:05.5571150Z 4 added, 0 removed; done.
+2025-12-02T03:51:05.5806556Z Running hooks in /etc/ca-certificates/update.d...
+2025-12-02T03:51:05.5943646Z done.
+2025-12-02T03:51:05.6479658Z CA certificates copied and updated successfully.
+2025-12-02T03:51:06.7229560Z Starting periodic command scheduler: cron.
+2025-12-02T03:51:06.7229983Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-12-02T03:51:06.7230028Z Could not find operation ID in manifest. Generating an operation id...
+2025-12-02T03:51:06.7230061Z Build Operation ID: 3fb168c8-dbab-422a-b3f7-bd747d19242e
+2025-12-02T03:51:07.2810095Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-12-02T03:51:07.4012092Z Writing output script to '/opt/startup/startup.sh'
+2025-12-02T03:51:07.5760624Z Running #!/bin/sh
+2025-12-02T03:51:07.5761175Z 
+2025-12-02T03:51:07.5761223Z # Enter the source directory to make sure the script runs where the user expects
+2025-12-02T03:51:07.5761268Z cd "/home/site/wwwroot"
+2025-12-02T03:51:07.5761294Z 
+2025-12-02T03:51:07.5761323Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-12-02T03:51:07.5761354Z if [ -z "$PORT" ]; then
+2025-12-02T03:51:07.5761381Z 		export PORT=8080
+2025-12-02T03:51:07.5761429Z fi
+2025-12-02T03:51:07.5761455Z 
+2025-12-02T03:51:07.5761486Z echo Found tar.gz based node_modules.
+2025-12-02T03:51:07.5761547Z extractionCommand="tar -xzf node_modules.tar.gz -C /node_modules"
+2025-12-02T03:51:07.5761578Z echo "Removing existing modules directory from root..."
+2025-12-02T03:51:07.5761606Z rm -fr /node_modules
+2025-12-02T03:51:07.5761654Z mkdir -p /node_modules
+2025-12-02T03:51:07.5761683Z echo Extracting modules...
+2025-12-02T03:51:07.5761709Z $extractionCommand
+2025-12-02T03:51:07.5762187Z export NODE_PATH="/node_modules":$NODE_PATH
+2025-12-02T03:51:07.5762281Z export PATH=/node_modules/.bin:$PATH
+2025-12-02T03:51:07.5762313Z if [ -d node_modules ]; then
+2025-12-02T03:51:07.5762346Z     mv -f node_modules _del_node_modules || true
+2025-12-02T03:51:07.5762417Z fi
+2025-12-02T03:51:07.5762446Z 
+2025-12-02T03:51:07.5762709Z if [ -d /node_modules ]; then
+2025-12-02T03:51:07.5762755Z     ln -sfn /node_modules ./node_modules 
+2025-12-02T03:51:07.5762784Z fi
+2025-12-02T03:51:07.5762837Z 
+2025-12-02T03:51:07.5762918Z echo "Done."
+2025-12-02T03:51:07.5849925Z PATH="$PATH:/home/site/wwwroot" node server.js
+2025-12-02T03:51:07.5896710Z Found tar.gz based node_modules.
+2025-12-02T03:51:07.5914249Z Removing existing modules directory from root...
+2025-12-02T03:51:07.6289934Z Extracting modules...
+2025-12-02T03:51:14.0330258Z Done.
+2025-12-02T03:51:18.0957955Z    ▲ Next.js 16.0.4
+2025-12-02T03:51:18.0968206Z    - Local:         http://localhost:3000
+2025-12-02T03:51:18.0970050Z    - Network:       http://0.0.0.0:3000
+2025-12-02T03:51:18.0974871Z 
+2025-12-02T03:51:18.0978103Z  ✓ Starting...
+2025-12-02T03:51:19.0288830Z  ✓ Ready in 983ms
+2025-12-02T03:52:12.9719923Z [Generate API] Fetching Azure data directly via service
+2025-12-02T03:52:13.0506004Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:52:13.0506562Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT%20-%20Gest%25C3%25A3o%20da%20Produ%25C3%25A7%25C3%25A3o/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100&searchCriteria.author=Marcus+Boni
+2025-12-02T03:52:14.7838387Z [Azure Service] Error 404: 
+2025-12-02T03:52:14.7839040Z [Generate API] Azure error: Recurso não encontrado - Verifique o nome da organização, projeto e repositório
+2025-12-02T03:52:53.3667402Z [Generate API] Fetching Azure data directly via service
+2025-12-02T03:52:53.5476757Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:52:53.5514456Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT%20-%20Gest%25C3%25A3o%20da%20Produ%25C3%25A7%25C3%25A3o/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100&searchCriteria.author=Marcus+Boni
+2025-12-02T03:52:54.6326720Z [Azure Service] Error 404: 
+2025-12-02T03:52:54.6343141Z [Generate API] Azure error: Recurso não encontrado - Verifique o nome da organização, projeto e repositório
+2025-12-02T03:53:42.5203571Z [Generate API] Fetching Harvest data directly via service
+2025-12-02T03:53:42.5466196Z [Harvest Service] Searching entries from 2025-12-01 to 2025-12-02
+2025-12-02T03:53:43.1540833Z [Harvest Service] Found 5 entries
+2025-12-02T03:53:43.3237005Z [Generate API] Harvest returned 5 entries
+2025-12-02T03:53:55.8561666Z [Generate API] Fetching Azure data directly via service
+2025-12-02T03:53:55.8565378Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:53:55.8569767Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT%20-%20Gest%25C3%25A3o%20da%20Produ%25C3%25A7%25C3%25A3o/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100&searchCriteria.author=Marcus+Boni
+2025-12-02T03:53:56.1183480Z [Azure Service] Error 404: 
+2025-12-02T03:53:56.1202790Z [Generate API] Azure error: Recurso não encontrado - Verifique o nome da organização, projeto e repositório
+2025-12-02T03:54:05.3080010Z [Generate API] Fetching Azure data directly via service
+2025-12-02T03:54:05.3081161Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:54:05.3081227Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT%20-%20Gest%25C3%25A3o%20da%20Produ%25C3%25A7%25C3%25A3o/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100&searchCriteria.author=Marcus+Boni
+2025-12-02T03:54:05.5747632Z [Azure Service] Error 404: 
+2025-12-02T03:54:05.5748140Z [Generate API] Azure error: Recurso não encontrado - Verifique o nome da organização, projeto e repositório
+2025-12-02T03:54:42.4364469Z [Generate API] Fetching Azure data directly via service
+2025-12-02T03:54:42.4365047Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:54:42.4365099Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT%20-%20Gest%25C3%25A3o%20da%20Produ%25C3%25A7%25C3%25A3o/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100&searchCriteria.author=Marcus+Boni
+2025-12-02T03:54:42.6636297Z [Azure Service] Error 404: 
+2025-12-02T03:54:42.6645782Z [Generate API] Azure error: Recurso não encontrado - Verifique o nome da organização, projeto e repositório
+2025-12-02T03:54:45.0900333Z [Generate API] Fetching Azure data directly via service
+2025-12-02T03:54:45.0926953Z [Azure Service] Searching commits from 2025-11-29T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:54:45.0927111Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT%20-%20Gest%25C3%25A3o%20da%20Produ%25C3%25A7%25C3%25A3o/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-11-29T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100&searchCriteria.author=Marcus+Boni
+2025-12-02T03:54:45.2563568Z [Azure Service] Error 404: 
+2025-12-02T03:54:45.2575323Z [Generate API] Azure error: Recurso não encontrado - Verifique o nome da organização, projeto e repositório
+2025-12-02T03:54:48.8136391Z [Generate API] Fetching Azure data directly via service
+2025-12-02T03:54:48.8136921Z [Azure Service] Searching commits from 2025-11-25T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:54:48.8137067Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT%20-%20Gest%25C3%25A3o%20da%20Produ%25C3%25A7%25C3%25A3o/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-11-25T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100&searchCriteria.author=Marcus+Boni
+2025-12-02T03:54:49.0539151Z [Azure Service] Error 404: 
+2025-12-02T03:54:49.0635723Z [Generate API] Azure error: Recurso não encontrado - Verifique o nome da organização, projeto e repositório
+2025-12-02T03:55:22.6540746Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:55:22.6541304Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100
+2025-12-02T03:55:23.5136682Z [Azure Service] Error: SyntaxError: Unexpected token '<', "
+2025-12-02T03:55:23.5137224Z 
+2025-12-02T03:55:23.5137258Z <!DOCTYPE "... is not valid JSON
+2025-12-02T03:55:23.5137287Z     at JSON.parse (<anonymous>)
+2025-12-02T03:55:23.5137314Z     at async t (.next/server/chunks/[root-of-the-server]__65b6c851._.js:1:2496)
+2025-12-02T03:55:23.5137343Z     at async w (.next/server/chunks/[root-of-the-server]__65b6c851._.js:1:3651)
+2025-12-02T03:56:47.9531002Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:56:47.9531484Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/test/_apis/git/repositories/test/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100
+2025-12-02T03:56:48.3586292Z [Azure Service] Error 404: {"$id":"1","innerException":null,"message":"TF200016: The following project does not exist: test. Verify that the name of the project is correct and that the project exists on the specified Azure DevOps Server.","typeName":"Microsoft.TeamFoundation.Core.WebApi.ProjectDoesNotExistWithNameException, Microsoft.TeamFoundation.Core.WebApi","typeKey":"ProjectDoesNotExistWithNameException","errorCode":0,"eventId":3000}
+2025-12-02T03:57:53.0356431Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:57:53.0365924Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/HIDRAUVIT%20-%20Gest%25C3%25A3o%20da%20Produ%25C3%25A7%25C3%25A3o/_apis/git/repositories/gestao-producao-web/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100
+2025-12-02T03:57:53.4361318Z [Azure Service] Error 404: 
+2025-12-02T03:59:12.7324402Z [Azure Service] Searching commits from 2025-12-01T00:00:00.000Z to 2025-12-02T23:59:59.999Z
+2025-12-02T03:59:12.7324827Z [Azure Service] Request URL: https://dev.azure.com/optsoldev/test/_apis/git/repositories/test/commits?api-version=7.1&searchCriteria.fromDate=2025-12-01T00%3A00%3A00.000Z&searchCriteria.toDate=2025-12-02T23%3A59%3A59.999Z&%24top=100
+2025-12-02T03:59:13.5059872Z [Azure Service] Error: SyntaxError: Unexpected token '<', "
+2025-12-02T03:59:13.5060512Z 
+2025-12-02T03:59:13.5060548Z <!DOCTYPE "... is not valid JSON
+2025-12-02T03:59:13.5060572Z     at JSON.parse (<anonymous>)
+2025-12-02T03:59:13.5060598Z     at async t (.next/server/chunks/[root-of-the-server]__65b6c851._.js:1:2496)
+2025-12-02T03:59:13.5060622Z     at async w (.next/server/chunks/[root-of-the-server]__65b6c851._.js:1:3651)

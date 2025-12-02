@@ -1,0 +1,9 @@
+<step title="Incoming Request" date="2025-12-02T02:48:24.616" instance="a2fa83" url="/api/deployments/latest?deployer=OneDeploy&amp;time=2025-12-02_02-47-52Z" method="GET" type="request" pid="833,1,20" Host="auto-daily-app-bcg7fmb4dse4h2cd.scm.brazilsouth-01.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployWebAppToAzure_6b1beaccd67596e5bdf1a318e792f84edf557a1eb38086da8cbfa7d6a121b765" Authorization="Bea..." Content-Type="application/json; charset=utf-8" Cookie="ARRAffinity=a2fa831d16021d925a0f99f667df2ce8bca2429815f806880f0aa167f21a611f;Path=/;HttpOnly;Secure;Domain=auto-daily-app-bcg7fmb4dse4h2cd.scm.brazilsouth-01.azurewebsites.net; ARRAffinitySameSite=a2fa831d16021d925a0f99f667df2ce8bca2429815f806880f0aa167f21a611f;Path=/;HttpOnly;SameSite=None;Secure;Domain=auto-daily-app-bcg7fmb4dse4h2cd.scm.brazilsouth-01.azurewebsites.net" Content-Length="0" X-ARR-LOG-ID="d79f6c37-c6f5-43c3-ae82-002fb7a61412" CLIENT-IP="68.154.118.247:63545" X-SITE-DEPLOYMENT-ID="auto-daily-app" WAS-DEFAULT-HOSTNAME="auto-daily-app-bcg7fmb4dse4h2cd.scm.brazilsouth-01.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/deployments/latest?deployer=OneDeploy&amp;time=2025-12-02_02-47-52Z" X-Client-IP="68.154.118.247" X-Client-Port="63545" >
+  <step title="Cleanup Xml Logs" date="2025-12-02T02:48:24.635" /><!-- duration: 34ms -->
+  <step title="DeploymentService.GetResult" date="2025-12-02T02:48:24.810" >
+    <step title="DeploymentService.GetLatestDeployment" date="2025-12-02T02:48:24.861" >
+      <step title="DeploymentManager.GetResults" date="2025-12-02T02:48:24.878" /><!-- duration: 426ms -->
+    </step><!-- duration: 447ms -->
+  </step><!-- duration: 503ms -->
+  <step title="Outgoing response" date="2025-12-02T02:48:25.318" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 9ms -->
+</step><!-- duration: 717ms -->
