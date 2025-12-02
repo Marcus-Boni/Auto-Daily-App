@@ -48,5 +48,6 @@ azure-logs/
 azure-logs.zip
 
 # Azure logs
-azure-logs*
+azure-logs*/
+latest-logs/
 *.zip
