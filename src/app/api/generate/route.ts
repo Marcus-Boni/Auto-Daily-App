@@ -1,7 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { fetchAzureCommits } from "@/lib/azure-service";
+import { AIServiceError, generateDailyWithAI } from "@/lib/ai-service";
 import { generateDailyPrompt, generateProfessionalPrompt } from "@/lib/constants";
 import { fetchHarvestEntries } from "@/lib/harvest-service";
 import type {
@@ -17,6 +18,17 @@ interface DataSources {
   azure?: ParsedCommit[];
   harvest?: ParsedTimeEntry[];
 }
+
+const generateDailySchema = z
+  .object({
+    mode: z.enum(["azure-only", "harvest-only", "combined-auto", "combined-custom"]),
+    customPrompt: z.string().trim().max(10_000).optional(),
+    periodHours: z.number().int().min(1).max(720).optional(),
+    reportFormat: z.enum(["standard", "professional"]).optional(),
+    date: z.string().optional(),
+    period: z.enum(["24h", "48h", "72h", "7d", "14d", "30d"]).optional(),
+  })
+  .strict();
 
 async function fetchAzureData(
   request: NextRequest,
@@ -199,32 +211,21 @@ function buildPrompt(
 
 export async function POST(request: NextRequest): Promise<NextResponse<GenerateDailyResponse>> {
   try {
-    const body: GenerateDailyRequest = await request.json();
-    const { mode, customPrompt, periodHours = 24, reportFormat = "standard" } = body;
+    const rawBody = (await request.json()) as GenerateDailyRequest;
+    const parsedBody = generateDailySchema.safeParse(rawBody);
 
-    if (!mode) {
+    if (!parsedBody.success) {
       return NextResponse.json(
         {
           success: false,
-          error: "Modo de geração não especificado",
+          error: "Payload inválido",
+          details: parsedBody.error.issues.map((issue) => issue.message).join("; "),
         },
         { status: 400 }
       );
     }
 
-    const geminiApiKey = process.env.GEMINI_API_KEY;
-
-    if (!geminiApiKey) {
-      console.error("GEMINI_API_KEY environment variable is not configured");
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Serviço de IA indisponível",
-          details: "Entre em contato com o administrador do sistema",
-        },
-        { status: 503 }
-      );
-    }
+    const { mode, customPrompt, periodHours = 24, reportFormat = "standard" } = parsedBody.data;
 
     const sources = await fetchDataByMode(mode, request, periodHours);
 
@@ -250,12 +251,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
       mode === "combined-custom" ? customPrompt : undefined
     );
 
-    const genAI = new GoogleGenerativeAI(geminiApiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const daily = response.text();
+    const daily = await generateDailyWithAI(prompt);
 
     return NextResponse.json({
       success: true,
@@ -265,26 +261,37 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
   } catch (error) {
     console.error("Generate API Error:", error);
 
-    if (error instanceof Error) {
-      if (error.message.includes("API_KEY_INVALID")) {
+    if (error instanceof AIServiceError) {
+      if (error.code === "INVALID_API_KEY") {
         return NextResponse.json(
           {
             success: false,
-            error: "API Key do Gemini inválida",
-            details: "Verifique se a API Key está correta",
+            error: "API Key do Hugging Face inválida",
+            details: "Verifique se a variável HUGGINGFACE_API_KEY está correta",
           },
           { status: 401 }
         );
       }
 
-      if (error.message.includes("QUOTA_EXCEEDED")) {
+      if (error.code === "RATE_LIMIT") {
         return NextResponse.json(
           {
             success: false,
-            error: "Quota da API excedida",
+            error: "Limite da API excedido",
             details: "Aguarde alguns minutos e tente novamente",
           },
           { status: 429 }
+        );
+      }
+
+      if (error.code === "PROVIDER_UNAVAILABLE") {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Serviço de IA indisponível",
+            details: "Verifique a configuração da API e tente novamente",
+          },
+          { status: 503 }
         );
       }
     }

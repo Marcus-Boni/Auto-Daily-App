@@ -103,7 +103,7 @@ export function AppShell() {
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>
             AutoDaily AI é uma ferramenta profissional que automatiza relatórios
-            de Daily Scrum com dados do Azure DevOps, Harvest e Google Gemini.
+            de Daily Scrum com dados do Azure DevOps, Harvest e IA generativa.
             Veja mais no{" "}
             <a
               className="text-primary underline-offset-4 hover:underline"
@@ -117,7 +117,7 @@ export function AppShell() {
           </p>
           <p className="mt-1 text-xs">
             Suas credenciais ficam seguras no navegador e são enviadas apenas
-            via cabeçalhos HTTP.
+            via cabeçalhos HTTP para as rotas de API da própria aplicação.
           </p>
         </div>
       </footer>

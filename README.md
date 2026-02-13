@@ -5,7 +5,7 @@
   
   **Gerador inteligente de relatórios de Daily Scrum com IA**
   
-  Automatize suas dailies integrando Azure DevOps, Harvest e Google Gemini AI.
+   Automatize suas dailies integrando Azure DevOps, Harvest e Hugging Face Inference API.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
@@ -24,7 +24,7 @@
 
 ## 📋 Sobre
 
-O **Auto Daily App** é uma ferramenta profissional que automatiza a criação de relatórios de Daily Scrum. Ele coleta automaticamente seus commits do Azure DevOps e suas entradas de tempo do Harvest, e utiliza o Google Gemini AI para gerar relatórios estruturados e prontos para compartilhar.
+O **Auto Daily App** é uma ferramenta profissional que automatiza a criação de relatórios de Daily Scrum. Ele coleta automaticamente seus commits do Azure DevOps e suas entradas de tempo do Harvest, e utiliza a Hugging Face Inference API para gerar relatórios estruturados e prontos para compartilhar.
 
 ### ✨ Por que usar?
 
@@ -39,7 +39,7 @@ O **Auto Daily App** é uma ferramenta profissional que automatiza a criação d
 
 - **📊 Integração Azure DevOps** - Busca automática de commits por período
 - **⏰ Integração Harvest** - Importa entradas de tempo automaticamente
-- **🤖 Geração com IA** - Google Gemini AI para relatórios inteligentes
+- **🤖 Geração com IA** - Hugging Face Inference API para relatórios inteligentes
 - **📅 Períodos flexíveis** - Suporte para dailies de 24h até 30 dias
 - **📝 Formatos de relatório** - Padrão (O que fiz/Vou fazer/Impedimentos) ou Executivo
 - **🌓 Modo escuro** - Interface adaptável com suporte a tema claro/escuro
@@ -50,17 +50,17 @@ O **Auto Daily App** é uma ferramenta profissional que automatiza a criação d
 
 ## 🛠️ Tecnologias
 
-| Categoria       | Tecnologia                                                                  |
-| --------------- | --------------------------------------------------------------------------- |
-| **Framework**   | [Next.js 16](https://nextjs.org/) (App Router)                              |
-| **Linguagem**   | [TypeScript 5](https://www.typescriptlang.org/)                             |
-| **Estilização** | [Tailwind CSS 4](https://tailwindcss.com/)                                  |
-| **Componentes** | [shadcn/ui](https://ui.shadcn.com/) + [Radix UI](https://www.radix-ui.com/) |
-| **Estado**      | [Zustand](https://zustand-demo.pmnd.rs/)                                    |
-| **IA**          | [Google Gemini AI](https://ai.google.dev/)                                  |
-| **Ícones**      | [Lucide React](https://lucide.dev/)                                         |
-| **Validação**   | [Zod](https://zod.dev/)                                                     |
-| **Linting**     | [Biome](https://biomejs.dev/)                                               |
+| Categoria       | Tecnologia                                                                          |
+| --------------- | ----------------------------------------------------------------------------------- |
+| **Framework**   | [Next.js 16](https://nextjs.org/) (App Router)                                      |
+| **Linguagem**   | [TypeScript 5](https://www.typescriptlang.org/)                                     |
+| **Estilização** | [Tailwind CSS 4](https://tailwindcss.com/)                                          |
+| **Componentes** | [shadcn/ui](https://ui.shadcn.com/) + [Radix UI](https://www.radix-ui.com/)         |
+| **Estado**      | [Zustand](https://zustand-demo.pmnd.rs/)                                            |
+| **IA**          | [Hugging Face Inference API](https://huggingface.co/docs/inference-providers/index) |
+| **Ícones**      | [Lucide React](https://lucide.dev/)                                                 |
+| **Validação**   | [Zod](https://zod.dev/)                                                             |
+| **Linting**     | [Biome](https://biomejs.dev/)                                                       |
 
 ---
 
@@ -101,7 +101,7 @@ O **Auto Daily App** é uma ferramenta profissional que automatiza a criação d
    Edite o arquivo `.env.local`:
 
    ```env
-   GEMINI_API_KEY=sua_chave_gemini_aqui
+   HUGGINGFACE_API_KEY=sua_chave_huggingface_aqui
    ```
 
 4. **Execute o servidor de desenvolvimento**
@@ -118,12 +118,12 @@ O **Auto Daily App** é uma ferramenta profissional que automatiza a criação d
 
 ## ⚙️ Configuração
 
-### Google Gemini API Key
+### Hugging Face Inference API Key
 
-A chave da API do Gemini deve ser configurada no servidor (`.env.local`):
+A chave da API do Hugging Face deve ser configurada no servidor (`.env.local`):
 
-1. Acesse [Google AI Studio](https://aistudio.google.com/apikey)
-2. Crie uma nova API Key
+1. Acesse [Hugging Face Tokens](https://huggingface.co/settings/tokens)
+2. Crie um token com permissão de inferência
 3. Adicione ao arquivo `.env.local`
 
 ### Azure DevOps (Opcional)
@@ -191,7 +191,7 @@ src/
 ├── app/
 │   ├── api/
 │   │   ├── azure/         # Proxy para Azure DevOps API
-│   │   ├── generate/      # Geração de daily com Gemini
+│   │   ├── generate/      # Geração de daily com Hugging Face
 │   │   └── harvest/       # Proxy para Harvest API
 │   ├── globals.css        # Estilos globais + tema
 │   ├── layout.tsx         # Layout raiz

@@ -80,7 +80,6 @@ function validateConfig(config: UserConfig): ConfigValidation {
     errors,
     hasAzureConfig,
     hasHarvestConfig,
-    hasGeminiConfig: true,
   };
 }
 

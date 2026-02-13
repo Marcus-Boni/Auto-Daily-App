@@ -17,13 +17,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Auto Daily App - Gerador de Daily Scrum",
   description:
-    "Gere relatórios de Daily Scrum automaticamente usando Azure DevOps, Harvest e Google Gemini AI",
+    "Gere relatórios de Daily Scrum automaticamente usando Azure DevOps, Harvest e Hugging Face Inference API",
   keywords: [
     "daily scrum",
     "standup",
     "azure devops",
     "harvest",
-    "gemini",
+    "hugging face",
     "ai",
   ],
   authors: [{ name: "Auto Daily App" }],

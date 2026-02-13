@@ -192,5 +192,4 @@ export interface ConfigValidation {
   errors: Record<keyof UserConfig, string | undefined>;
   hasAzureConfig: boolean;
   hasHarvestConfig: boolean;
-  hasGeminiConfig: boolean;
 }

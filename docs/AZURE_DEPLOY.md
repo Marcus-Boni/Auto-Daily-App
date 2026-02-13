@@ -19,7 +19,6 @@ O Azure App Service é a melhor opção para Next.js com API Routes.
 1. **Acesse o [Azure Portal](https://portal.azure.com)**
 
 2. **Criar um Resource Group**
-
    - Pesquise por "Resource groups" na barra de pesquisa
    - Clique em "+ Create"
    - **Subscription**: Azure for Students
@@ -28,7 +27,6 @@ O Azure App Service é a melhor opção para Next.js com API Routes.
    - Clique em "Review + create" → "Create"
 
 3. **Criar o App Service Plan**
-
    - Pesquise por "App Service plans"
    - Clique em "+ Create"
    - **Subscription**: Azure for Students
@@ -59,8 +57,10 @@ O Azure App Service é a melhor opção para Next.js com API Routes.
 1. No Azure Portal, vá para seu **App Service**
 2. No menu lateral, clique em **Settings** → **Environment variables**
 3. Clique em **+ Add** e adicione:
-   - **Name**: `GEMINI_API_KEY`
-   - **Value**: Sua chave da API do Gemini
+
+- **Name**: `HUGGINGFACE_API_KEY`
+- **Value**: Sua chave da API do Hugging Face
+
 4. Clique em **Apply** e depois **Confirm**
 
 ### Passo 3: Configurar autenticação para GitHub Actions
@@ -123,7 +123,7 @@ O comando retornará um JSON assim:
 | `AZURE_CLIENT_ID`       | O `clientId` do passo anterior       |
 | `AZURE_TENANT_ID`       | O `tenantId` do passo anterior       |
 | `AZURE_SUBSCRIPTION_ID` | O `subscriptionId` do passo anterior |
-| `GEMINI_API_KEY`        | Sua chave da API do Gemini           |
+| `HUGGINGFACE_API_KEY`   | Sua chave da API do Hugging Face     |
 
 > **Nota**: Se usou a Opção A com `--sdk-auth`, você também pode usar o secret `AZURE_CREDENTIALS` com o JSON completo.
 
@@ -190,7 +190,7 @@ O Azure criará automaticamente um workflow no seu repositório!
 
 1. Vá para seu Static Web App no Portal
 2. **Settings** → **Environment variables**
-3. Adicione `GEMINI_API_KEY`
+3. Adicione `HUGGINGFACE_API_KEY`
 
 ---
 
@@ -210,7 +210,7 @@ az webapp config show --name auto-daily-app --resource-group rg-auto-daily-app
 az webapp config appsettings list --name auto-daily-app --resource-group rg-auto-daily-app
 
 # Adicionar variável de ambiente via CLI
-az webapp config appsettings set --name auto-daily-app --resource-group rg-auto-daily-app --settings GEMINI_API_KEY="sua-chave"
+az webapp config appsettings set --name auto-daily-app --resource-group rg-auto-daily-app --settings HUGGINGFACE_API_KEY="sua-chave"
 ```
 
 ---

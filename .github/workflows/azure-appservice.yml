@@ -54,7 +54,7 @@ jobs:
       - name: 🏗️ Build application
         run: npm run build
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
 
       - name: 📦 Create deployment package
         run: |
