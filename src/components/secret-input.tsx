@@ -1,6 +1,7 @@
 "use client";
 
 import { Eye, EyeOff, Lock } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { TutorialHelp } from "@/components/tutorial-help";
 import { Button } from "@/components/ui/button";
@@ -56,15 +57,33 @@ export function SecretInput({
           type="button"
           variant="ghost"
           size="sm"
-          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent cursor-pointer"
           onClick={() => setIsVisible(!isVisible)}
           aria-label={isVisible ? "Ocultar" : "Mostrar"}
         >
-          {isVisible ? (
-            <EyeOff className="h-4 w-4 text-muted-foreground" />
-          ) : (
-            <Eye className="h-4 w-4 text-muted-foreground" />
-          )}
+          <AnimatePresence mode="wait" initial={false}>
+            {isVisible ? (
+              <motion.span
+                key="visible"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.12 }}
+              >
+                <EyeOff className="h-4 w-4 text-muted-foreground" />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="hidden"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.12 }}
+              >
+                <Eye className="h-4 w-4 text-muted-foreground" />
+              </motion.span>
+            )}
+          </AnimatePresence>
         </Button>
       </div>
 

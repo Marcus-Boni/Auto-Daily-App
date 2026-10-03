@@ -12,6 +12,7 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserConfig } from "@/hooks/use-user-config";
 import { API_ENDPOINTS, GENERATION_MODES, REPORT_FORMATS, TIME_PERIODS } from "@/lib/constants";
+import { collapseVariants, fadeInUpVariants, scalePopVariants } from "@/lib/motion";
 import type {
   DailyResult,
   GenerateDailyResponse,
@@ -212,13 +214,16 @@ export function DailyGenerator() {
             </Label>
             <div className="grid grid-cols-2 gap-3">
               {REPORT_FORMATS.map((format) => (
-                <button
+                <motion.button
                   key={format.value}
                   type="button"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.985 }}
+                  transition={{ duration: 0.15 }}
                   onClick={() => setReportFormat(format.value)}
                   className={`
-                    relative flex flex-col items-start gap-1 rounded-lg border p-4 text-left transition-all
-                    hover:border-primary/50 hover:bg-accent/50
+                    relative flex flex-col items-start gap-1 rounded-lg border p-4 text-left transition-colors
+                    hover:border-primary/50 hover:bg-accent/50 cursor-pointer
                     ${
                       reportFormat === format.value
                         ? "border-primary bg-primary/5 ring-1 ring-primary/20"
@@ -235,19 +240,30 @@ export function DailyGenerator() {
                       )}
                       <span className="font-medium">{format.label}</span>
                     </div>
-                    {reportFormat === format.value && (
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
-                        <Check className="h-3 w-3 text-primary-foreground" />
-                      </div>
-                    )}
+                    <AnimatePresence>
+                      {reportFormat === format.value && (
+                        <motion.div
+                          variants={scalePopVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          className="flex h-5 w-5 items-center justify-center rounded-full bg-primary"
+                        >
+                          <Check className="h-3 w-3 text-primary-foreground" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                   <p className="text-xs text-muted-foreground pl-6">{format.description}</p>
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2">
+          <motion.div
+            layout
+            className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2"
+          >
             {selectedPeriod && (
               <>
                 <span className="text-lg">{selectedPeriod.icon}</span>
@@ -265,160 +281,259 @@ export function DailyGenerator() {
                 </Badge>
               </>
             )}
-          </div>
+          </motion.div>
 
-          {mode === "combined-custom" && (
-            <div className="space-y-2">
-              <Label htmlFor="custom-prompt">Instrução Adicional</Label>
-              <Textarea
-                id="custom-prompt"
-                value={customPrompt}
-                onChange={(e) => setCustomPrompt(e.target.value)}
-                placeholder="Ex: Foque mais em tarefas de frontend, mencione o framework React..."
-                className="min-h-[100px]"
-              />
-              <p className="text-xs text-muted-foreground">
-                Adicione instruções personalizadas para a IA
-              </p>
-            </div>
-          )}
-
-          {missingRequirements.length > 0 && (
-            <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-3">
-              <div className="flex items-start gap-2">
-                <AlertCircle className="h-4 w-4 text-yellow-500 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
-                    Configuração Incompleta
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Configure nas Configurações: {missingRequirements.join(", ")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <Button
-            onClick={handleGenerate}
-            disabled={!canGenerate || isLoading}
-            className="w-full gap-2"
-            size="lg"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Gerando Daily...
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4" />
-                Gerar Daily Scrum
-              </>
+          <AnimatePresence>
+            {mode === "combined-custom" && (
+              <motion.div
+                variants={collapseVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="space-y-2 overflow-hidden"
+              >
+                <Label htmlFor="custom-prompt">Instrução Adicional</Label>
+                <Textarea
+                  id="custom-prompt"
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  placeholder="Ex: Foque mais em tarefas de frontend, mencione o framework React..."
+                  className="min-h-[100px]"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Adicione instruções personalizadas para a IA
+                </p>
+              </motion.div>
             )}
-          </Button>
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {missingRequirements.length > 0 && (
+              <motion.div
+                variants={collapseVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="overflow-hidden"
+              >
+                <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-3">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-4 w-4 text-yellow-500 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
+                        Configuração Incompleta
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Configure nas Configurações: {missingRequirements.join(", ")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <motion.div
+            whileHover={canGenerate && !isLoading ? { scale: 1.008 } : undefined}
+            whileTap={canGenerate && !isLoading ? { scale: 0.985 } : undefined}
+            transition={{ duration: 0.15 }}
+          >
+            <Button
+              onClick={handleGenerate}
+              disabled={!canGenerate || isLoading}
+              className="w-full gap-2 cursor-pointer disabled:cursor-not-allowed"
+              size="lg"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {isLoading ? (
+                  <motion.span
+                    key="loading"
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex items-center gap-2"
+                  >
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Gerando Daily...
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="generate"
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex items-center gap-2"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    Gerar Daily Scrum
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Button>
+          </motion.div>
         </CardContent>
       </Card>
 
-      {isLoading && (
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-48" />
-            <Skeleton className="h-4 w-32" />
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-5/6" />
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-4/5" />
-          </CardContent>
-        </Card>
-      )}
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <motion.div
+            key="loading"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-6 w-48" />
+                <Skeleton className="h-4 w-32" />
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-5/6" />
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-4/5" />
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
-      {error && !isLoading && (
-        <Card className="border-destructive/50">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
-              <div>
-                <p className="font-medium text-destructive">Erro ao gerar Daily</p>
-                <p className="text-sm text-muted-foreground">{error}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+        {error && !isLoading && (
+          <motion.div
+            key="error"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Card className="border-destructive/50">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
+                  <div>
+                    <p className="font-medium text-destructive">Erro ao gerar Daily</p>
+                    <p className="text-sm text-muted-foreground">{error}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
-      {result && !isLoading && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  Daily Gerado
-                </CardTitle>
-                <CardDescription className="flex items-center gap-2 mt-1">
-                  <Calendar className="h-3 w-3" />
-                  {new Date(result.generatedAt).toLocaleString("pt-BR")}
-                </CardDescription>
-              </div>
-              <Button variant="outline" size="sm" onClick={handleCopy} className="gap-2">
-                {copied ? (
-                  <>
-                    <Check className="h-4 w-4 text-green-500" />
-                    Copiado!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4" />
-                    Copiar
-                  </>
-                )}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {result.sources?.azure && result.sources.azure.length > 0 && (
-                <Badge variant="secondary" className="gap-1">
-                  <span className="h-2 w-2 rounded-full bg-blue-500" />
-                  {result.sources.azure.length} commits
-                </Badge>
-              )}
-              {result.sources?.harvest && result.sources.harvest.length > 0 && (
-                <Badge variant="secondary" className="gap-1">
-                  <span className="h-2 w-2 rounded-full bg-orange-500" />
-                  {result.sources.harvest.length} registros
-                </Badge>
-              )}
-            </div>
+        {result && !isLoading && (
+          <motion.div
+            key="result"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Sparkles className="h-5 w-5 text-primary" />
+                      Daily Gerado
+                    </CardTitle>
+                    <CardDescription className="flex items-center gap-2 mt-1">
+                      <Calendar className="h-3 w-3" />
+                      {new Date(result.generatedAt).toLocaleString("pt-BR")}
+                    </CardDescription>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopy}
+                    className="gap-2 overflow-hidden min-w-[95px]"
+                  >
+                    <AnimatePresence mode="wait" initial={false}>
+                      {copied ? (
+                        <motion.span
+                          key="copied"
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.15 }}
+                          className="flex items-center gap-1.5 text-green-500 font-medium"
+                        >
+                          <Check className="h-4 w-4" />
+                          Copiado!
+                        </motion.span>
+                      ) : (
+                        <motion.span
+                          key="copy"
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.15 }}
+                          className="flex items-center gap-1.5"
+                        >
+                          <Copy className="h-4 w-4" />
+                          Copiar
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {result.sources?.azure && result.sources.azure.length > 0 && (
+                    <Badge variant="secondary" className="gap-1">
+                      <span className="h-2 w-2 rounded-full bg-blue-500" />
+                      {result.sources.azure.length} commits
+                    </Badge>
+                  )}
+                  {result.sources?.harvest && result.sources.harvest.length > 0 && (
+                    <Badge variant="secondary" className="gap-1">
+                      <span className="h-2 w-2 rounded-full bg-orange-500" />
+                      {result.sources.harvest.length} registros
+                    </Badge>
+                  )}
+                </div>
 
-            <div className="prose prose-sm dark:prose-invert max-w-none rounded-lg bg-muted/30 p-4">
-              <ReactMarkdown>{result.content}</ReactMarkdown>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                <div className="prose prose-sm dark:prose-invert max-w-none rounded-lg bg-muted/30 p-4">
+                  <ReactMarkdown>{result.content}</ReactMarkdown>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
-      {!result && !isLoading && !error && (
-        <Card className="border-dashed">
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center justify-center text-center py-8">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
-                <Sparkles className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <h3 className="font-semibold text-lg">Pronto para gerar seu Daily</h3>
-              <p className="text-sm text-muted-foreground max-w-sm mt-1">
-                Selecione o modo desejado e clique em &quot;Gerar Daily Scrum&quot; para criar seu
-                relatório automaticamente
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+        {!result && !isLoading && !error && (
+          <motion.div
+            key="idle"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Card className="border-dashed">
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center justify-center text-center py-8">
+                  <motion.div
+                    whileHover={{ rotate: 12, scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    className="flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4 cursor-default"
+                  >
+                    <Sparkles className="h-8 w-8 text-muted-foreground" />
+                  </motion.div>
+                  <h3 className="font-semibold text-lg">Pronto para gerar seu Daily</h3>
+                  <p className="text-sm text-muted-foreground max-w-sm mt-1">
+                    Selecione o modo desejado e clique em &quot;Gerar Daily Scrum&quot; para criar
+                    seu relatório automaticamente
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

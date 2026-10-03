@@ -1,15 +1,20 @@
 "use client";
 
 import { Github, Settings, Sparkles } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 import { DailyGenerator } from "@/components/daily-generator";
 import { SettingsPanel } from "@/components/settings-panel";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserConfig } from "@/hooks/use-user-config";
+import { tabContentVariants } from "@/lib/motion";
 
 export function AppShell() {
   const { isHydrated, validation } = useUserConfig();
+  const isFirstTime = !validation.hasAzureConfig && !validation.hasHarvestConfig;
+  const [activeTab, setActiveTab] = useState<string>(isFirstTime ? "settings" : "generator");
 
   if (!isHydrated) {
     return (
@@ -34,16 +39,19 @@ export function AppShell() {
     );
   }
 
-  const isFirstTime = !validation.hasAzureConfig && !validation.hasHarvestConfig;
-
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <motion.div
+              whileHover={{ scale: 1.06, rotate: 4 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs select-none"
+            >
               <Sparkles className="h-5 w-5" />
-            </div>
+            </motion.div>
             <div>
               <h1 className="text-lg font-semibold tracking-tight">Auto Daily</h1>
               <p className="text-xs text-muted-foreground">Gerador de Daily Scrum com IA</p>
@@ -52,7 +60,9 @@ export function AppShell() {
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <a
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               href="https://github.com/Marcus-Boni"
               target="_blank"
               rel="noopener noreferrer"
@@ -60,34 +70,78 @@ export function AppShell() {
               aria-label="GitHub"
             >
               <Github className="h-5 w-5" />
-            </a>
+            </motion.a>
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue={isFirstTime ? "settings" : "generator"} className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="generator" className="gap-2">
-              <Sparkles className="h-4 w-4" />
-              Gerar Daily
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2">
-              <Settings className="h-4 w-4" />
-              Configurações
-              {!validation.hasAzureConfig && !validation.hasHarvestConfig && (
-                <span className="ml-1 flex h-2 w-2 rounded-full bg-yellow-500" />
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="relative grid w-full max-w-md grid-cols-2 p-1">
+            <TabsTrigger
+              value="generator"
+              className="relative z-10 gap-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+            >
+              {activeTab === "generator" && (
+                <motion.div
+                  layoutId="active-tab-indicator"
+                  className="absolute inset-0 rounded-md bg-background shadow-xs dark:bg-input/50"
+                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                />
               )}
+              <span className="relative z-10 flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                Gerar Daily
+              </span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="settings"
+              className="relative z-10 gap-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+            >
+              {activeTab === "settings" && (
+                <motion.div
+                  layoutId="active-tab-indicator"
+                  className="absolute inset-0 rounded-md bg-background shadow-xs dark:bg-input/50"
+                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                Configurações
+                {!validation.hasAzureConfig && !validation.hasHarvestConfig && (
+                  <span className="ml-1 flex h-2 w-2 rounded-full bg-yellow-500 animate-pulse" />
+                )}
+              </span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="generator" className="mt-6">
-            <DailyGenerator />
-          </TabsContent>
-
-          <TabsContent value="settings" className="mt-6">
-            <SettingsPanel />
-          </TabsContent>
+          <AnimatePresence mode="wait">
+            {activeTab === "generator" ? (
+              <motion.div
+                key="generator"
+                role="tabpanel"
+                variants={tabContentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="mt-6"
+              >
+                <DailyGenerator />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="settings"
+                role="tabpanel"
+                variants={tabContentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="mt-6"
+              >
+                <SettingsPanel />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </Tabs>
       </main>
 
