@@ -8,31 +8,35 @@ interface ConfigStatusProps {
   label: string;
   isConfigured: boolean;
   isRequired?: boolean;
+  icon?: React.ReactNode;
 }
 
-export function ConfigStatus({ label, isConfigured, isRequired = false }: ConfigStatusProps) {
+export function ConfigStatus({ label, isConfigured, isRequired = false, icon }: ConfigStatusProps) {
   const content = isConfigured ? (
     <Badge
       variant="outline"
-      className="gap-1 border-green-500/50 bg-green-500/10 text-green-600 dark:text-green-400"
+      className="gap-1.5 border-green-500/50 bg-green-500/10 text-green-600 dark:text-green-400"
     >
-      <CheckCircle2 className="h-3 w-3" />
+      <CheckCircle2 className="h-3 w-3 shrink-0" />
+      {icon && <span className="shrink-0">{icon}</span>}
       {label}
     </Badge>
   ) : isRequired ? (
     <Badge
       variant="outline"
-      className="gap-1 border-destructive/50 bg-destructive/10 text-destructive"
+      className="gap-1.5 border-destructive/50 bg-destructive/10 text-destructive"
     >
-      <XCircle className="h-3 w-3" />
+      <XCircle className="h-3 w-3 shrink-0" />
+      {icon && <span className="shrink-0">{icon}</span>}
       {label}
     </Badge>
   ) : (
     <Badge
       variant="outline"
-      className="gap-1 border-yellow-500/50 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+      className="gap-1.5 border-yellow-500/50 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
     >
-      <AlertCircle className="h-3 w-3" />
+      <AlertCircle className="h-3 w-3 shrink-0" />
+      {icon && <span className="shrink-0">{icon}</span>}
       {label}
     </Badge>
   );

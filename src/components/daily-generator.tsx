@@ -16,6 +16,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { OptSolvLogo } from "@/components/optsolv-logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -158,14 +159,22 @@ export function DailyGenerator() {
               <Select value={mode} onValueChange={(v) => setMode(v as GenerationMode)}>
                 <SelectTrigger id="mode" className="w-full h-auto py-2">
                   <SelectValue placeholder="Selecione um modo">
-                    {selectedMode && <span className="font-medium">{selectedMode.label}</span>}
+                    {selectedMode && (
+                      <span className="flex items-center gap-1.5 font-medium">
+                        {selectedMode.requiresOptsolv && <OptSolvLogo size={14} />}
+                        {selectedMode.label}
+                      </span>
+                    )}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {GENERATION_MODES.map((m) => (
                     <SelectItem key={m.value} value={m.value} className="py-2.5">
                       <div className="flex flex-col items-start gap-0.5">
-                        <span className="font-medium">{m.label}</span>
+                        <div className="flex items-center gap-1.5">
+                          {m.requiresOptsolv && <OptSolvLogo size={14} />}
+                          <span className="font-medium">{m.label}</span>
+                        </div>
                         <span className="text-xs text-muted-foreground">{m.description}</span>
                       </div>
                     </SelectItem>
@@ -490,8 +499,8 @@ export function DailyGenerator() {
                     </Badge>
                   )}
                   {result.sources?.optsolv && result.sources.optsolv.length > 0 && (
-                    <Badge variant="secondary" className="gap-1">
-                      <span className="h-2 w-2 rounded-full bg-orange-500" />
+                    <Badge variant="secondary" className="gap-1.5">
+                      <OptSolvLogo size={14} />
                       {result.sources.optsolv.length} registros (OptSolv)
                     </Badge>
                   )}

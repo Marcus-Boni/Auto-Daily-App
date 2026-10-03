@@ -4,6 +4,7 @@ import { CheckCircle, RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { ConfigStatus } from "@/components/config-status";
+import { OptSolvLogo } from "@/components/optsolv-logo";
 import { SecretInput } from "@/components/secret-input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,7 +37,11 @@ export function SettingsPanel() {
     >
       <motion.div variants={fadeInUpVariants} className="flex flex-wrap items-center gap-2">
         <ConfigStatus label="Azure DevOps" isConfigured={validation.hasAzureConfig} />
-        <ConfigStatus label="OptSolv Time Tracker" isConfigured={validation.hasOptsolvConfig} />
+        <ConfigStatus
+          label="OptSolv Time Tracker"
+          isConfigured={validation.hasOptsolvConfig}
+          icon={<OptSolvLogo size={14} />}
+        />
       </motion.div>
 
       <motion.div variants={fadeInUpVariants}>
@@ -136,23 +141,8 @@ export function SettingsPanel() {
       <motion.div variants={fadeInUpVariants}>
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10">
-                <svg
-                  className="h-5 w-5 text-orange-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-label="OptSolv Time Tracker"
-                >
-                  <title id="optsolv-icon-title">OptSolv Time Tracker</title>
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-              </div>
+            <CardTitle className="flex items-center gap-2.5 text-lg">
+              <OptSolvLogo size={24} />
               OptSolv Time Tracker
             </CardTitle>
             <CardDescription>
