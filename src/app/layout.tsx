@@ -24,8 +24,16 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Auto Daily App - Gerador de Daily Scrum",
   description:
-    "Gere relatórios de Daily Scrum automaticamente usando Azure DevOps, Harvest e Hugging Face Inference API",
-  keywords: ["daily scrum", "standup", "azure devops", "harvest", "hugging face", "ai"],
+    "Gere relatórios de Daily Scrum automaticamente usando Azure DevOps, OptSolv Time Tracker e Hugging Face Inference API",
+  keywords: [
+    "daily scrum",
+    "standup",
+    "azure devops",
+    "optsolv",
+    "time tracker",
+    "hugging face",
+    "ai",
+  ],
   authors: [{ name: "Auto Daily App" }],
   manifest: "/manifest.json",
   icons: {

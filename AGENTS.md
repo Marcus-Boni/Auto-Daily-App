@@ -11,7 +11,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 # AGENTS.md - Workspace Agent Instructions
 
 ## 📌 Project Identity
-**Auto Daily App** is an intelligent standup generator web app integrating Azure DevOps, Harvest, and Hugging Face Inference API.
+**Auto Daily App** is an intelligent standup generator web app integrating Azure DevOps, OptSolv Time Tracker, and Hugging Face Inference API.
 
 - **Stack**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5, Tailwind CSS 4, Biome 2.5, Zustand, Zod.
 
@@ -36,10 +36,10 @@ npm run build
 
 ## 🧭 Architecture Quick Reference
 
-- **`src/app/`**: Next.js App Router (pages and API routes `/api/azure`, `/api/harvest`, `/api/generate`).
+- **`src/app/`**: Next.js App Router (pages and API routes `/api/azure`, `/api/optsolv`, `/api/generate`).
 - **`src/components/`**: UI components. Reusable Radix/shadcn primitives in `src/components/ui/`.
 - **`src/hooks/`**: Custom hooks, specifically `useUserConfig` for local user preferences & credentials.
-- **`src/lib/`**: External services (`ai-service.ts`, `azure-service.ts`, `harvest-service.ts`) and constants.
+- **`src/lib/`**: External services (`ai-service.ts`, `azure-service.ts`, `optsolv-service.ts`) and constants.
 - **`src/types/`**: TypeScript data contracts and payload schemas.
 - **`.agents/skills/`**: Installed agent skills:
   - `find-skills`: Discover and install skills from the agent ecosystem (`npx skills`).

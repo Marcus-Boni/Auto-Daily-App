@@ -13,7 +13,7 @@ import { tabContentVariants } from "@/lib/motion";
 
 export function AppShell() {
   const { isHydrated, validation } = useUserConfig();
-  const isFirstTime = !validation.hasAzureConfig && !validation.hasHarvestConfig;
+  const isFirstTime = !validation.hasAzureConfig && !validation.hasOptsolvConfig;
   const [activeTab, setActiveTab] = useState<string>(isFirstTime ? "settings" : "generator");
 
   if (!isHydrated) {
@@ -108,7 +108,7 @@ export function AppShell() {
               <span className="relative z-10 flex items-center gap-2">
                 <Settings className="h-4 w-4" />
                 Configurações
-                {!validation.hasAzureConfig && !validation.hasHarvestConfig && (
+                {!validation.hasAzureConfig && !validation.hasOptsolvConfig && (
                   <span className="ml-1 flex h-2 w-2 rounded-full bg-yellow-500 animate-pulse" />
                 )}
               </span>
@@ -149,7 +149,7 @@ export function AppShell() {
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>
             AutoDaily AI é uma ferramenta profissional que automatiza relatórios de Daily Scrum com
-            dados do Azure DevOps, Harvest e IA generativa. Veja mais no{" "}
+            dados do Azure DevOps, OptSolv Time Tracker e IA generativa. Veja mais no{" "}
             <a
               className="text-primary underline-offset-4 hover:underline"
               href="https://github.com/Marcus-Boni"

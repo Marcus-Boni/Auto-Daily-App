@@ -66,28 +66,28 @@ export const GENERATION_MODES: ModeOption[] = [
     label: "Apenas Azure DevOps",
     description: "Gera o daily baseado apenas nos commits do Azure DevOps",
     requiresAzure: true,
-    requiresHarvest: false,
+    requiresOptsolv: false,
   },
   {
-    value: "harvest-only",
-    label: "Apenas Harvest",
-    description: "Gera o daily baseado apenas nos registros de tempo do Harvest",
+    value: "optsolv-only",
+    label: "Apenas OptSolv",
+    description: "Gera o daily baseado apenas nos registros de tempo do OptSolv Time Tracker",
     requiresAzure: false,
-    requiresHarvest: true,
+    requiresOptsolv: true,
   },
   {
     value: "combined-auto",
     label: "Combinado (Automático)",
-    description: "Combina dados do Azure DevOps e Harvest com prompt padrão",
+    description: "Combina dados do Azure DevOps e OptSolv com prompt padrão",
     requiresAzure: true,
-    requiresHarvest: true,
+    requiresOptsolv: true,
   },
   {
     value: "combined-custom",
     label: "Combinado (Customizado)",
-    description: "Combina dados do Azure DevOps e Harvest com prompt personalizado",
+    description: "Combina dados do Azure DevOps e OptSolv com prompt personalizado",
     requiresAzure: true,
-    requiresHarvest: true,
+    requiresOptsolv: true,
   },
 ];
 
@@ -96,7 +96,7 @@ export const STORAGE_KEY = "auto-daily-config";
 export const API_ENDPOINTS = {
   generate: "/api/generate",
   azure: "/api/azure",
-  harvest: "/api/harvest",
+  optsolv: "/api/optsolv",
 } as const;
 
 export function generateProfessionalPrompt(periodHours: number): string {
@@ -328,16 +328,15 @@ export const TUTORIALS = {
       "Use o nome exato do repositório",
     ],
   },
-  harvestToken: {
-    title: "Como obter o Token do Harvest",
+  optsolvToken: {
+    title: "Como obter a Chave ou Token do OptSolv Time Tracker",
     steps: [
-      "Acesse https://id.getharvest.com/developers",
-      "Faça login na sua conta Harvest",
-      "Clique em 'Create New Personal Access Token'",
-      "Dê um nome ao token (ex: 'Auto Daily App')",
-      "Copie o 'Your Token' gerado",
-      "Copie também o 'Account ID' exibido",
+      "Acesse a documentação da API em https://opt-time.optsolv.com.br/api/v1/docs",
+      "Utilize a Chave de Integração Padronizada fornecida pela equipe ou o Token M2M via Microsoft Entra ID",
+      "Chave padrão de desenvolvimento: opt_time_dev_standardized_integration_key_2026_test",
+      "Cole a chave no campo abaixo para autenticar suas consultas",
     ],
-    warning: "⚠️ Anote o Account ID junto com o Token!",
+    warning:
+      "🔒 A chave é enviada com segurança apenas via cabeçalho Authorization Bearer para a API do OptSolv.",
   },
 } as const;

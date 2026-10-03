@@ -5,8 +5,8 @@ export interface UserConfig {
   azureRepositoryId: string;
   azureUserEmail: string;
 
-  harvestAccountId: string;
-  harvestToken: string;
+  optsolvToken: string;
+  optsolvUserEmail: string;
 
   defaultMode: GenerationMode;
   language: "pt-BR" | "en-US";
@@ -14,7 +14,7 @@ export interface UserConfig {
 
 export type PartialUserConfig = Partial<UserConfig>;
 
-export type GenerationMode = "azure-only" | "harvest-only" | "combined-auto" | "combined-custom";
+export type GenerationMode = "azure-only" | "optsolv-only" | "combined-auto" | "combined-custom";
 
 export type TimePeriod = "24h" | "48h" | "72h" | "7d" | "14d" | "30d";
 
@@ -23,7 +23,7 @@ export interface ModeOption {
   label: string;
   description: string;
   requiresAzure: boolean;
-  requiresHarvest: boolean;
+  requiresOptsolv: boolean;
 }
 
 export interface PeriodOption {
@@ -72,65 +72,35 @@ export interface ParsedCommit {
   changes: string;
 }
 
-export interface HarvestTimeEntry {
-  id: number;
-  spent_date: string;
-  hours: number;
-  hours_without_timer: number;
-  rounded_hours: number;
-  notes: string | null;
-  is_locked: boolean;
-  locked_reason: string | null;
-  is_closed: boolean;
-  is_billed: boolean;
-  timer_started_at: string | null;
-  started_time: string | null;
-  ended_time: string | null;
-  is_running: boolean;
+export interface OptSolvTimeEntry {
+  id: string;
+  userId: string;
+  userEmail: string;
+  projectId: string;
+  projectCode: string;
+  projectIntegrationKey: string | null;
+  date: string;
+  durationMinutes: number;
   billable: boolean;
-  budgeted: boolean;
-  billable_rate: number | null;
-  cost_rate: number | null;
-  created_at: string;
-  updated_at: string;
-  user: {
-    id: number;
-    name: string;
-  };
-  client: {
-    id: number;
-    name: string;
-    currency: string;
-  };
-  project: {
-    id: number;
-    name: string;
-    code: string;
-  };
-  task: {
-    id: number;
-    name: string;
-  };
+  status: "draft" | "submitted" | "approved" | "rejected";
+  description: string;
+  createdAt: string;
 }
 
-export interface HarvestTimeEntriesResponse {
-  time_entries: HarvestTimeEntry[];
-  per_page: number;
-  total_pages: number;
-  total_entries: number;
-  next_page: number | null;
-  previous_page: number | null;
-  page: number;
+export interface OptSolvTimeEntriesResponse {
+  data: OptSolvTimeEntry[];
+  nextCursor: string | null;
 }
 
 export interface ParsedTimeEntry {
-  id: number;
+  id: string | number;
   project: string;
   task: string;
   hours: number;
   notes: string;
   client: string;
   date: string;
+  userEmail?: string;
 }
 
 export interface GenerateDailyRequest {
@@ -149,7 +119,7 @@ export interface GenerateDailyResponse {
   details?: string;
   sources?: {
     azure?: ParsedCommit[];
-    harvest?: ParsedTimeEntry[];
+    optsolv?: ParsedTimeEntry[];
   };
 }
 
@@ -160,7 +130,7 @@ export interface AzureDataResponse {
   details?: string;
 }
 
-export interface HarvestDataResponse {
+export interface OptsolvDataResponse {
   success: boolean;
   entries?: ParsedTimeEntry[];
   error?: string;
@@ -178,7 +148,7 @@ export interface DailyResult {
   mode: GenerationMode;
   sources?: {
     azure?: ParsedCommit[];
-    harvest?: ParsedTimeEntry[];
+    optsolv?: ParsedTimeEntry[];
   };
 }
 
@@ -191,5 +161,5 @@ export interface ConfigValidation {
   isValid: boolean;
   errors: Record<keyof UserConfig, string | undefined>;
   hasAzureConfig: boolean;
-  hasHarvestConfig: boolean;
+  hasOptsolvConfig: boolean;
 }

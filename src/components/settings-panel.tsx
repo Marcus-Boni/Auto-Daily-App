@@ -36,7 +36,7 @@ export function SettingsPanel() {
     >
       <motion.div variants={fadeInUpVariants} className="flex flex-wrap items-center gap-2">
         <ConfigStatus label="Azure DevOps" isConfigured={validation.hasAzureConfig} />
-        <ConfigStatus label="Harvest" isConfigured={validation.hasHarvestConfig} />
+        <ConfigStatus label="OptSolv Time Tracker" isConfigured={validation.hasOptsolvConfig} />
       </motion.div>
 
       <motion.div variants={fadeInUpVariants}>
@@ -141,41 +141,47 @@ export function SettingsPanel() {
                 <svg
                   className="h-5 w-5 text-orange-500"
                   viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-label="Harvest"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-label="OptSolv Time Tracker"
                 >
-                  <title id="harvest-icon-title">Harvest</title>
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 21.6c-5.302 0-9.6-4.298-9.6-9.6S6.698 2.4 12 2.4s9.6 4.298 9.6 9.6-4.298 9.6-9.6 9.6zm0-16.8c-3.974 0-7.2 3.226-7.2 7.2s3.226 7.2 7.2 7.2 7.2-3.226 7.2-7.2-3.226-7.2-7.2zm0 12c-2.65 0-4.8-2.15-4.8-4.8s2.15-4.8 4.8-4.8 4.8 2.15 4.8 4.8-2.15 4.8-4.8 4.8z" />
+                  <title id="optsolv-icon-title">OptSolv Time Tracker</title>
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
                 </svg>
               </div>
-              Harvest
+              OptSolv Time Tracker
             </CardTitle>
             <CardDescription>
-              Configure suas credenciais para buscar registros de tempo
+              Configure suas credenciais da API v1 para buscar registros de tempo da OptSolv
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <SecretInput
-              id="harvest-token"
-              label="Access Token"
-              value={config.harvestToken}
-              onChange={(value) => updateConfig({ harvestToken: value })}
-              placeholder="Seu token do Harvest"
-              tutorial={TUTORIALS.harvestToken}
-              error={validation.errors.harvestToken}
+              id="optsolv-token"
+              label="Chave de Integração ou Token M2M"
+              value={config.optsolvToken}
+              onChange={(value) => updateConfig({ optsolvToken: value })}
+              placeholder="opt_time_dev_standardized_integration_key_..."
+              tutorial={TUTORIALS.optsolvToken}
+              error={validation.errors.optsolvToken}
             />
 
             <div className="space-y-2">
-              <Label htmlFor="harvest-account">Account ID</Label>
+              <Label htmlFor="optsolv-user">E-mail do colaborador (opcional)</Label>
               <Input
-                id="harvest-account"
-                value={config.harvestAccountId}
-                onChange={(e) => updateConfig({ harvestAccountId: e.target.value })}
-                placeholder="123456"
+                id="optsolv-user"
+                type="email"
+                value={config.optsolvUserEmail}
+                onChange={(e) => updateConfig({ optsolvUserEmail: e.target.value })}
+                placeholder="ex: marcus.boni@optsolv.com.br"
               />
-              {validation.errors.harvestAccountId && (
-                <p className="text-sm text-destructive">{validation.errors.harvestAccountId}</p>
-              )}
+              <p className="text-xs text-muted-foreground">
+                Filtra apenas os lançamentos de tempo do seu usuário no OptSolv
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -211,8 +217,8 @@ export function SettingsPanel() {
         <p className="text-sm text-muted-foreground">
           <strong className="text-foreground">🔒 Segurança:</strong> Suas credenciais são salvas
           apenas no seu navegador (LocalStorage) e são enviadas via cabeçalhos HTTP somente para as
-          rotas de API da aplicação. Essas rotas atuam como proxy para Azure DevOps, Harvest e
-          provedor de IA, sem persistência em banco de dados.
+          rotas de API da aplicação. Essas rotas atuam como proxy para Azure DevOps, OptSolv Time
+          Tracker e provedor de IA, sem persistência em banco de dados.
         </p>
       </motion.div>
     </motion.div>

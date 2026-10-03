@@ -127,8 +127,8 @@ export function DailyGenerator() {
     if (selectedMode?.requiresAzure && !validation.hasAzureConfig) {
       requirements.push("Azure DevOps");
     }
-    if (selectedMode?.requiresHarvest && !validation.hasHarvestConfig) {
-      requirements.push("Harvest");
+    if (selectedMode?.requiresOptsolv && !validation.hasOptsolvConfig) {
+      requirements.push("OptSolv Time Tracker");
     }
 
     return requirements;
@@ -489,10 +489,10 @@ export function DailyGenerator() {
                       {result.sources.azure.length} commits
                     </Badge>
                   )}
-                  {result.sources?.harvest && result.sources.harvest.length > 0 && (
+                  {result.sources?.optsolv && result.sources.optsolv.length > 0 && (
                     <Badge variant="secondary" className="gap-1">
                       <span className="h-2 w-2 rounded-full bg-orange-500" />
-                      {result.sources.harvest.length} registros
+                      {result.sources.optsolv.length} registros (OptSolv)
                     </Badge>
                   )}
                 </div>

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { AIServiceError, generateDailyWithAI } from "@/lib/ai-service";
 import { fetchAzureCommits } from "@/lib/azure-service";
 import { generateDailyPrompt, generateProfessionalPrompt } from "@/lib/constants";
-import { fetchHarvestEntries } from "@/lib/harvest-service";
+import { fetchOptsolvEntries } from "@/lib/optsolv-service";
 import type {
   GenerateDailyRequest,
   GenerateDailyResponse,
@@ -16,12 +16,12 @@ import type {
 
 interface DataSources {
   azure?: ParsedCommit[];
-  harvest?: ParsedTimeEntry[];
+  optsolv?: ParsedTimeEntry[];
 }
 
 const generateDailySchema = z
   .object({
-    mode: z.enum(["azure-only", "harvest-only", "combined-auto", "combined-custom"]),
+    mode: z.enum(["azure-only", "optsolv-only", "combined-auto", "combined-custom"]),
     customPrompt: z.string().trim().max(10_000).optional(),
     periodHours: z.number().int().min(1).max(720).optional(),
     reportFormat: z.enum(["standard", "professional"]).optional(),
@@ -66,33 +66,33 @@ async function fetchAzureData(
   return result.commits || null;
 }
 
-async function fetchHarvestData(
+async function fetchOptsolvData(
   request: NextRequest,
   periodHours: number
 ): Promise<ParsedTimeEntry[] | null> {
-  const token = request.headers.get("x-harvest-token") || "";
-  const accountId = request.headers.get("x-harvest-account-id") || "";
+  const token = request.headers.get("x-optsolv-token") || "";
+  const userEmail = request.headers.get("x-optsolv-user-email") || undefined;
 
   if (!token) {
     return null;
   }
 
-  console.log(`[Generate API] Fetching Harvest data directly via service`);
+  console.log(`[Generate API] Fetching OptSolv data directly via service`);
 
-  const result = await fetchHarvestEntries(
+  const result = await fetchOptsolvEntries(
     {
       token,
-      accountId,
+      userEmail,
     },
     periodHours
   );
 
   if (!result.success) {
-    console.error(`[Generate API] Harvest error: ${result.error} - ${result.details}`);
+    console.error(`[Generate API] OptSolv error: ${result.error} - ${result.details}`);
     return null;
   }
 
-  console.log(`[Generate API] Harvest returned ${result.entries?.length || 0} entries`);
+  console.log(`[Generate API] OptSolv returned ${result.entries?.length || 0} entries`);
   return result.entries || null;
 }
 
@@ -104,7 +104,7 @@ async function fetchDataByMode(
   const sources: DataSources = {};
 
   const hasAzureConfig = request.headers.get("x-azure-pat");
-  const hasHarvestConfig = request.headers.get("x-harvest-token");
+  const hasOptsolvConfig = request.headers.get("x-optsolv-token");
 
   switch (mode) {
     case "azure-only":
@@ -113,21 +113,21 @@ async function fetchDataByMode(
       }
       break;
 
-    case "harvest-only":
-      if (hasHarvestConfig) {
-        sources.harvest = (await fetchHarvestData(request, periodHours)) || undefined;
+    case "optsolv-only":
+      if (hasOptsolvConfig) {
+        sources.optsolv = (await fetchOptsolvData(request, periodHours)) || undefined;
       }
       break;
 
     case "combined-auto":
     case "combined-custom": {
-      const [azureData, harvestData] = await Promise.all([
+      const [azureData, optsolvData] = await Promise.all([
         hasAzureConfig ? fetchAzureData(request, periodHours) : Promise.resolve(null),
-        hasHarvestConfig ? fetchHarvestData(request, periodHours) : Promise.resolve(null),
+        hasOptsolvConfig ? fetchOptsolvData(request, periodHours) : Promise.resolve(null),
       ]);
 
       if (azureData) sources.azure = azureData;
-      if (harvestData) sources.harvest = harvestData;
+      if (optsolvData) sources.optsolv = optsolvData;
       break;
     }
   }
@@ -173,10 +173,10 @@ function buildPrompt(
     parts.push("_Nenhum commit encontrado no período._\n");
   }
 
-  if (sources.harvest && sources.harvest.length > 0) {
-    parts.push("\n### Registros de Tempo (Harvest):\n");
+  if (sources.optsolv && sources.optsolv.length > 0) {
+    parts.push("\n### Registros de Tempo (OptSolv Time Tracker):\n");
 
-    const byProject = sources.harvest.reduce(
+    const byProject = sources.optsolv.reduce(
       (acc, entry) => {
         if (!acc[entry.project]) {
           acc[entry.project] = [];
@@ -194,12 +194,12 @@ function buildPrompt(
       for (const entry of entries) {
         parts.push(`- ${entry.task}: ${entry.hours}h`);
         if (entry.notes !== "Sem descrição") {
-          parts.push(`  - Notas: ${entry.notes}`);
+          parts.push(`  - Atividade: ${entry.notes}`);
         }
       }
     }
   } else {
-    parts.push("\n### Registros de Tempo (Harvest):\n");
+    parts.push("\n### Registros de Tempo (OptSolv Time Tracker):\n");
     parts.push("_Nenhum registro de tempo encontrado no período._\n");
   }
 
@@ -230,9 +230,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
     const sources = await fetchDataByMode(mode, request, periodHours);
 
     const hasAzureData = sources.azure && sources.azure.length > 0;
-    const hasHarvestData = sources.harvest && sources.harvest.length > 0;
+    const hasOptsolvData = sources.optsolv && sources.optsolv.length > 0;
 
-    if (!hasAzureData && !hasHarvestData) {
+    if (!hasAzureData && !hasOptsolvData) {
       return NextResponse.json(
         {
           success: false,

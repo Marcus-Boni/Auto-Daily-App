@@ -5,7 +5,7 @@
   
   **Gerador inteligente de relatórios de Daily Scrum com IA**
   
-   Automatize suas dailies integrando Azure DevOps, Harvest e Hugging Face Inference API.
+    Automatize suas dailies integrando Azure DevOps, OptSolv Time Tracker e Hugging Face Inference API.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
@@ -24,7 +24,7 @@
 
 ## 📋 Sobre
 
-O **Auto Daily App** é uma ferramenta profissional que automatiza a criação de relatórios de Daily Scrum. Ele coleta automaticamente seus commits do Azure DevOps e suas entradas de tempo do Harvest, e utiliza a Hugging Face Inference API para gerar relatórios estruturados e prontos para compartilhar.
+O **Auto Daily App** é uma ferramenta profissional que automatiza a criação de relatórios de Daily Scrum. Ele coleta automaticamente seus commits do Azure DevOps e suas entradas de tempo do OptSolv Time Tracker, e utiliza a Hugging Face Inference API para gerar relatórios estruturados e prontos para compartilhar.
 
 ### ✨ Por que usar?
 
@@ -38,7 +38,7 @@ O **Auto Daily App** é uma ferramenta profissional que automatiza a criação d
 ## 🚀 Funcionalidades
 
 - **📊 Integração Azure DevOps** - Busca automática de commits por período
-- **⏰ Integração Harvest** - Importa entradas de tempo automaticamente
+- **⏰ Integração OptSolv Time Tracker** - Importa entradas de tempo e tarefas automaticamente
 - **🤖 Geração com IA** - Hugging Face Inference API para relatórios inteligentes
 - **📅 Períodos flexíveis** - Suporte para dailies de 24h até 30 dias
 - **📝 Formatos de relatório** - Padrão (O que fiz/Vou fazer/Impedimentos) ou Executivo
@@ -71,7 +71,7 @@ O **Auto Daily App** é uma ferramenta profissional que automatiza a criação d
 - [Node.js](https://nodejs.org/) 18.17 ou superior
 - [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), [pnpm](https://pnpm.io/) ou [bun](https://bun.sh/)
 - Conta no Azure DevOps (opcional)
-- Conta no Harvest (opcional)
+- Chave de integração do OptSolv Time Tracker (opcional)
 
 ### Instalação
 
@@ -149,22 +149,21 @@ Na aba **Configurações** do app, você precisará informar:
 
 </details>
 
-### Harvest (Opcional)
+### OptSolv Time Tracker (Opcional)
 
 Na aba **Configurações** do app, você precisará informar:
 
-| Campo            | Descrição                        |
-| ---------------- | -------------------------------- |
-| **Account ID**   | ID numérico da sua conta Harvest |
-| **Access Token** | Token de acesso pessoal          |
+| Campo                     | Descrição                                                                     |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| **Chave de Integração**   | Token JWT Bearer ou Chave de Integração Padronizada (`opt_time_...`)           |
+| **Filtro de Colaborador** | *(Opcional)* Email para filtrar apenas seus lançamentos (ex: `seu.email@...`) |
 
 <details>
-<summary>📖 Como obter credenciais do Harvest</summary>
+<summary>📖 Documentação da API do OptSolv Time Tracker</summary>
 
-1. Acesse [Harvest Developers](https://id.getharvest.com/developers)
-2. Clique em **"Create New Personal Access Token"**
-3. Dê um nome ao token (ex: "Auto Daily App")
-4. Copie o **Access Token** e o **Account ID**
+1. Acesse a documentação Swagger em [OptSolv Time Tracker API v1 Docs](https://opt-time.optsolv.com.br/api/v1/docs)
+2. Utilize sua chave de integração ou token JWT emitido pelo portal
+3. Preencha no painel de configurações para sincronizar seus lançamentos de horas e tarefas
 
 </details>
 
@@ -175,7 +174,7 @@ Na aba **Configurações** do app, você precisará informar:
 1. **Configure suas credenciais** na aba "Configurações"
 2. **Selecione o modo de geração**:
    - 🔷 **Azure DevOps** - Baseado em commits
-   - 🟠 **Harvest** - Baseado em time entries
+   - 🟠 **OptSolv Time Tracker** - Baseado em time entries e apontamentos
    - 🟢 **Combinado** - Usa ambas as fontes
 3. **Escolha o período** (24h, 48h, 72h, 1 semana, etc.)
 4. **Selecione o formato** do relatório (Padrão ou Executivo)
@@ -192,7 +191,7 @@ src/
 │   ├── api/
 │   │   ├── azure/         # Proxy para Azure DevOps API
 │   │   ├── generate/      # Geração de daily com Hugging Face
-│   │   └── harvest/       # Proxy para Harvest API
+│   │   └── optsolv/       # Proxy para OptSolv Time Tracker API
 │   ├── globals.css        # Estilos globais + tema
 │   ├── layout.tsx         # Layout raiz
 │   └── page.tsx           # Página principal
