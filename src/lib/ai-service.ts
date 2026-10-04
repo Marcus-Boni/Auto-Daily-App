@@ -59,7 +59,8 @@ function getHuggingFaceApiKey(): string {
   return apiKey;
 }
 
-export async function generateDailyWithAI(prompt: string): Promise<string> {
+export async function generateDailyWithAI(prompt: string, signal?: AbortSignal): Promise<string> {
+  signal?.throwIfAborted();
   const apiKey = getHuggingFaceApiKey();
 
   let response: Response;
@@ -77,7 +78,9 @@ export async function generateDailyWithAI(prompt: string): Promise<string> {
         temperature: 0.3,
         max_tokens: 1200,
       }),
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      signal: signal
+        ? AbortSignal.any([AbortSignal.timeout(REQUEST_TIMEOUT_MS), signal])
+        : AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
   } catch (error) {
     if (error instanceof Error && error.name === "TimeoutError") {

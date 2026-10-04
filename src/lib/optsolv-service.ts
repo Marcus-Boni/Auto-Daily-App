@@ -1,4 +1,4 @@
-import type { ParsedTimeEntry } from "@/types";
+import type { ParsedTimeEntry, SourceWindow } from "@/types";
 
 export interface OptSolvConfig {
   token: string;
@@ -41,7 +41,8 @@ const DEFAULT_OPTSOLV_BASE_URL = "https://opt-time.optsolv.com.br/api/v1";
  */
 export async function fetchOptsolvEntries(
   config: OptSolvConfig,
-  periodHours: number
+  periodHours: number,
+  options: { window?: SourceWindow; test?: boolean; signal?: AbortSignal } = {}
 ): Promise<OptSolvResult> {
   const { token, baseUrl = DEFAULT_OPTSOLV_BASE_URL, userEmail } = config;
 
@@ -54,38 +55,29 @@ export async function fetchOptsolvEntries(
   }
 
   try {
-    const now = new Date();
-
-    const toDate = new Date(now);
-    toDate.setHours(23, 59, 59, 999);
-
-    const fromDate = new Date(now);
-    if (periodHours === 0) {
-      fromDate.setHours(0, 0, 0, 0);
-    } else {
-      fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
-      fromDate.setHours(0, 0, 0, 0);
-    }
-
-    const formatDate = (date: Date): string => {
-      return date.toISOString().split("T")[0];
-    };
-
-    const fromStr = formatDate(fromDate);
-    const toStr = formatDate(toDate);
-
-    console.log(`[OptSolv Service] Searching entries from ${fromStr} to ${toStr}`);
-
+    const end = options.window?.end ?? new Date().toISOString();
+    const start =
+      options.window?.start ??
+      new Date(
+        new Date(end).getTime() - Math.max(1, Math.min(720, periodHours || 24)) * 3_600_000
+      ).toISOString();
+    // OptSolv's API accepts calendar dates rather than timestamp boundaries.
+    const fromStr = start.slice(0, 10);
+    const toStr = end.slice(0, 10);
     const params = new URLSearchParams({
       from: fromStr,
       to: toStr,
-      limit: "200",
+      limit: options.test ? "1" : "200",
     });
 
     const apiUrl = `${baseUrl.replace(/\/$/, "")}/time-entries?${params.toString()}`;
 
     const response = await fetch(apiUrl, {
       method: "GET",
+      cache: "no-store",
+      signal: options.signal
+        ? AbortSignal.any([AbortSignal.timeout(15_000), options.signal])
+        : AbortSignal.timeout(15_000),
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -94,9 +86,6 @@ export async function fetchOptsolvEntries(
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`[OptSolv Service] Error ${response.status}: ${errorText}`);
-
       if (response.status === 401) {
         return {
           success: false,
@@ -125,13 +114,14 @@ export async function fetchOptsolvEntries(
       return {
         success: false,
         error: "Erro ao buscar registros de tempo do OptSolv",
-        details: errorText,
+        details: `A consulta ao OptSolv falhou (HTTP ${response.status}). Tente novamente.`,
       };
     }
 
     const data: OptSolvResponse = await response.json();
-    let rawEntries = data.data || [];
-    console.log(`[OptSolv Service] Found ${rawEntries.length} entries in period`);
+    if (!Array.isArray(data.data)) throw new Error("Invalid response");
+    if (options.test) return { success: true, entries: [] };
+    let rawEntries = data.data;
 
     // Filtrar por e-mail do usuário se fornecido
     if (userEmail && userEmail.trim().length > 0) {
@@ -141,7 +131,6 @@ export async function fetchOptsolvEntries(
           entry.userEmail?.toLowerCase() === normalizedUser ||
           entry.userId?.toLowerCase() === normalizedUser
       );
-      console.log(`[OptSolv Service] Filtered to ${rawEntries.length} entries for ${userEmail}`);
     }
 
     const entries: ParsedTimeEntry[] = rawEntries.map((entry) => {
@@ -165,12 +154,13 @@ export async function fetchOptsolvEntries(
       entries,
     };
   } catch (error) {
-    console.error("[OptSolv Service] Error:", error);
-
     return {
       success: false,
       error: "Erro interno ao comunicar com OptSolv",
-      details: error instanceof Error ? error.message : "Erro desconhecido",
+      details:
+        error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")
+          ? "A consulta excedeu o tempo limite. Tente novamente."
+          : "Não foi possível consultar a fonte. Verifique a configuração e tente novamente.",
     };
   }
 }

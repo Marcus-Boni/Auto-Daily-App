@@ -1,171 +1,183 @@
 "use client";
 
-import { Github, Settings, Sparkles } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { BookOpen, Code2, FileText, Github, Plug } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { BrandLogo } from "@/components/brand-logo";
+import { GenerationAction } from "@/components/daily/generation-controls";
 import { DailyGenerator } from "@/components/daily-generator";
+import { GuidePanel } from "@/components/guide-panel";
 import { SettingsPanel } from "@/components/settings-panel";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useDailyGeneration } from "@/hooks/use-daily-generation";
 import { useUserConfig } from "@/hooks/use-user-config";
-import { tabContentVariants } from "@/lib/motion";
+import brand from "@/lib/brand.json";
+
+type View = "daily" | "integrations" | "guide";
+const navigation = [
+  { id: "daily", label: "Daily", icon: FileText },
+  { id: "integrations", label: "Integrações", icon: Plug },
+  { id: "guide", label: "Guia", icon: BookOpen },
+] as const;
 
 export function AppShell() {
-  const { isHydrated, validation } = useUserConfig();
-  const isFirstTime = !validation.hasAzureConfig && !validation.hasOptsolvConfig;
-  const [activeTab, setActiveTab] = useState<string>(isFirstTime ? "settings" : "generator");
-
-  if (!isHydrated) {
+  const { isHydrated } = useUserConfig();
+  if (!isHydrated)
     return (
-      <div className="min-h-screen bg-background">
-        <header className="border-b">
-          <div className="container mx-auto flex h-16 items-center justify-between px-4">
-            <Skeleton className="h-8 w-48" />
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-9 w-9 rounded-full" />
-              <Skeleton className="h-9 w-9 rounded-full" />
-            </div>
-          </div>
-        </header>
-        <main className="container mx-auto px-4 py-8">
-          <Skeleton className="h-10 w-64 mb-8" />
-          <div className="space-y-4">
-            <Skeleton className="h-48 w-full" />
-            <Skeleton className="h-32 w-full" />
-          </div>
-        </main>
+      <div className="app-loading" role="status" aria-label="Carregando suas preferências">
+        <BrandLogo />
+        <Skeleton className="mt-12 h-10 w-80 max-w-full" />
+        <Skeleton className="mt-8 h-80 w-full" />
       </div>
     );
-  }
+  return <AppWorkspace />;
+}
 
+function AppWorkspace() {
+  const daily = useDailyGeneration();
+  const { validation } = useUserConfig();
+  const [view, setView] = useState<View>("daily");
+  const main = useRef<HTMLElement>(null);
+  const navigate = (next: View) => {
+    if (next === "daily" && !daily.state.options.azure && !daily.state.options.optsolv)
+      daily.updateOptions({
+        azure: validation.hasAzureConfig,
+        optsolv: validation.hasOptsolvConfig,
+      });
+    setView(next);
+    if (window.location.hash !== `#${next}`) window.history.pushState(null, "", `#${next}`);
+    requestAnimationFrame(() => {
+      const heading = main.current?.querySelector<HTMLElement>(`#${next} h1`);
+      heading?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: "instant" });
+    });
+  };
+  useEffect(() => {
+    const syncHash = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash === "daily" || hash === "integrations" || hash === "guide") setView(hash);
+    };
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, []);
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-3">
-            <motion.div
-              whileHover={{ scale: 1.06, rotate: 4 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs select-none"
-            >
-              <Sparkles className="h-5 w-5" />
-            </motion.div>
-            <div>
-              <h1 className="text-lg font-semibold tracking-tight">Auto Daily</h1>
-              <p className="text-xs text-muted-foreground">Gerador de Daily Scrum com IA</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              href="https://github.com/Marcus-Boni"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-              aria-label="GitHub"
-            >
-              <Github className="h-5 w-5" />
-            </motion.a>
-          </div>
+    <>
+      <a className="skip-link" href="#main">
+        Ir para o conteúdo
+      </a>
+      <header className="app-header">
+        <button
+          type="button"
+          className="brand"
+          onClick={() => navigate("daily")}
+          aria-label={`${brand.name}, início`}
+        >
+          <BrandLogo decorative />
+        </button>
+        <span className="header-separator" aria-hidden="true" />
+        <span className="product-label">{brand.tagline}</span>
+        <div className="header-actions">
+          <ThemeToggle />
+          <a
+            className="icon-button"
+            href="https://github.com/Marcus-Boni/Auto-Daily-App"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Repositório no GitHub"
+          >
+            <Github aria-hidden="true" />
+            <span className="sr-only">Repositório no GitHub</span>
+          </a>
         </div>
       </header>
-
-      <main className="container mx-auto px-4 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="relative grid w-full max-w-md grid-cols-2 p-1">
-            <TabsTrigger
-              value="generator"
-              className="relative z-10 gap-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-            >
-              {activeTab === "generator" && (
-                <motion.div
-                  layoutId="active-tab-indicator"
-                  className="absolute inset-0 rounded-md bg-background shadow-xs dark:bg-input/50"
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                />
-              )}
-              <span className="relative z-10 flex items-center gap-2">
-                <Sparkles className="h-4 w-4" />
-                Gerar Daily
-              </span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="settings"
-              className="relative z-10 gap-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-            >
-              {activeTab === "settings" && (
-                <motion.div
-                  layoutId="active-tab-indicator"
-                  className="absolute inset-0 rounded-md bg-background shadow-xs dark:bg-input/50"
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                />
-              )}
-              <span className="relative z-10 flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                Configurações
-                {!validation.hasAzureConfig && !validation.hasOptsolvConfig && (
-                  <span className="ml-1 flex h-2 w-2 rounded-full bg-yellow-500 animate-pulse" />
-                )}
-              </span>
-            </TabsTrigger>
-          </TabsList>
-
-          <AnimatePresence mode="wait">
-            {activeTab === "generator" ? (
-              <motion.div
-                key="generator"
-                role="tabpanel"
-                variants={tabContentVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="mt-6"
+      <div className="app-layout">
+        <aside className="sidebar">
+          <nav aria-label="Principal">
+            {navigation.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className="nav-item"
+                aria-current={view === item.id ? "page" : undefined}
+                onClick={(event) => {
+                  event.preventDefault();
+                  navigate(item.id);
+                }}
               >
-                <DailyGenerator />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="settings"
-                role="tabpanel"
-                variants={tabContentVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="mt-6"
-              >
-                <SettingsPanel />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Tabs>
-      </main>
-
-      <footer className="border-t py-6">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>
-            AutoDaily AI é uma ferramenta profissional que automatiza relatórios de Daily Scrum com
-            dados do Azure DevOps, OptSolv Time Tracker e IA generativa. Veja mais no{" "}
-            <a
-              className="text-primary underline-offset-4 hover:underline"
-              href="https://github.com/Marcus-Boni"
-              target="_blank"
-              rel="noreferrer"
-            >
-              GitHub
-            </a>
-            .
-          </p>
-          <p className="mt-1 text-xs">
-            Suas credenciais ficam seguras no navegador e são enviadas apenas via cabeçalhos HTTP
-            para as rotas de API da própria aplicação.
-          </p>
-        </div>
-      </footer>
-    </div>
+                <item.icon aria-hidden="true" />
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <div className="sidebar-note">
+            <p>Do registro ao relato.</p>
+            <span>
+              Reúna as fontes.
+              <br />
+              Revise com contexto.
+              <br />
+              Compartilhe com clareza.
+            </span>
+          </div>
+          <div className="sidebar-bottom">
+            <Code2 aria-hidden="true" />
+            <span>Código e documentação</span>
+          </div>
+        </aside>
+        <main id="main" className="app-main" ref={main} tabIndex={-1}>
+          <section
+            id="daily"
+            className="view"
+            hidden={view !== "daily"}
+            aria-labelledby="daily-heading"
+          >
+            <div className="page-heading">
+              <div>
+                <h1 id="daily-heading" tabIndex={-1}>
+                  Prepare sua daily.
+                </h1>
+                <p>Transforme os registros do seu trabalho em um relato que faz sentido.</p>
+              </div>
+              <div className="desktop-generation">
+                <GenerationAction daily={daily} />
+              </div>
+            </div>
+            <DailyGenerator daily={daily} onNavigate={navigate} />
+          </section>
+          <section
+            id="integrations"
+            className="view"
+            hidden={view !== "integrations"}
+            aria-labelledby="integrations-heading"
+          >
+            <SettingsPanel
+              onNavigate={navigate}
+              onResetPreferences={() =>
+                daily.updateOptions({
+                  azure: validation.hasAzureConfig,
+                  optsolv: validation.hasOptsolvConfig,
+                  period: "24h",
+                  reportFormat: "standard",
+                  customPrompt: "",
+                })
+              }
+            />
+          </section>
+          <section
+            id="guide"
+            className="view"
+            hidden={view !== "guide"}
+            aria-labelledby="guide-heading"
+          >
+            <GuidePanel onNavigate={navigate} />
+          </section>
+        </main>
+      </div>
+    </>
   );
 }

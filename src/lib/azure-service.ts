@@ -1,4 +1,4 @@
-import type { AzureCommitsResponse, ParsedCommit } from "@/types";
+import type { AzureCommitsResponse, ParsedCommit, SourceWindow } from "@/types";
 
 export interface AzureConfig {
   pat: string;
@@ -17,7 +17,8 @@ export interface AzureResult {
 
 export async function fetchAzureCommits(
   config: AzureConfig,
-  periodHours: number
+  periodHours: number,
+  options: { window?: SourceWindow; test?: boolean; signal?: AbortSignal } = {}
 ): Promise<AzureResult> {
   const { pat, organization, project, repository, userEmail } = config;
 
@@ -30,31 +31,12 @@ export async function fetchAzureCommits(
   }
 
   try {
-    const now = new Date();
-
-    const toDate = new Date(now);
-    toDate.setHours(23, 59, 59, 999);
-
-    const fromDate = new Date(now);
-    if (periodHours === 0) {
-      fromDate.setHours(0, 0, 0, 0);
-    } else {
-      fromDate.setTime(fromDate.getTime() - periodHours * 60 * 60 * 1000);
-      fromDate.setHours(0, 0, 0, 0);
-    }
-
-    console.log(
-      `[Azure Service] Searching commits from ${fromDate.toISOString()} to ${toDate.toISOString()}`
-    );
-
-    // Log raw values for debugging
-    console.log("[Azure Service] Config values:", {
-      organization,
-      project,
-      repository,
-      userEmail: userEmail || "(none)",
-    });
-
+    const end = options.window?.end ?? new Date().toISOString();
+    const start =
+      options.window?.start ??
+      new Date(
+        new Date(end).getTime() - Math.max(1, Math.min(720, periodHours || 24)) * 3_600_000
+      ).toISOString();
     // Helper function to safely decode URI components that might be double-encoded
     // Some environments (like Azure App Service) may pre-encode header values
     const safeEncode = (value: string): string => {
@@ -75,9 +57,9 @@ export async function fetchAzureCommits(
 
     const params = new URLSearchParams({
       "api-version": "7.1",
-      "searchCriteria.fromDate": fromDate.toISOString(),
-      "searchCriteria.toDate": toDate.toISOString(),
-      $top: "100",
+      "searchCriteria.fromDate": start,
+      "searchCriteria.toDate": end,
+      $top: options.test ? "1" : "100",
     });
 
     if (userEmail) {
@@ -85,12 +67,15 @@ export async function fetchAzureCommits(
     }
 
     const apiUrl = `${baseUrl}?${params.toString()}`;
-    console.log(`[Azure Service] Request URL: ${apiUrl}`);
 
     const authHeader = `Basic ${Buffer.from(`:${pat}`).toString("base64")}`;
 
     const response = await fetch(apiUrl, {
       method: "GET",
+      cache: "no-store",
+      signal: options.signal
+        ? AbortSignal.any([AbortSignal.timeout(15_000), options.signal])
+        : AbortSignal.timeout(15_000),
       headers: {
         Authorization: authHeader,
         "Content-Type": "application/json",
@@ -102,23 +87,7 @@ export async function fetchAzureCommits(
     const contentType = response.headers.get("content-type") || "";
 
     if (!response.ok) {
-      let errorDetails = `Status: ${response.status}`;
-
-      if (contentType.includes("application/json")) {
-        try {
-          const errorData = await response.json();
-          errorDetails = JSON.stringify(errorData);
-        } catch {
-          errorDetails = await response.text();
-        }
-      } else {
-        // Response is HTML or other format
-        errorDetails = `Server returned non-JSON response (${contentType})`;
-      }
-
-      console.error(`[Azure Service] Error ${response.status}: ${errorDetails}`);
-
-      if (response.status === 401) {
+      if (response.status === 401 || response.status === 403) {
         return {
           success: false,
           error: "Token inválido ou expirado",
@@ -138,22 +107,23 @@ export async function fetchAzureCommits(
       return {
         success: false,
         error: "Erro ao buscar commits",
-        details: errorDetails,
+        details: `A consulta ao Azure DevOps falhou (HTTP ${response.status}). Tente novamente.`,
       };
     }
 
     // Verify response is JSON before parsing
     if (!contentType.includes("application/json")) {
-      console.error(`[Azure Service] Unexpected content type: ${contentType}`);
       return {
         success: false,
         error: "Resposta inesperada do Azure DevOps",
-        details: `O servidor retornou ${contentType} ao invés de JSON`,
+        details: "O servidor não retornou dados JSON válidos.",
       };
     }
 
     const data: AzureCommitsResponse = await response.json();
-    console.log(`[Azure Service] Found ${data.value?.length || 0} commits`);
+
+    if (!Array.isArray(data.value)) throw new Error("Invalid response");
+    if (options.test) return { success: true, commits: [] };
 
     const commits: ParsedCommit[] = data.value.map((commit) => ({
       id: commit.commitId.substring(0, 8),
@@ -168,12 +138,13 @@ export async function fetchAzureCommits(
       commits,
     };
   } catch (error) {
-    console.error("[Azure Service] Error:", error);
-
     return {
       success: false,
       error: "Erro interno do servidor",
-      details: error instanceof Error ? error.message : "Erro desconhecido",
+      details:
+        error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")
+          ? "A consulta excedeu o tempo limite. Tente novamente."
+          : "Não foi possível consultar a fonte. Verifique a configuração e tente novamente.",
     };
   }
 }

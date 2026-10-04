@@ -1,6 +1,6 @@
 # 🚀 Guia de Deploy no Azure
 
-Este guia explica como fazer o deploy do Auto Daily App no **Azure App Service** com CI/CD completo usando GitHub Actions.
+Este guia explica como fazer o deploy do Auto Daily no **Azure App Service** com CI/CD completo usando GitHub Actions. Configure `SITE_URL` com o endereço público real antes de executar o build para que canonical e imagens de compartilhamento apontem para a hospedagem correta.
 
 ## 📋 Pré-requisitos
 

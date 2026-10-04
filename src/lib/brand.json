@@ -1,0 +1,15 @@
+{
+  "name": "Auto Daily",
+  "tagline": "Seu trabalho, bem contado.",
+  "description": "Prepare, revise e compartilhe sua daily a partir de commits do Azure DevOps e registros do OptSolv Time Tracker, com apoio de IA.",
+  "colors": {
+    "green": "#176344",
+    "mint": "#86d6ad",
+    "ink": "#192820",
+    "dark": "#131a17",
+    "white": "#ffffff"
+  },
+  "concept": "Daily aberto",
+  "viewBox": "0 0 256 256",
+  "symbolPath": "M176 24H212V148C212 194.4 174.4 232 128 232C86.9 232 52.7 202.4 45.4 164H87.2C93.8 180.7 109.6 192 128 192C152.3 192 172 172.3 172 148C172 123.7 152.3 104 128 104C109.6 104 93.8 115.3 87.2 132H45.4C52.7 93.6 86.9 64 128 64C145.8 64 162.3 69.5 176 78.5V24Z"
+}

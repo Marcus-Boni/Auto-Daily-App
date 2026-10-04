@@ -1,4 +1,5 @@
 export interface UserConfig {
+  rememberCredentials: boolean;
   azurePat: string;
   azureOrganization: string;
   azureProject: string;
@@ -18,20 +19,11 @@ export type GenerationMode = "azure-only" | "optsolv-only" | "combined-auto" | "
 
 export type TimePeriod = "24h" | "48h" | "72h" | "7d" | "14d" | "30d";
 
-export interface ModeOption {
-  value: GenerationMode;
-  label: string;
-  description: string;
-  requiresAzure: boolean;
-  requiresOptsolv: boolean;
-}
-
 export interface PeriodOption {
   value: TimePeriod;
   label: string;
   description: string;
   hours: number;
-  icon: string;
 }
 
 export type ReportFormat = "standard" | "professional";
@@ -40,7 +32,6 @@ export interface ReportFormatOption {
   value: ReportFormat;
   label: string;
   description: string;
-  icon: string;
 }
 
 export interface AzureCommit {
@@ -117,6 +108,9 @@ export interface GenerateDailyResponse {
   daily?: string;
   error?: string;
   details?: string;
+  window?: SourceWindow;
+  generatedAt?: string;
+  sourceStatus?: SourceStatuses;
   sources?: {
     azure?: ParsedCommit[];
     optsolv?: ParsedTimeEntry[];
@@ -128,6 +122,7 @@ export interface AzureDataResponse {
   commits?: ParsedCommit[];
   error?: string;
   details?: string;
+  message?: string;
 }
 
 export interface OptsolvDataResponse {
@@ -135,6 +130,7 @@ export interface OptsolvDataResponse {
   entries?: ParsedTimeEntry[];
   error?: string;
   details?: string;
+  message?: string;
 }
 
 export interface LoadingState {
@@ -146,11 +142,29 @@ export interface DailyResult {
   content: string;
   generatedAt: string;
   mode: GenerationMode;
+  window?: SourceWindow;
+  sourceStatus?: SourceStatuses;
+  period?: TimePeriod;
+  reportFormat?: ReportFormat;
+  customPrompt?: string;
   sources?: {
     azure?: ParsedCommit[];
     optsolv?: ParsedTimeEntry[];
   };
 }
+
+export interface SourceWindow {
+  start: string;
+  end: string;
+}
+
+export interface SourceStatus {
+  status: "success" | "empty" | "error" | "not-configured";
+  count: number;
+  message?: string;
+}
+
+export type SourceStatuses = Partial<Record<"azure" | "optsolv", SourceStatus>>;
 
 export interface FieldValidation {
   isValid: boolean;

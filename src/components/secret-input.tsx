@@ -1,18 +1,11 @@
 "use client";
 
-import { Eye, EyeOff, Lock } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { TutorialHelp } from "@/components/tutorial-help";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-interface TutorialStep {
-  title: string;
-  steps: readonly string[];
-  warning?: string;
-}
 
 interface SecretInputProps {
   id: string;
@@ -20,8 +13,10 @@ interface SecretInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  tutorial?: TutorialStep;
+  tutorial?: { title: string; steps: readonly string[]; warning?: string };
   error?: string;
+  help?: string;
+  required?: boolean;
 }
 
 export function SecretInput({
@@ -32,64 +27,54 @@ export function SecretInput({
   placeholder,
   tutorial,
   error,
+  help,
+  required,
 }: SecretInputProps) {
-  const [isVisible, setIsVisible] = useState(false);
-
+  const [visible, setVisible] = useState(false);
+  const description =
+    [help ? `${id}-help` : undefined, error ? `${id}-error` : undefined]
+      .filter(Boolean)
+      .join(" ") || undefined;
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <Label htmlFor={id} className="flex items-center gap-2">
-          <Lock className="h-3 w-3 text-muted-foreground" />
-          {label}
-        </Label>
-      </div>
-
-      <div className="relative">
+    <div className="form-group">
+      <Label htmlFor={id}>{label}</Label>
+      <div className="secret-input-control relative">
         <Input
           id={id}
-          type={isVisible ? "text" : "password"}
+          type={visible ? "text" : "password"}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
-          className={`pr-10 ${error ? "border-destructive" : ""}`}
+          autoComplete="off"
+          spellCheck={false}
+          required={required}
+          aria-invalid={Boolean(error)}
+          aria-describedby={description}
+          className="min-h-11 pr-12"
         />
         <Button
           type="button"
           variant="ghost"
-          size="sm"
-          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent cursor-pointer"
-          onClick={() => setIsVisible(!isVisible)}
-          aria-label={isVisible ? "Ocultar" : "Mostrar"}
+          size="icon"
+          className="secret-toggle absolute right-0 top-0 min-h-11 min-w-11"
+          onClick={() => setVisible(!visible)}
+          aria-label={`${visible ? "Ocultar" : "Mostrar"} ${label}`}
+          aria-pressed={visible}
         >
-          <AnimatePresence mode="wait" initial={false}>
-            {isVisible ? (
-              <motion.span
-                key="visible"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.12 }}
-              >
-                <EyeOff className="h-4 w-4 text-muted-foreground" />
-              </motion.span>
-            ) : (
-              <motion.span
-                key="hidden"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.12 }}
-              >
-                <Eye className="h-4 w-4 text-muted-foreground" />
-              </motion.span>
-            )}
-          </AnimatePresence>
+          {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
         </Button>
       </div>
-
-      {error && <p className="text-sm text-destructive">{error}</p>}
-
-      {tutorial && <TutorialHelp tutorial={tutorial} />}
+      {help ? (
+        <p id={`${id}-help`} className="field-help">
+          {help}
+        </p>
+      ) : null}
+      {error ? (
+        <p id={`${id}-error`} className="field-error">
+          {error}
+        </p>
+      ) : null}
+      {tutorial ? <TutorialHelp tutorial={tutorial} /> : null}
     </div>
   );
 }

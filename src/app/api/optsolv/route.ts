@@ -4,18 +4,37 @@ import { fetchOptsolvEntries } from "@/lib/optsolv-service";
 import type { OptsolvDataResponse } from "@/types";
 
 export async function GET(request: NextRequest): Promise<NextResponse<OptsolvDataResponse>> {
-  const token = request.headers.get("x-optsolv-token") || "";
-  const userEmail = request.headers.get("x-optsolv-user-email") || undefined;
+  const token = (request.headers.get("x-optsolv-token") || "").trim();
+  const userEmail = request.headers.get("x-optsolv-user-email")?.trim() || undefined;
 
   const searchParams = request.nextUrl.searchParams;
-  const periodHours = Number.parseInt(searchParams.get("periodHours") || "24", 10);
+  const requestedHours = Number(searchParams.get("periodHours") || "24");
+
+  const operation = searchParams.get("operation");
+  if (operation && operation !== "test")
+    return NextResponse.json({ success: false, error: "Operação inválida" }, { status: 400 });
+  const periodHours = Number.isFinite(requestedHours)
+    ? Math.max(1, Math.min(720, Math.trunc(requestedHours)))
+    : 24;
+
+  if (!token) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Configuração incompleta",
+        details: "Informe a chave de integração ou token do OptSolv.",
+      },
+      { status: 400 }
+    );
+  }
 
   const result = await fetchOptsolvEntries(
     {
       token,
       userEmail,
     },
-    periodHours
+    periodHours,
+    { test: operation === "test", signal: request.signal }
   );
 
   if (!result.success) {
@@ -36,6 +55,12 @@ export async function GET(request: NextRequest): Promise<NextResponse<OptsolvDat
       { status }
     );
   }
+
+  if (operation === "test")
+    return NextResponse.json({
+      success: true,
+      message: "Conexão verificada com acesso de leitura.",
+    });
 
   return NextResponse.json({
     success: true,

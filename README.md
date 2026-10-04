@@ -1,275 +1,104 @@
-<div align="center">
-  <img src="public/favicon.svg" alt="Auto Daily Logo" width="80" height="80" />
-  
-  # Auto Daily App
-  
-  **Gerador inteligente de relatórios de Daily Scrum com IA**
-  
-    Automatize suas dailies integrando Azure DevOps, OptSolv Time Tracker e Hugging Face Inference API.
+# Auto Daily
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="public/brand/horizontal-dark.svg">
+  <img src="public/brand/horizontal-brand.svg" alt="Identidade Auto Daily" width="360">
+</picture>
 
-[Começar](#-começando) •
-[Funcionalidades](#-funcionalidades) •
-[Configuração](#%EF%B8%8F-configuração) •
-[Como Usar](#-como-usar) •
-[Tecnologias](#-tecnologias)
+Seu trabalho, bem contado.
 
-</div>
+Prepare um rascunho de daily a partir de commits do Azure DevOps e registros do OptSolv Time Tracker. Revise o texto, confira as fontes e copie quando ele representar o que você quer compartilhar.
 
----
+![Aplicativo com identidade aprovada e dados fictícios de validação](docs/brand/integrated-desktop-light.jpg)
 
-## 📋 Sobre
+## O que o aplicativo faz
 
-O **Auto Daily App** é uma ferramenta profissional que automatiza a criação de relatórios de Daily Scrum. Ele coleta automaticamente seus commits do Azure DevOps e suas entradas de tempo do OptSolv Time Tracker, e utiliza a Hugging Face Inference API para gerar relatórios estruturados e prontos para compartilhar.
+- Seleção independente de fontes e seis períodos móveis, de 24 horas a 30 dias.
+- Formatos Daily Scrum e resumo executivo, com instruções complementares.
+- Editor Markdown, cópia manual e evidências junto ao documento.
+- Rascunho preservado ao navegar, cancelar ou recuperar falhas.
+- Escolha explícita antes de substituir edições por uma nova geração.
+- Teste de conexão separado do salvamento das integrações.
+- Temas claro/escuro, interface responsiva e guia do fluxo de dados.
 
-### ✨ Por que usar?
+Azure fornece commits, não work items. A consulta atual limita Azure aos 100 commits mais recentes e OptSolv à primeira página de até 200 registros. OptSolv aceita datas de calendário UTC; sua precisão difere de uma janela de timestamps. Essas limitações aparecem junto às fontes do resultado.
 
-- ⏱️ **Economize tempo** - Não perca mais 5-10 minutos escrevendo sua daily manualmente
-- 🎯 **Precisão** - Baseado em dados reais dos seus commits e timesheet
-- 🤖 **Inteligência** - IA que entende contexto e formata profissionalmente
-- 🔒 **Privacidade** - Suas credenciais ficam apenas no seu navegador
+## Executar localmente
 
----
+Requer Node.js **20.9 ou superior** e npm. Não é necessário adicionar banco de dados.
 
-## 🚀 Funcionalidades
-
-- **📊 Integração Azure DevOps** - Busca automática de commits por período
-- **⏰ Integração OptSolv Time Tracker** - Importa entradas de tempo e tarefas automaticamente
-- **🤖 Geração com IA** - Hugging Face Inference API para relatórios inteligentes
-- **📅 Períodos flexíveis** - Suporte para dailies de 24h até 30 dias
-- **📝 Formatos de relatório** - Padrão (O que fiz/Vou fazer/Impedimentos) ou Executivo
-- **🌓 Modo escuro** - Interface adaptável com suporte a tema claro/escuro
-- **💾 Persistência local** - Configurações salvas no navegador
-- **📱 Responsivo** - Funciona em desktop e mobile
-
----
-
-## 🛠️ Tecnologias
-
-| Categoria       | Tecnologia                                                                          |
-| --------------- | ----------------------------------------------------------------------------------- |
-| **Framework**   | [Next.js 16](https://nextjs.org/) (App Router)                                      |
-| **Linguagem**   | [TypeScript 5](https://www.typescriptlang.org/)                                     |
-| **Estilização** | [Tailwind CSS 4](https://tailwindcss.com/)                                          |
-| **Componentes** | [shadcn/ui](https://ui.shadcn.com/) + [Radix UI](https://www.radix-ui.com/)         |
-| **Estado**      | [Zustand](https://zustand-demo.pmnd.rs/)                                            |
-| **IA**          | [Hugging Face Inference API](https://huggingface.co/docs/inference-providers/index) |
-| **Ícones**      | [Lucide React](https://lucide.dev/)                                                 |
-| **Validação**   | [Zod](https://zod.dev/)                                                             |
-| **Linting**     | [Biome](https://biomejs.dev/)                                                       |
-
----
-
-## 📦 Começando
-
-### Pré-requisitos
-
-- [Node.js](https://nodejs.org/) 18.17 ou superior
-- [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), [pnpm](https://pnpm.io/) ou [bun](https://bun.sh/)
-- Conta no Azure DevOps (opcional)
-- Chave de integração do OptSolv Time Tracker (opcional)
-
-### Instalação
-
-1. **Clone o repositório**
-
-   ```bash
-   git clone https://github.com/Marcus-Boni/Auto-Daily-App.git
-   cd Auto-Daily-App
-   ```
-
-2. **Instale as dependências**
-
-   ```bash
-   npm install
-   # ou
-   yarn install
-   # ou
-   pnpm install
-   ```
-
-3. **Configure as variáveis de ambiente**
-
-   ```bash
-   cp .env.example .env.local
-   ```
-
-   Edite o arquivo `.env.local`:
-
-   ```env
-   HUGGINGFACE_API_KEY=sua_chave_huggingface_aqui
-   ```
-
-4. **Execute o servidor de desenvolvimento**
-
-   ```bash
-   npm run dev
-   ```
-
-5. **Acesse a aplicação**
-
-   Abra [http://localhost:3000](http://localhost:3000) no seu navegador.
-
----
-
-## ⚙️ Configuração
-
-### Hugging Face Inference API Key
-
-A chave da API do Hugging Face deve ser configurada no servidor (`.env.local`):
-
-1. Acesse [Hugging Face Tokens](https://huggingface.co/settings/tokens)
-2. Crie um token com permissão de inferência
-3. Adicione ao arquivo `.env.local`
-
-### Azure DevOps (Opcional)
-
-Na aba **Configurações** do app, você precisará informar:
-
-| Campo                     | Descrição                                     |
-| ------------------------- | --------------------------------------------- |
-| **Organization**          | Nome da sua organização (ex: `minha-empresa`) |
-| **Project**               | Nome do projeto Azure DevOps                  |
-| **Repository**            | Nome do repositório                           |
-| **Personal Access Token** | Token com permissão de leitura de código      |
-
-<details>
-<summary>📖 Como criar um Personal Access Token (PAT)</summary>
-
-1. Acesse `https://dev.azure.com/{sua-org}/_usersSettings/tokens`
-2. Clique em **"New Token"**
-3. Dê um nome (ex: "Auto Daily App")
-4. Em **Scopes**, selecione:
-   - `Code` → **Read**
-5. Clique em **"Create"** e copie o token gerado
-
-</details>
-
-### OptSolv Time Tracker (Opcional)
-
-Na aba **Configurações** do app, você precisará informar:
-
-| Campo                     | Descrição                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------- |
-| **Chave de Integração**   | Token JWT Bearer ou Chave de Integração Padronizada (`opt_time_...`)           |
-| **Filtro de Colaborador** | *(Opcional)* Email para filtrar apenas seus lançamentos (ex: `seu.email@...`) |
-
-<details>
-<summary>📖 Documentação da API do OptSolv Time Tracker</summary>
-
-1. Acesse a documentação Swagger em [OptSolv Time Tracker API v1 Docs](https://opt-time.optsolv.com.br/api/v1/docs)
-2. Utilize sua chave de integração ou token JWT emitido pelo portal
-3. Preencha no painel de configurações para sincronizar seus lançamentos de horas e tarefas
-
-</details>
-
----
-
-## 💡 Como Usar
-
-1. **Configure suas credenciais** na aba "Configurações"
-2. **Selecione o modo de geração**:
-   - 🔷 **Azure DevOps** - Baseado em commits
-   - 🟠 **OptSolv Time Tracker** - Baseado em time entries e apontamentos
-   - 🟢 **Combinado** - Usa ambas as fontes
-3. **Escolha o período** (24h, 48h, 72h, 1 semana, etc.)
-4. **Selecione o formato** do relatório (Padrão ou Executivo)
-5. **Clique em "Gerar Daily"** e aguarde a mágica acontecer ✨
-6. **Copie o resultado** e compartilhe com sua equipe!
-
----
-
-## 📁 Estrutura do Projeto
-
-```
-src/
-├── app/
-│   ├── api/
-│   │   ├── azure/         # Proxy para Azure DevOps API
-│   │   ├── generate/      # Geração de daily com Hugging Face
-│   │   └── optsolv/       # Proxy para OptSolv Time Tracker API
-│   ├── globals.css        # Estilos globais + tema
-│   ├── layout.tsx         # Layout raiz
-│   └── page.tsx           # Página principal
-├── components/
-│   ├── ui/                # Componentes shadcn/ui
-│   ├── app-shell.tsx      # Shell principal da aplicação
-│   ├── daily-generator.tsx # Componente de geração
-│   ├── settings-panel.tsx  # Painel de configurações
-│   └── theme-toggle.tsx    # Toggle de tema claro/escuro
-├── hooks/
-│   └── use-user-config.ts  # Hook de configuração do usuário
-├── lib/
-│   ├── constants.ts        # Constantes e prompts
-│   └── utils.ts            # Utilitários
-└── types/
-    └── index.ts            # Definições de tipos
+```powershell
+git clone https://github.com/Marcus-Boni/Auto-Daily-App.git
+cd Auto-Daily-App
+npm ci
+Copy-Item .env.example .env
 ```
 
----
+Configure `HUGGINGFACE_API_KEY` no arquivo `.env` com uma chave do seu provedor e inicie:
 
-## 🔒 Segurança
-
-- ✅ **Credenciais no cliente** - Tokens são armazenados apenas no localStorage do navegador
-- ✅ **Sem banco de dados** - Aplicação 100% stateless no servidor
-- ✅ **Headers seguros** - Credenciais são enviadas via HTTP headers, nunca no body
-- ✅ **API Routes como proxy** - Backend age como intermediário para evitar CORS
-
----
-
-## 🧪 Scripts Disponíveis
-
-```bash
-# Desenvolvimento
-npm run dev          # Inicia servidor de desenvolvimento
-
-# Build
-npm run build        # Build de produção
-npm run start        # Inicia servidor de produção
-
-# Qualidade de código
-npm run lint         # Executa linting com Biome
-npm run format       # Formata código com Biome
-npm run check        # Lint + Format em um comando
-npm run type-check   # Verifica tipos TypeScript
+```powershell
+npm run dev
 ```
 
----
+Na hospedagem pública, configure também `SITE_URL` com a URL real do aplicativo **antes do build**. Ela determina canonical e os URLs de compartilhamento Open Graph/Twitter. Sem essa configuração, os metadados de desenvolvimento usam `http://localhost:3000` e não declaram canonical.
 
-## 🤝 Contribuindo
+Abra a URL exibida pelo servidor. A chave do provedor fica no servidor; PAT e token das fontes são configurados na área **Integrações**.
 
-Contribuições são bem-vindas! Sinta-se à vontade para:
+### Configurar uma fonte
 
-1. Fazer um Fork do projeto
-2. Criar uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abrir um Pull Request
+**Azure DevOps:** organização, projeto, nome/ID do repositório e PAT com permissão **Code · Read**. O filtro opcional aceita nome ou e-mail do autor.
 
----
+**OptSolv Time Tracker:** chave de integração ou token de leitura. O e-mail opcional restringe os registros consultados aos do colaborador.
 
-## 📄 Licença
+Salvar aplica os dados ao aplicativo. Testar conexão consulta a fonte com um limite reduzido e verifica acesso naquele momento. Editar qualquer campo invalida o teste anterior. Uma resposta vazia pode comprovar acesso, mas não comprova existência de atividades.
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Depois, volte à Daily, selecione fontes, período e formato e gere o rascunho. As opções atuais não reescrevem os metadados de um documento já gerado.
 
----
+## Dados e credenciais
 
-## 👤 Autor
+Por padrão, tokens ficam apenas na memória da página. Recarregar ou fechar a página os descarta. **Lembrar credenciais neste dispositivo** é opt-in: usa armazenamento local sem criptografia. Preferências e identificação das integrações são lembradas quando o navegador permite armazenamento.
 
-**Marcus Boni**
+Este redesign migra configurações antigas descartando os tokens que eram persistidos sem escolha explícita. Organização, projeto, repositório e filtros são preservados. Informe novamente as credenciais se estiver atualizando uma instalação anterior.
 
-- GitHub: [@Marcus-Boni](https://github.com/Marcus-Boni)
+As credenciais passam pelas APIs da aplicação para consultar as fontes. O contexto das atividades e as instruções adicionais são enviados ao provedor de IA. Os rascunhos não são persistidos e o compartilhamento é manual. Observe as políticas de dados da sua organização e as condições do provedor.
 
----
+IA pode omitir contexto ou interpretar um registro incorretamente. Commits não comprovam publicação/homologação; registros de tempo não medem produtividade. Próximos passos e impedimentos sem evidência ficam explicitamente pendentes de revisão.
 
-<div align="center">
-  
-  ⭐ Se este projeto te ajudou, considere dar uma estrela!
-  
-  Feito com ❤️ e ☕ por [Marcus Boni](https://github.com/Marcus-Boni)
+## Qualidade
 
-</div>
+```powershell
+npm run check
+npm run type-check
+npm test
+npm run build
+```
+
+Os assets da identidade podem ser regenerados com `npm run brand:build`; o símbolo e os textos vêm de `src/lib/brand.json`. A imagem de compartilhamento é gerada em 1200 × 630 e utiliza a mesma identidade.
+
+`check` aplica formatação com Biome. Os testes nativos cobrem migração, retenção, falhas parciais, contratos, cancelamento, metadados e preservação de edições. Não exigem conexão com serviços reais.
+
+Para validar a interface com respostas fictícias, use o servidor descrito em [evidências da implementação](docs/redesign/IMPLEMENTATION-VALIDATION.md). Ele é uma ferramenta de desenvolvimento e não faz parte do produto publicado.
+
+## Organização
+
+```text
+src/app/                      páginas, layout e APIs
+src/components/daily/         preparação, documento e fontes
+src/components/integrations/  formulários de integração
+src/components/ui/            primitivas compartilhadas
+src/hooks/                    geração e configuração do usuário
+src/lib/                      serviços, regras de estado e prompts
+src/types/                    contratos
+tests/                        regressões sem dependências adicionais
+docs/redesign/                proposta, implementação e evidências
+```
+
+O [sistema visual](DESIGN.md) documenta a implementação atual. O aplicativo permanece em `/`; a homepage de apresentação será uma etapa posterior, com migração de rotas planejada separadamente.
+
+## Contribuir e publicar
+
+Leia [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) e as instruções do workspace em [AGENTS.md](AGENTS.md). A configuração de hospedagem existente está em [docs/AZURE_DEPLOY.md](docs/AZURE_DEPLOY.md).
+
+Antes de publicar um fork/histórico, revise segredos: uma chave de desenvolvimento removida do código ainda existe no histórico anterior. Sua validade não foi verificada. Se representar acesso real, revogue/rotacione pelo serviço responsável e trate o histórico antes da publicação.
+
+Licença [MIT](LICENSE). A [identidade visual](docs/brand/README.md) usa símbolo próprio e assinatura Geist sob [SIL OFL](public/brand/OFL-Geist.txt). Os ícones funcionais Lucide mantêm os avisos em [public/lucide-LICENSE.txt](public/lucide-LICENSE.txt). Criado por [Marcus Boni](https://github.com/Marcus-Boni).

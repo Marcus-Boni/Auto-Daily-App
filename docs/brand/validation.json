@@ -1,0 +1,93 @@
+{
+  "svgs": [
+    {
+      "file": "app-icon.svg",
+      "paths": 1,
+      "bytes": 507
+    },
+    {
+      "file": "favicon.svg",
+      "paths": 1,
+      "bytes": 537
+    },
+    {
+      "file": "horizontal-black.svg",
+      "paths": 2,
+      "bytes": 5032
+    },
+    {
+      "file": "horizontal-brand.svg",
+      "paths": 2,
+      "bytes": 5032
+    },
+    {
+      "file": "horizontal-dark.svg",
+      "paths": 2,
+      "bytes": 5032
+    },
+    {
+      "file": "horizontal-white.svg",
+      "paths": 2,
+      "bytes": 5032
+    },
+    {
+      "file": "maskable.svg",
+      "paths": 1,
+      "bytes": 500
+    },
+    {
+      "file": "stacked-black.svg",
+      "paths": 2,
+      "bytes": 5035
+    },
+    {
+      "file": "stacked-brand.svg",
+      "paths": 2,
+      "bytes": 5035
+    },
+    {
+      "file": "stacked-dark.svg",
+      "paths": 2,
+      "bytes": 5035
+    },
+    {
+      "file": "stacked-white.svg",
+      "paths": 2,
+      "bytes": 5035
+    },
+    {
+      "file": "symbol-black.svg",
+      "paths": 1,
+      "bytes": 446
+    },
+    {
+      "file": "symbol-brand.svg",
+      "paths": 1,
+      "bytes": 446
+    },
+    {
+      "file": "symbol-dark.svg",
+      "paths": 1,
+      "bytes": 446
+    },
+    {
+      "file": "symbol-small.svg",
+      "paths": 1,
+      "bytes": 481
+    },
+    {
+      "file": "symbol-white.svg",
+      "paths": 1,
+      "bytes": 446
+    },
+    {
+      "file": "wordmark.svg",
+      "paths": 1,
+      "bytes": 4712
+    }
+  ],
+  "aperturePixels": [[23, 99, 68, 255], [23, 99, 68, 255]],
+  "maskableMaxRadius": 198.73,
+  "maskableSafeRadius": 204.8,
+  "icoFrames": 3
+}
