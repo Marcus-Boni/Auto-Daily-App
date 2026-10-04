@@ -56,14 +56,24 @@ export function useDailyGeneration() {
       });
       const data: GenerateDailyResponse = await response.json();
       if (!response.ok || !data.success || !data.daily?.trim()) {
+        let errorText =
+          data.error ||
+          "Não foi possível preparar o rascunho. Confira as fontes e tente novamente.";
+        if (data.error === "Nenhum dado encontrado") {
+          errorText =
+            "Nenhum registro encontrado. Amplie o período ou confira os filtros das integrações.";
+        } else if (
+          data.details &&
+          !data.error?.includes(data.details) &&
+          !data.details.includes("Tente novamente")
+        ) {
+          errorText = `${data.error || "Erro ao gerar daily"}: ${data.details}`;
+        }
+
         dispatch({
           type: "failure",
           requestId,
-          error:
-            data.error === "Nenhum dado encontrado"
-              ? "Nenhum registro encontrado. Amplie o período ou confira os filtros das integrações."
-              : data.error ||
-                "Não foi possível preparar o rascunho. Confira as fontes e tente novamente.",
+          error: errorText,
           sourceStatus: data.sourceStatus,
         });
         return;

@@ -238,14 +238,31 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
           { status: 503 }
         );
       }
+
+      if (error.code === "REQUEST_FAILED" || error.code === "INVALID_RESPONSE") {
+        return NextResponse.json(
+          {
+            success: false,
+            ...metadata,
+            error: "Erro ao gerar daily",
+            details: error.message || "Falha na comunicação com o provedor de IA.",
+          },
+          { status: 502 }
+        );
+      }
     }
+
+    console.error("[generate] Erro inesperado:", error instanceof Error ? error.message : error);
 
     return NextResponse.json(
       {
         success: false,
         ...metadata,
         error: "Erro ao gerar daily",
-        details: "Não foi possível gerar o relatório. Tente novamente.",
+        details:
+          error instanceof Error && error.message
+            ? error.message
+            : "Não foi possível gerar o relatório. Tente novamente.",
       },
       { status: 500 }
     );
