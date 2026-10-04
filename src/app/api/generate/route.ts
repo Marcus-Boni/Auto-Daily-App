@@ -17,6 +17,9 @@ import type {
 
 type DataSources = NonNullable<GenerateDailyResponse["sources"]>;
 
+// Allow up to 60 seconds for AI inference on Vercel Serverless
+export const maxDuration = 60;
+
 const generateDailySchema = z
   .object({
     mode: z.enum(["azure-only", "optsolv-only", "combined-auto", "combined-custom"]),
