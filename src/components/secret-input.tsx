@@ -6,6 +6,7 @@ import { TutorialHelp } from "@/components/tutorial-help";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface SecretInputProps {
   id: string;
@@ -52,17 +53,24 @@ export function SecretInput({
           aria-describedby={description}
           className="min-h-11 pr-12"
         />
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="secret-toggle absolute right-0 top-0 min-h-11 min-w-11"
-          onClick={() => setVisible(!visible)}
-          aria-label={`${visible ? "Ocultar" : "Mostrar"} ${label}`}
-          aria-pressed={visible}
-        >
-          {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="secret-toggle absolute right-0 top-0 min-h-11 min-w-11"
+              onClick={() => setVisible(!visible)}
+              aria-label={`${visible ? "Ocultar" : "Mostrar"} ${label}`}
+              aria-pressed={visible}
+            >
+              {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left" sideOffset={6}>
+            {visible ? "Ocultar token" : "Exibir token"}
+          </TooltipContent>
+        </Tooltip>
       </div>
       {help ? (
         <p id={`${id}-help`} className="field-help">

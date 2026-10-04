@@ -7,6 +7,7 @@ import { TutorialHelp } from "@/components/tutorial-help";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { TUTORIALS } from "@/lib/constants";
 import { validateConfig } from "@/lib/user-config";
 import type { PartialUserConfig, UserConfig } from "@/types";
@@ -275,9 +276,28 @@ export function IntegrationForm({
               : "Contexto dos seus registros de tempo."}
           </p>
         </div>
-        <span className="status-label" data-state={connection.status}>
-          {stateLabel}
-        </span>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="status-label cursor-help" data-state={connection.status}>
+              {stateLabel}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top" sideOffset={6}>
+            {connection.status === "testing"
+              ? "Realizando consulta de teste à API..."
+              : connection.status === "success"
+                ? "Conexão validada com sucesso"
+                : connection.status === "error"
+                  ? connection.message || "Falha ao validar credenciais"
+                  : dirty
+                    ? "Alterações preenchidas ainda não salvas"
+                    : configured
+                      ? persistenceAvailable
+                        ? "Configuração persistida neste dispositivo"
+                        : "Configuração retida somente nesta sessão"
+                      : "Preencha os campos obrigatórios para configurar"}
+          </TooltipContent>
+        </Tooltip>
       </div>
       <div className="connection-fields">
         {fields.map((field) => {
@@ -334,22 +354,42 @@ export function IntegrationForm({
             : "Preencher dados não comprova acesso."}
         </span>
         <div className="connection-actions">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={connection.status === "testing"}
-            onClick={testConnection}
-          >
-            {connection.status === "testing" ? (
-              <LoaderCircle className="animate-spin" aria-hidden="true" />
-            ) : (
-              <Check aria-hidden="true" />
-            )}
-            {connection.status === "testing" ? "Verificando…" : "Testar conexão"}
-          </Button>
-          <Button type="submit" disabled={!dirty}>
-            Salvar integração
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-flex">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={connection.status === "testing"}
+                  onClick={testConnection}
+                >
+                  {connection.status === "testing" ? (
+                    <LoaderCircle className="animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Check aria-hidden="true" />
+                  )}
+                  {connection.status === "testing" ? "Verificando…" : "Testar conexão"}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={6}>
+              Testar comunicação com a API usando os dados preenchidos
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-flex">
+                <Button type="submit" disabled={!dirty}>
+                  Salvar integração
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={6}>
+              {dirty
+                ? "Salvar configurações para utilizar na geração da daily"
+                : "Nenhuma alteração pendente para salvar"}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
       <div className="connection-feedback" role="status" aria-live="polite">

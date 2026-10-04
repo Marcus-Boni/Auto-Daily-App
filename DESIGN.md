@@ -41,7 +41,7 @@ Seletores devem usar exclusivamente o componente `Select` de `src/components/ui/
 
 A aplicação da identidade usa `BrandLogo` para assinatura acessível e `BrandMark` para símbolo isolado. Nome, tagline, descrição, cores de marca e geometria são centralizados em `src/lib/brand.json`; ícones funcionais mantêm Lucide. Assets e manifest são regenerados por `npm run brand:build`, incluindo a imagem de compartilhamento 1200 × 630. `SITE_URL` configura o endereço público dos metadados no build.
 
-Sidebar de 196 px no desktop; preparação de 280–300 px; documento flexível. Conteúdo limitado a 1240 px. Até 900 px a navegação é horizontal; abaixo de 700 px a composição é uma coluna e a geração fica depois dos controles. O mesmo documento e as mesmas opções permanecem ao mudar de área.
+Sidebar de altura fixa no desktop (`calc(100dvh - 68px)` com sticky), desacoplada da rolagem de telas longas. Suporta expansão (204 px) e recolhimento (64 px), com atalho `Ctrl+B`, transição suave e persistência em `localStorage`. No modo recolhido, exibe tooltips acessíveis flutuantes via Radix UI com atalhos e nomes das seções. Preparação de 280–300 px; documento flexível; conteúdo limitado a 1240 px. Até 900 px a navegação é horizontal; abaixo de 700 px a composição é uma coluna e a geração fica depois dos controles. O mesmo documento e as mesmas opções permanecem ao mudar de área.
 
 Estados de loading, vazio, erro e parcial preservam o texto anterior. Novo resultado editado precisa de aceitação. Metadados pertencem ao resultado, não à seleção atual. O contraste de tokens e o reflow foram verificados; isso não substitui auditoria completa de conformidade WCAG ou testes com usuários.
 

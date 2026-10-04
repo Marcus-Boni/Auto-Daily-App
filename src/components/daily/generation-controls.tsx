@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { DailyGeneration } from "@/hooks/use-daily-generation";
 import { useUserConfig } from "@/hooks/use-user-config";
 import { REPORT_FORMATS, TIME_PERIODS } from "@/lib/constants";
@@ -156,18 +157,49 @@ export function GenerationControls({ daily, onNavigate }: DailyProps) {
   );
 }
 export function GenerationAction({ daily }: { daily: DailyGeneration }) {
-  return daily.state.loading ? (
-    <Button type="button" variant="outline" className="generation-action" onClick={daily.cancel}>
-      Cancelar geração
-    </Button>
-  ) : (
-    <Button
-      type="submit"
-      form="generation-form"
-      className="generation-action"
-      disabled={!daily.canGenerate || Boolean(daily.state.pending)}
-    >
-      Gerar rascunho <ArrowRight aria-hidden="true" />
-    </Button>
+  if (daily.state.loading) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            className="generation-action"
+            onClick={daily.cancel}
+          >
+            Cancelar geração
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="top" sideOffset={6}>
+          Interromper a consulta e preparação do rascunho
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  const disabledReason = daily.canGenerate
+    ? daily.state.pending
+      ? "Aceite ou descarte o novo rascunho antes de gerar outro"
+      : undefined
+    : "Selecione e configure ao menos uma integração com dados válidos";
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className="inline-flex">
+          <Button
+            type="submit"
+            form="generation-form"
+            className="generation-action"
+            disabled={!daily.canGenerate || Boolean(daily.state.pending)}
+          >
+            Gerar rascunho <ArrowRight aria-hidden="true" />
+          </Button>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side="top" sideOffset={6}>
+        {disabledReason || "Consultar fontes e gerar relato estruturado com IA"}
+      </TooltipContent>
+    </Tooltip>
   );
 }

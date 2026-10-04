@@ -1,4 +1,5 @@
 import { ChevronDown, Clock, GitCommitHorizontal, Layers } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { DailyResult } from "@/types";
 
 export function SourceSummary({ result }: { result: DailyResult }) {
@@ -49,7 +50,14 @@ export function SourceSummary({ result }: { result: DailyResult }) {
             <ul>
               {commits.map((commit) => (
                 <li key={commit.id}>
-                  <code title={commit.id}>{commit.id.slice(0, 8)}</code>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <code className="cursor-help">{commit.id.slice(0, 8)}</code>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" sideOffset={4} className="font-mono text-[11px]">
+                      Commit: {commit.id}
+                    </TooltipContent>
+                  </Tooltip>
                   <div>
                     <p>{commit.message}</p>
                     <small>{commit.author}</small>

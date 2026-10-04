@@ -4,6 +4,7 @@ import { ArrowRight, ShieldCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { IntegrationForm } from "@/components/integrations/integration-form";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUserConfig } from "@/hooks/use-user-config";
 
 type View = "daily" | "integrations" | "guide";
@@ -100,21 +101,32 @@ function SettingsContent({ onNavigate, onResetPreferences }: SettingsPanelProps)
               Ao ativar e salvar, os tokens ficam no armazenamento local, sem criptografia. Evite
               esta opção em dispositivos compartilhados.
             </p>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={remember === config.rememberCredentials}
-              onClick={() => {
-                updateConfig({ rememberCredentials: remember });
-                setNotice(
-                  remember
-                    ? "Escolha de armazenamento aplicada."
-                    : "Credenciais retidas somente na sessão atual."
-                );
-              }}
-            >
-              Salvar escolha de armazenamento
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="inline-flex">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={remember === config.rememberCredentials}
+                    onClick={() => {
+                      updateConfig({ rememberCredentials: remember });
+                      setNotice(
+                        remember
+                          ? "Escolha de armazenamento aplicada."
+                          : "Credenciais retidas somente na sessão atual."
+                      );
+                    }}
+                  >
+                    Salvar escolha de armazenamento
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={6}>
+                {remember === config.rememberCredentials
+                  ? "Nenhuma alteração na opção de retenção"
+                  : "Salvar nova opção de retenção de credenciais"}
+              </TooltipContent>
+            </Tooltip>
           </div>
           <p>
             As credenciais passam pelas rotas de API da aplicação para consultar suas fontes. Os
@@ -138,13 +150,31 @@ function SettingsContent({ onNavigate, onResetPreferences }: SettingsPanelProps)
           Remova tokens ou restaure as preferências de geração. Seu rascunho permanece disponível.
         </p>
         <div className="connection-actions">
-          <Button type="button" variant="outline" onClick={() => setConfirmation("credentials")}>
-            <Trash2 aria-hidden="true" />
-            Remover credenciais
-          </Button>
-          <Button type="button" variant="ghost" onClick={() => setConfirmation("preferences")}>
-            Restaurar preferências
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setConfirmation("credentials")}
+              >
+                <Trash2 aria-hidden="true" />
+                Remover credenciais
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={6}>
+              Limpar tokens de autenticação salvos no dispositivo
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button type="button" variant="ghost" onClick={() => setConfirmation("preferences")}>
+                Restaurar preferências
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={6}>
+              Restaurar formato (Daily Scrum) e período padrão (24h)
+            </TooltipContent>
+          </Tooltip>
         </div>
         {confirmation ? (
           <fieldset className="inline-confirmation" aria-label="Confirmar limpeza">

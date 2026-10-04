@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { DailyGeneration } from "@/hooks/use-daily-generation";
 import { TIME_PERIODS } from "@/lib/constants";
 
@@ -73,24 +74,50 @@ export function ReportDocument({
           Seu rascunho
         </span>
         <div className="document-actions">
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={!state.result}
-            onClick={() => daily.setEditing(!state.editing)}
-            aria-pressed={state.editing}
-          >
-            {state.editing ? "Concluir edição" : "Editar"}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={!state.result || !state.content.trim()}
-            onClick={() => void copy()}
-          >
-            {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
-            {copied ? "Texto copiado" : "Copiar texto"}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-flex">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={!state.result}
+                  onClick={() => daily.setEditing(!state.editing)}
+                  aria-pressed={state.editing}
+                >
+                  {state.editing ? "Concluir edição" : "Editar"}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={6}>
+              {state.result
+                ? state.editing
+                  ? "Concluir edição e pré-visualizar Markdown"
+                  : "Editar rascunho manualmente em Markdown"
+                : "Gere um rascunho para poder editar"}
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-flex">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!state.result || !state.content.trim()}
+                  onClick={() => void copy()}
+                >
+                  {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                  {copied ? "Texto copiado" : "Copiar texto"}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={6}>
+              {!state.result || !state.content.trim()
+                ? "Gere um rascunho para poder copiar"
+                : copied
+                  ? "Copiado para a área de transferência!"
+                  : "Copiar relato formatado"}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
       {state.loading && (
