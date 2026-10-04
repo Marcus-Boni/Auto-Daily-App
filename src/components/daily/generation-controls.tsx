@@ -1,6 +1,15 @@
 "use client";
 import { AlertCircle, ArrowRight, Info } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -38,40 +47,40 @@ export function GenerationControls({ daily, onNavigate }: DailyProps) {
       <h2>Preparar</h2>
       <fieldset className="source-fieldset" disabled={state.loading}>
         <legend>Fontes de atividade</legend>
-        <label className="source-option">
-          <input
-            type="checkbox"
+        <div className="source-option">
+          <Checkbox
+            id="source-azure"
             checked={state.options.azure}
-            onChange={(event) => updateOptions({ azure: event.target.checked })}
+            onCheckedChange={(checked) => updateOptions({ azure: checked === true })}
             disabled={!validation.hasAzureConfig && !state.options.azure}
           />
-          <span className="source-copy">
+          <label htmlFor="source-azure" className="source-copy cursor-pointer flex-1">
             <strong>Azure DevOps</strong>
             <small>
               {validation.hasAzureConfig ? "Commits do repositório" : "Configure esta integração"}
             </small>
-          </span>
-        </label>
-        <label className="source-option">
-          <input
-            type="checkbox"
+          </label>
+        </div>
+        <div className="source-option">
+          <Checkbox
+            id="source-optsolv"
             checked={state.options.optsolv}
-            onChange={(event) => updateOptions({ optsolv: event.target.checked })}
+            onCheckedChange={(checked) => updateOptions({ optsolv: checked === true })}
             disabled={!validation.hasOptsolvConfig && !state.options.optsolv}
           />
-          <span className="source-copy">
+          <label htmlFor="source-optsolv" className="source-copy cursor-pointer flex-1">
             <strong>OptSolv Time Tracker</strong>
             <small>
               {validation.hasOptsolvConfig ? "Registros de tempo" : "Configure esta integração"}
             </small>
-          </span>
-        </label>
+          </label>
+        </div>
         <button type="button" className="text-link" onClick={() => onNavigate("integrations")}>
           Gerenciar integrações <ArrowRight aria-hidden="true" />
         </button>
       </fieldset>
       <div className="form-group">
-        <label htmlFor="daily-period">Período</label>
+        <Label htmlFor="daily-period">Período</Label>
         <Select
           value={state.options.period}
           disabled={state.loading}
@@ -98,39 +107,52 @@ export function GenerationControls({ daily, onNavigate }: DailyProps) {
       </div>
       <fieldset className="format-fieldset" disabled={state.loading}>
         <legend>Formato do relato</legend>
-        {REPORT_FORMATS.map((format) => (
-          <label className="format-option" key={format.value}>
-            <input
-              type="radio"
-              name="report-format"
-              value={format.value}
-              checked={state.options.reportFormat === format.value}
-              onChange={() => updateOptions({ reportFormat: format.value as ReportFormat })}
-            />
-            <span>
-              <strong>{format.value === "standard" ? "Daily Scrum" : "Resumo executivo"}</strong>
-              <small>{format.description}</small>
-            </span>
-          </label>
-        ))}
+        <RadioGroup
+          value={state.options.reportFormat}
+          onValueChange={(value) => updateOptions({ reportFormat: value as ReportFormat })}
+          className="gap-0"
+        >
+          {REPORT_FORMATS.map((format) => {
+            const id = `format-${format.value}`;
+            return (
+              <div className="format-option" key={format.value}>
+                <RadioGroupItem value={format.value} id={id} className="mt-0.5" />
+                <label htmlFor={id} className="cursor-pointer flex-1">
+                  <strong>
+                    {format.value === "standard" ? "Daily Scrum" : "Resumo executivo"}
+                  </strong>
+                  <small>{format.description}</small>
+                </label>
+              </div>
+            );
+          })}
+        </RadioGroup>
       </fieldset>
-      <details className="instructions">
-        <summary>Instruções adicionais</summary>
-        <label htmlFor="daily-instructions">O que deve orientar o texto?</label>
-        <Textarea
-          id="daily-instructions"
-          value={state.options.customPrompt}
-          onChange={(event) => updateOptions({ customPrompt: event.target.value })}
-          disabled={state.loading}
-          maxLength={4000}
-          rows={4}
-          placeholder="Ex.: priorize entregas e use frases curtas."
-          aria-describedby="instructions-help"
-        />
-        <p className="field-help" id="instructions-help">
-          Complementam o formato escolhido. Evite incluir dados sensíveis.
-        </p>
-      </details>
+      <Accordion type="single" collapsible className="instructions">
+        <AccordionItem value="instructions" className="border-none">
+          <AccordionTrigger className="instructions-summary hover:no-underline py-2 text-[0.8125rem] font-semibold text-foreground">
+            Instruções adicionais
+          </AccordionTrigger>
+          <AccordionContent className="pt-2 pb-0">
+            <Label htmlFor="daily-instructions" className="block mb-2 text-[0.8125rem]">
+              O que deve orientar o texto?
+            </Label>
+            <Textarea
+              id="daily-instructions"
+              value={state.options.customPrompt}
+              onChange={(event) => updateOptions({ customPrompt: event.target.value })}
+              disabled={state.loading}
+              maxLength={4000}
+              rows={4}
+              placeholder="Ex.: priorize entregas e use frases curtas."
+              aria-describedby="instructions-help"
+            />
+            <p className="field-help mt-1.5" id="instructions-help">
+              Complementam o formato escolhido. Evite incluir dados sensíveis.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
       <div className="mobile-generation">
         <GenerationAction daily={daily} />
       </div>

@@ -4,6 +4,8 @@ import { ArrowRight, ShieldCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { IntegrationForm } from "@/components/integrations/integration-form";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUserConfig } from "@/hooks/use-user-config";
 
@@ -88,15 +90,20 @@ function SettingsContent({ onNavigate, onResetPreferences }: SettingsPanelProps)
             </p>
           )}
           <div className="storage-controls">
-            <label className="remember-option">
-              <input
-                type="checkbox"
+            <div className="remember-option">
+              <Checkbox
+                id="remember-credentials"
                 checked={remember}
-                onChange={(event) => setRemember(event.target.checked)}
+                onCheckedChange={(checked) => setRemember(checked === true)}
                 aria-describedby="remember-help"
-              />{" "}
-              Lembrar credenciais neste dispositivo
-            </label>
+              />
+              <Label
+                htmlFor="remember-credentials"
+                className="cursor-pointer text-sm font-normal text-foreground"
+              >
+                Lembrar credenciais neste dispositivo
+              </Label>
+            </div>
             <p id="remember-help" className="field-help">
               Ao ativar e salvar, os tokens ficam no armazenamento local, sem criptografia. Evite
               esta opção em dispositivos compartilhados.

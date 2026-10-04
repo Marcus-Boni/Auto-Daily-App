@@ -575,7 +575,8 @@ input[type="radio"] {
   padding-block: 11px;
   cursor: pointer;
 }
-.format-option input {
+.format-option input,
+.format-option [data-slot="radio-group-item"] {
   margin-top: 3px;
 }
 .instructions {
@@ -583,10 +584,12 @@ input[type="radio"] {
   padding-top: 13px;
   border-top: 1px solid var(--border);
 }
-.instructions summary {
+.instructions summary,
+.instructions [data-slot="accordion-trigger"] {
   min-height: 44px;
   font-size: 0.8125rem;
   font-weight: 550;
+  padding-block: 8px;
 }
 .instructions label {
   display: block;
@@ -872,7 +875,8 @@ input[type="radio"] {
   border: 1px solid var(--border);
   border-radius: 10px;
 }
-.evidence summary {
+.evidence summary,
+.evidence [data-slot="accordion-trigger"] {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -886,14 +890,15 @@ input[type="radio"] {
 .evidence summary::-webkit-details-marker {
   display: none;
 }
-.evidence summary > span:first-child {
+.evidence summary > span:first-child,
+.evidence [data-slot="accordion-trigger"] > span:first-child {
   display: flex;
   gap: 8px;
   align-items: center;
   color: var(--foreground);
   font-size: 0.8125rem;
 }
-.evidence :where(summary svg) {
+.evidence :where(summary svg, [data-slot="accordion-trigger"] > span:first-child svg) {
   width: 16px;
   height: 16px;
 }
@@ -1165,10 +1170,12 @@ input[type="radio"] {
   .product-label {
     display: none;
   }
-  .evidence summary {
+  .evidence summary,
+  .evidence [data-slot="accordion-trigger"] {
     flex-wrap: wrap;
   }
-  .evidence summary > span:nth-child(2) {
+  .evidence summary > span:nth-child(2),
+  .evidence [data-slot="accordion-trigger"] > span:nth-child(2) {
     order: 3;
     width: 100%;
     padding-left: 24px;
