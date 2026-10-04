@@ -1,5 +1,6 @@
 "use client";
 import { AlertCircle, ArrowRight, Info } from "lucide-react";
+import { ProviderLogo } from "@/components/provider-logo";
 import {
   Accordion,
   AccordionContent,
@@ -54,6 +55,7 @@ export function GenerationControls({ daily, onNavigate }: DailyProps) {
             onCheckedChange={(checked) => updateOptions({ azure: checked === true })}
             disabled={!validation.hasAzureConfig && !state.options.azure}
           />
+          <ProviderLogo provider="azure" size="sm" aria-hidden="true" />
           <label htmlFor="source-azure" className="source-copy cursor-pointer flex-1">
             <strong>Azure DevOps</strong>
             <small>
@@ -68,6 +70,7 @@ export function GenerationControls({ daily, onNavigate }: DailyProps) {
             onCheckedChange={(checked) => updateOptions({ optsolv: checked === true })}
             disabled={!validation.hasOptsolvConfig && !state.options.optsolv}
           />
+          <ProviderLogo provider="optsolv" size="sm" aria-hidden="true" />
           <label htmlFor="source-optsolv" className="source-copy cursor-pointer flex-1">
             <strong>OptSolv Time Tracker</strong>
             <small>

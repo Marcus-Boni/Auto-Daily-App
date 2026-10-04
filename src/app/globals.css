@@ -49,6 +49,8 @@
   --error-surface: #fff0ee;
   --warning: #805000;
   --warning-surface: #fff4dc;
+  --brand: #f97316;
+  --brand-optsolv: #f97316;
   --radius: 0.75rem;
 }
 .dark {
@@ -70,6 +72,8 @@
   --error-surface: #3b2624;
   --warning: #f2cc82;
   --warning-surface: #3a2e18;
+  --brand: #f97316;
+  --brand-optsolv: #f97316;
 }
 @layer base {
   * {

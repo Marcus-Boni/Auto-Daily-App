@@ -1,7 +1,8 @@
 "use client";
 
-import { Check, Clock3, GitCommitHorizontal, LoaderCircle } from "lucide-react";
+import { Check, LoaderCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { ProviderLogo } from "@/components/provider-logo";
 import { SecretInput } from "@/components/secret-input";
 import { TutorialHelp } from "@/components/tutorial-help";
 import { Button } from "@/components/ui/button";
@@ -263,11 +264,7 @@ export function IntegrationForm({
       }}
     >
       <div className="connection-heading">
-        {provider === "azure" ? (
-          <GitCommitHorizontal aria-hidden="true" />
-        ) : (
-          <Clock3 aria-hidden="true" />
-        )}
+        <ProviderLogo provider={provider} size="md" />
         <div>
           <h2>{title}</h2>
           <p>

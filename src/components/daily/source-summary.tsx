@@ -1,4 +1,5 @@
-import { Clock, GitCommitHorizontal, Layers } from "lucide-react";
+import { Layers } from "lucide-react";
+import { ProviderLogo } from "@/components/provider-logo";
 import {
   Accordion,
   AccordionContent,
@@ -52,7 +53,7 @@ export function SourceSummary({ result }: { result: DailyResult }) {
           {commits.length > 0 && (
             <section>
               <h3>
-                <GitCommitHorizontal aria-hidden="true" />
+                <ProviderLogo provider="azure" size="sm" aria-hidden="true" />
                 Azure DevOps
               </h3>
               <ul>
@@ -78,7 +79,7 @@ export function SourceSummary({ result }: { result: DailyResult }) {
           {entries.length > 0 && (
             <section>
               <h3>
-                <Clock aria-hidden="true" />
+                <ProviderLogo provider="optsolv" size="sm" aria-hidden="true" />
                 OptSolv Time Tracker
               </h3>
               <ul>
