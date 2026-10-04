@@ -4,6 +4,7 @@ import { z } from "zod";
 import { AIServiceError, generateDailyWithAI } from "@/lib/ai-service";
 import { fetchAzureCommits } from "@/lib/azure-service";
 import { generateDailyPrompt, generateProfessionalPrompt } from "@/lib/constants";
+import { saveDailyIfAuthenticated } from "@/lib/daily-history";
 import { fetchOptsolvEntries } from "@/lib/optsolv-service";
 import type {
   GenerateDailyRequest,
@@ -188,6 +189,18 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateD
 
     request.signal.throwIfAborted();
     const daily = await generateDailyWithAI(prompt, request.signal);
+
+    await saveDailyIfAuthenticated({
+      headers: request.headers,
+      content: daily,
+      mode,
+      period,
+      periodHours,
+      reportFormat,
+      customPrompt,
+      sourceStatus,
+      window,
+    });
 
     return NextResponse.json({
       success: true,

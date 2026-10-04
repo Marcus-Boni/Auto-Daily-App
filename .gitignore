@@ -54,3 +54,10 @@ azure-logs.zip
 azure-logs*/
 latest-logs/
 *.zip
+
+# Local SQLite databases
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+

@@ -5,15 +5,18 @@ import {
   Code2,
   FileText,
   Github,
+  History,
   PanelLeftClose,
   PanelLeftOpen,
   Plug,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { UserMenu } from "@/components/auth/user-menu";
 import { BrandLogo } from "@/components/brand-logo";
 import { GenerationAction } from "@/components/daily/generation-controls";
 import { DailyGenerator } from "@/components/daily-generator";
 import { GuidePanel } from "@/components/guide-panel";
+import { HistoryPanel } from "@/components/history-panel";
 import { SettingsPanel } from "@/components/settings-panel";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,9 +25,10 @@ import { useDailyGeneration } from "@/hooks/use-daily-generation";
 import { useUserConfig } from "@/hooks/use-user-config";
 import brand from "@/lib/brand.json";
 
-type View = "daily" | "integrations" | "guide";
+type View = "daily" | "history" | "integrations" | "guide";
 const navigation = [
   { id: "daily", label: "Daily", icon: FileText },
+  { id: "history", label: "Histórico", icon: History },
   { id: "integrations", label: "Integrações", icon: Plug },
   { id: "guide", label: "Guia", icon: BookOpen },
 ] as const;
@@ -128,7 +132,9 @@ function AppWorkspace() {
   useEffect(() => {
     const syncHash = () => {
       const hash = window.location.hash.slice(1);
-      if (hash === "daily" || hash === "integrations" || hash === "guide") setView(hash);
+      if (hash === "daily" || hash === "history" || hash === "integrations" || hash === "guide") {
+        setView(hash);
+      }
     };
     syncHash();
     window.addEventListener("hashchange", syncHash);
@@ -156,6 +162,7 @@ function AppWorkspace() {
         <span className="product-label">{brand.tagline}</span>
         <div className="header-actions">
           <ThemeToggle />
+          <UserMenu />
           <Tooltip>
             <TooltipTrigger asChild>
               <a
@@ -271,6 +278,14 @@ function AppWorkspace() {
               </div>
             </div>
             <DailyGenerator daily={daily} onNavigate={navigate} />
+          </section>
+          <section
+            id="history"
+            className="view"
+            hidden={view !== "history"}
+            aria-labelledby="history-heading"
+          >
+            <HistoryPanel />
           </section>
           <section
             id="integrations"
