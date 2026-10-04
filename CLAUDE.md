@@ -14,7 +14,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 **Auto Daily App** is an intelligent web application that automates the generation of Daily Scrum reports.
 It integrates with **Azure DevOps** (commits), **OptSolv Time Tracker** (timesheets / time entries), and the **Hugging Face Inference API** to produce structured, professional standup reports.
 
-- **Framework**: Next.js 16 (App Router, Turbopack, standalone deployment)
+- **Official Host**: [Auto Daily | Seu trabalho, bem contado.](https://auto-daily-app.vercel.app/)
+- **Framework**: Next.js 16 (App Router, Turbopack, Vercel Serverless)
+- **Auth & Database**: Better Auth (GitHub OAuth & Email/Password), Turso (libSQL), Drizzle ORM, AES-256-GCM Vault
 - **UI & Styling**: React 19, Tailwind CSS 4, Radix UI, Lucide React, Sonner (Toasts)
 - **State Management**: Zustand with localStorage persistence
 - **Validation & Tooling**: Zod, Biome v2.5 (linter & formatter), TypeScript 5

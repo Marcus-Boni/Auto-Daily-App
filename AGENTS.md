@@ -13,7 +13,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## 📌 Project Identity
 **Auto Daily App** is an intelligent standup generator web app integrating Azure DevOps, OptSolv Time Tracker, and Hugging Face Inference API.
 
-- **Stack**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5, Tailwind CSS 4, Biome 2.5, Zustand, Zod.
+- **Official Host**: [Auto Daily | Seu trabalho, bem contado.](https://auto-daily-app.vercel.app/)
+- **Stack**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5, Tailwind CSS 4, Biome 2.5, Better Auth, Turso (libSQL), Drizzle ORM, AES-256 Vault, Zustand, Zod.
 
 ---
 

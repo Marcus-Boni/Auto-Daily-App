@@ -7,19 +7,21 @@
 
 Seu trabalho, bem contado.
 
+> 🌐 **Aplicação oficial no ar:** [Auto Daily | Seu trabalho, bem contado.](https://auto-daily-app.vercel.app/)
+
 Prepare um rascunho de daily a partir de commits do Azure DevOps e registros do OptSolv Time Tracker. Revise o texto, confira as fontes e copie quando ele representar o que você quer compartilhar.
 
 ![Aplicativo com identidade aprovada e dados fictícios de validação](docs/brand/integrated-desktop-light.jpg)
 
 ## O que o aplicativo faz
 
-- Seleção independente de fontes e seis períodos móveis, de 24 horas a 30 dias.
-- Formatos Daily Scrum e resumo executivo, com instruções complementares.
-- Editor Markdown, cópia manual e evidências junto ao documento.
-- Rascunho preservado ao navegar, cancelar ou recuperar falhas.
-- Escolha explícita antes de substituir edições por uma nova geração.
-- Teste de conexão separado do salvamento das integrações.
-- Temas claro/escuro, interface responsiva e guia do fluxo de dados.
+- **Geração Inteligente**: commits do Azure DevOps e horas do OptSolv estruturados por IA via Hugging Face (`Qwen2.5-Coder-7B`).
+- **Autenticação Moderna**: login com 1 clique via GitHub OAuth ou Email/Senha via Better Auth.
+- **Banco de Dados Serverless**: histórico persistente e pesquisável no Turso (libSQL) com Drizzle ORM.
+- **Cofre Criptografado (AES-256-GCM)**: PATs e tokens encriptados no servidor com chave militar de 256 bits antes do armazenamento.
+- **Seleção Independente**: seis períodos móveis (de 24 horas a 30 dias) e formatos Daily Scrum ou Executivo.
+- **Editor Markdown e Evidências**: rascunho preservado ao navegar, cancelar ou recuperar falhas.
+- **Temas e Acessibilidade**: temas claro/escuro, barra lateral retrátil com atalhos de teclado (`Ctrl+B`) e design responsivo.
 
 Azure fornece commits, não work items. A consulta atual limita Azure aos 100 commits mais recentes e OptSolv à primeira página de até 200 registros. OptSolv aceita datas de calendário UTC; sua precisão difere de uma janela de timestamps. Essas limitações aparecem junto às fontes do resultado.
 
@@ -97,7 +99,7 @@ O [sistema visual](DESIGN.md) documenta a implementação atual. O aplicativo pe
 
 ## Contribuir e publicar
 
-Leia [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) e as instruções do workspace em [AGENTS.md](AGENTS.md). A configuração de hospedagem existente está em [docs/AZURE_DEPLOY.md](docs/AZURE_DEPLOY.md).
+Leia [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) e as instruções do workspace em [AGENTS.md](AGENTS.md). O aplicativo está hospedado oficialmente na Vercel em [Auto Daily | Seu trabalho, bem contado.](https://auto-daily-app.vercel.app/). A configuração legada de hospedagem no Azure está em [docs/AZURE_DEPLOY.md](docs/AZURE_DEPLOY.md).
 
 Antes de publicar um fork/histórico, revise segredos: uma chave de desenvolvimento removida do código ainda existe no histórico anterior. Sua validade não foi verificada. Se representar acesso real, revogue/rotacione pelo serviço responsável e trate o histórico antes da publicação.
 
