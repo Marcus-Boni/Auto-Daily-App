@@ -9,7 +9,13 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { DailyResult } from "@/types";
 
-export function SourceSummary({ result }: { result: DailyResult }) {
+export function SourceSummary({
+  result,
+  defaultOpen = false,
+}: {
+  result: DailyResult;
+  defaultOpen?: boolean;
+}) {
   const commits = result.sources?.azure ?? [];
   const entries = result.sources?.optsolv ?? [];
   const summary = [
@@ -21,7 +27,12 @@ export function SourceSummary({ result }: { result: DailyResult }) {
     .filter(Boolean)
     .join(" · ");
   return (
-    <Accordion type="single" collapsible className="evidence">
+    <Accordion
+      type="single"
+      collapsible
+      className="evidence"
+      defaultValue={defaultOpen ? "evidence" : undefined}
+    >
       <AccordionItem value="evidence" className="border-none">
         <AccordionTrigger className="evidence-summary hover:no-underline">
           <span className="evidence-summary-title">

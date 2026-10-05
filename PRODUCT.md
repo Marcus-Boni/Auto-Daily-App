@@ -25,7 +25,8 @@ A aplicação consulta commits do Azure DevOps e registros de tempo do OptSolv a
 - Dois formatos: padrão de daily e relatório profissional.
 - Resultado em Markdown, com dados das fontes na resposta da geração.
 - Configuração persistida no navegador com Zustand; tema claro, escuro ou do sistema.
-- Editor Markdown, teste de conexão, preservação do rascunho e escolha antes de substituir edições estão implementados. Histórico, seleção individual de evidências antes da geração e modo de demonstração no produto ficam como evoluções futuras.
+- Editor Markdown, teste de conexão, preservação do rascunho e escolha antes de substituir edições estão implementados. Conta opcional (Better Auth) guarda histórico de dailies e credenciais em cofre AES-256-GCM. Seleção individual de evidências antes da geração e modo de demonstração dentro do app ficam como evoluções futuras.
+- Página inicial pública em `/` com demonstração rotulada como fictícia; o aplicativo fica em `/app`.
 - O fluxo inspecionado do Azure usa commits; não anunciar suporte a work items.
 - Credenciais ficam na memória da página por padrão; retenção local exige opt-in. Dados antigos sem consentimento não restauram tokens. O aplicativo tolera armazenamento indisponível e informa o estado. Não apresentar armazenamento local como garantia de segurança.
 
@@ -48,4 +49,4 @@ Código em `src/`, README, assets em `public/` e licença do projeto. Não foram
 
 ## Open Decisions
 
-Retenção de rascunhos além da sessão, futuras integrações, suporte multilíngue e identidade definitiva não foram definidos. A homepage será uma etapa posterior. Não transformar essas possibilidades em promessas públicas.
+Retenção de rascunhos além da sessão sem conta, futuras integrações, suporte multilíngue e identidade definitiva não foram definidos. Não transformar essas possibilidades em promessas públicas.

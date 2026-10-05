@@ -1,5 +1,6 @@
 "use client";
 
+import { useLenis } from "lenis/react";
 import {
   BookOpen,
   Code2,
@@ -10,6 +11,7 @@ import {
   PanelLeftOpen,
   Plug,
 } from "lucide-react";
+import { motion, useAnimate, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { UserMenu } from "@/components/auth/user-menu";
 import { BrandLogo } from "@/components/brand-logo";
@@ -24,6 +26,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useDailyGeneration } from "@/hooks/use-daily-generation";
 import { useUserConfig } from "@/hooks/use-user-config";
 import brand from "@/lib/brand.json";
+import { EASE_OUT } from "@/lib/gsap";
 
 type View = "daily" | "history" | "integrations" | "guide";
 const navigation = [
@@ -58,6 +61,45 @@ function NavTooltip({ label, isCollapsed, children, shortcut }: NavTooltipProps)
   );
 }
 
+/**
+ * Áreas continuam montadas (preservam rascunho e formulários); ao voltar a ficar
+ * visível, a área entra com um deslocamento curto para explicar a troca.
+ */
+function ViewPanel({
+  id,
+  active,
+  className = "view",
+  children,
+}: {
+  id: View;
+  active: boolean;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const [scope, animate] = useAnimate<HTMLElement>();
+  const reduce = useReducedMotion();
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    if (!active || reduce || !scope.current) return;
+    animate(scope.current, { opacity: [0, 1], y: [10, 0] }, { duration: 0.38, ease: EASE_OUT });
+  }, [active, animate, reduce, scope]);
+  return (
+    <section
+      ref={scope}
+      id={id}
+      className={className}
+      hidden={!active}
+      aria-labelledby={`${id}-heading`}
+    >
+      {children}
+    </section>
+  );
+}
+
 export function AppShell() {
   const { isHydrated } = useUserConfig();
   if (!isHydrated)
@@ -84,6 +126,7 @@ function AppWorkspace() {
     }
   });
   const main = useRef<HTMLElement>(null);
+  const lenis = useLenis();
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarCollapsed((prev) => {
@@ -126,7 +169,8 @@ function AppWorkspace() {
     requestAnimationFrame(() => {
       const heading = main.current?.querySelector<HTMLElement>(`#${next} h1`);
       heading?.focus({ preventScroll: true });
-      window.scrollTo({ top: 0, behavior: "instant" });
+      if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
+      else window.scrollTo({ top: 0, behavior: "instant" });
     });
   };
   useEffect(() => {
@@ -236,6 +280,14 @@ function AppWorkspace() {
                     navigate(item.id);
                   }}
                 >
+                  {view === item.id && (
+                    <motion.span
+                      layoutId="nav-active"
+                      className="nav-active-pill"
+                      aria-hidden="true"
+                      transition={{ type: "spring", stiffness: 460, damping: 36 }}
+                    />
+                  )}
                   <item.icon className="nav-icon" aria-hidden="true" />
                   <span className="nav-label">{item.label}</span>
                 </a>
@@ -260,12 +312,7 @@ function AppWorkspace() {
           </NavTooltip>
         </aside>
         <main id="main" className="app-main" ref={main} tabIndex={-1}>
-          <section
-            id="daily"
-            className="view"
-            hidden={view !== "daily"}
-            aria-labelledby="daily-heading"
-          >
+          <ViewPanel id="daily" active={view === "daily"}>
             <div className="page-heading">
               <div>
                 <h1 id="daily-heading" tabIndex={-1}>
@@ -278,21 +325,11 @@ function AppWorkspace() {
               </div>
             </div>
             <DailyGenerator daily={daily} onNavigate={navigate} />
-          </section>
-          <section
-            id="history"
-            className="view"
-            hidden={view !== "history"}
-            aria-labelledby="history-heading"
-          >
+          </ViewPanel>
+          <ViewPanel id="history" active={view === "history"}>
             <HistoryPanel />
-          </section>
-          <section
-            id="integrations"
-            className="view"
-            hidden={view !== "integrations"}
-            aria-labelledby="integrations-heading"
-          >
+          </ViewPanel>
+          <ViewPanel id="integrations" active={view === "integrations"}>
             <SettingsPanel
               onNavigate={navigate}
               onResetPreferences={() =>
@@ -305,15 +342,10 @@ function AppWorkspace() {
                 })
               }
             />
-          </section>
-          <section
-            id="guide"
-            className="view"
-            hidden={view !== "guide"}
-            aria-labelledby="guide-heading"
-          >
+          </ViewPanel>
+          <ViewPanel id="guide" active={view === "guide"}>
             <GuidePanel onNavigate={navigate} />
-          </section>
+          </ViewPanel>
         </main>
       </div>
     </TooltipProvider>

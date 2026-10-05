@@ -108,7 +108,7 @@ export function HistoryPanel() {
       <main id="main" className="app-main">
         <header className="page-header">
           <div>
-            <h1 className="page-title flex items-center gap-2.5">
+            <h1 id="history-heading" tabIndex={-1} className="page-title flex items-center gap-2.5">
               <History className="size-6 text-primary" />
               Histórico de Dailies
             </h1>
@@ -144,7 +144,7 @@ export function HistoryPanel() {
     <main id="main" className="app-main">
       <header className="page-header flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="page-title flex items-center gap-2.5">
+          <h1 id="history-heading" tabIndex={-1} className="page-title flex items-center gap-2.5">
             <History className="size-6 text-primary" />
             Histórico de Dailies
           </h1>

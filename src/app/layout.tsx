@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import brand from "@/lib/brand.json";
 import { getSiteUrl } from "@/lib/site-url";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -83,13 +86,17 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* Marca o documento antes da pintura: entradas coreografadas só escondem conteúdo com JS ativo. */}
+        <Script id="js-flag" strategy="beforeInteractive">
+          {"document.documentElement.classList.add('js')"}
+        </Script>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SmoothScroll>{children}</SmoothScroll>
           <Toaster position="top-right" richColors closeButton />
         </ThemeProvider>
       </body>

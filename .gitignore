@@ -61,3 +61,7 @@ latest-logs/
 *.db-shm
 *.db-wal
 
+
+# brag: intermediários do vídeo (quadros, CSS compilado, fontes)
+brag-output/work/
+.playwright-mcp/

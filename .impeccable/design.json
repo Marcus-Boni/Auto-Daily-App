@@ -1,0 +1,852 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-04T22:41:05.116Z",
+  "title": "Design System: Auto Daily",
+  "extensions": {
+    "colorMeta": {
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas",
+        "canonical": "#F5F7F6",
+        "cssVar": "--background",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.002 165.1)",
+          "oklch(26% 0.002 165.1)",
+          "oklch(38% 0.002 165.1)",
+          "oklch(50% 0.002 165.1)",
+          "oklch(62% 0.002 165.1)",
+          "oklch(74% 0.002 165.1)",
+          "oklch(85% 0.002 165.1)",
+          "oklch(95% 0.001 165.1)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Superfície",
+        "canonical": "#FFFFFF",
+        "cssVar": "--card",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Superfície secundária",
+        "canonical": "#EDF1EF",
+        "cssVar": "--secondary",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.004 165.0)",
+          "oklch(26% 0.005 165.0)",
+          "oklch(38% 0.005 165.0)",
+          "oklch(50% 0.005 165.0)",
+          "oklch(62% 0.005 165.0)",
+          "oklch(74% 0.005 165.0)",
+          "oklch(85% 0.005 165.0)",
+          "oklch(95% 0.003 165.0)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Texto",
+        "canonical": "#192820",
+        "cssVar": "--foreground",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.018 160.7)",
+          "oklch(26% 0.025 160.7)",
+          "oklch(38% 0.025 160.7)",
+          "oklch(50% 0.025 160.7)",
+          "oklch(62% 0.025 160.7)",
+          "oklch(74% 0.025 160.7)",
+          "oklch(85% 0.025 160.7)",
+          "oklch(95% 0.013 160.7)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Texto secundário",
+        "canonical": "#58655E",
+        "cssVar": "--muted-foreground",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.014 162.2)",
+          "oklch(26% 0.019 162.2)",
+          "oklch(38% 0.019 162.2)",
+          "oklch(50% 0.019 162.2)",
+          "oklch(62% 0.019 162.2)",
+          "oklch(74% 0.019 162.2)",
+          "oklch(85% 0.019 162.2)",
+          "oklch(95% 0.010 162.2)"
+        ]
+      },
+      "action": {
+        "role": "primary",
+        "displayName": "Ação",
+        "canonical": "#176344",
+        "cssVar": "--primary",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.062 161.3)",
+          "oklch(26% 0.089 161.3)",
+          "oklch(38% 0.089 161.3)",
+          "oklch(50% 0.089 161.3)",
+          "oklch(62% 0.089 161.3)",
+          "oklch(74% 0.089 161.3)",
+          "oklch(85% 0.089 161.3)",
+          "oklch(95% 0.044 161.3)"
+        ]
+      },
+      "on-action": {
+        "role": "primary",
+        "displayName": "Texto sobre ação",
+        "canonical": "#FFFFFF",
+        "cssVar": "--primary-foreground",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Seleção suave",
+        "canonical": "#E5F2EA",
+        "cssVar": "--accent",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.012 159.1)",
+          "oklch(26% 0.017 159.1)",
+          "oklch(38% 0.017 159.1)",
+          "oklch(50% 0.017 159.1)",
+          "oklch(62% 0.017 159.1)",
+          "oklch(74% 0.017 159.1)",
+          "oklch(85% 0.017 159.1)",
+          "oklch(95% 0.009 159.1)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Divisória de superfície",
+        "canonical": "#D8E0DB",
+        "cssVar": "--border",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.008 158.8)",
+          "oklch(26% 0.011 158.8)",
+          "oklch(38% 0.011 158.8)",
+          "oklch(50% 0.011 158.8)",
+          "oklch(62% 0.011 158.8)",
+          "oklch(74% 0.011 158.8)",
+          "oklch(85% 0.011 158.8)",
+          "oklch(95% 0.005 158.8)"
+        ]
+      },
+      "input": {
+        "role": "neutral",
+        "displayName": "Limite de input",
+        "canonical": "#809184",
+        "cssVar": "--input",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.019 152.6)",
+          "oklch(26% 0.027 152.6)",
+          "oklch(38% 0.027 152.6)",
+          "oklch(50% 0.027 152.6)",
+          "oklch(62% 0.027 152.6)",
+          "oklch(74% 0.027 152.6)",
+          "oklch(85% 0.027 152.6)",
+          "oklch(95% 0.014 152.6)"
+        ]
+      },
+      "ring": {
+        "role": "primary",
+        "displayName": "Foco",
+        "canonical": "#257E59",
+        "cssVar": "--ring",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.071 161.5)",
+          "oklch(26% 0.102 161.5)",
+          "oklch(38% 0.102 161.5)",
+          "oklch(50% 0.102 161.5)",
+          "oklch(62% 0.102 161.5)",
+          "oklch(74% 0.102 161.5)",
+          "oklch(85% 0.102 161.5)",
+          "oklch(95% 0.051 161.5)"
+        ]
+      },
+      "error": {
+        "role": "status",
+        "displayName": "Erro",
+        "canonical": "#A53232",
+        "cssVar": "--destructive",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.084 24.6)",
+          "oklch(26% 0.120 24.6)",
+          "oklch(38% 0.120 24.6)",
+          "oklch(50% 0.120 24.6)",
+          "oklch(62% 0.120 24.6)",
+          "oklch(74% 0.120 24.6)",
+          "oklch(85% 0.120 24.6)",
+          "oklch(95% 0.060 24.6)"
+        ]
+      },
+      "error-surface": {
+        "role": "status",
+        "displayName": "Superfície de erro",
+        "canonical": "#FFF0EE",
+        "cssVar": "--error-surface",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.012 26.6)",
+          "oklch(26% 0.016 26.6)",
+          "oklch(38% 0.016 26.6)",
+          "oklch(50% 0.016 26.6)",
+          "oklch(62% 0.016 26.6)",
+          "oklch(74% 0.016 26.6)",
+          "oklch(85% 0.016 26.6)",
+          "oklch(95% 0.008 26.6)"
+        ]
+      },
+      "warning": {
+        "role": "status",
+        "displayName": "Atenção",
+        "canonical": "#805000",
+        "cssVar": "--warning",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.072 70.2)",
+          "oklch(26% 0.103 70.2)",
+          "oklch(38% 0.103 70.2)",
+          "oklch(50% 0.103 70.2)",
+          "oklch(62% 0.103 70.2)",
+          "oklch(74% 0.103 70.2)",
+          "oklch(85% 0.103 70.2)",
+          "oklch(95% 0.051 70.2)"
+        ]
+      },
+      "warning-surface": {
+        "role": "status",
+        "displayName": "Superfície de atenção",
+        "canonical": "#FFF4DC",
+        "cssVar": "--warning-surface",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.024 86.3)",
+          "oklch(26% 0.034 86.3)",
+          "oklch(38% 0.034 86.3)",
+          "oklch(50% 0.034 86.3)",
+          "oklch(62% 0.034 86.3)",
+          "oklch(74% 0.034 86.3)",
+          "oklch(85% 0.034 86.3)",
+          "oklch(95% 0.017 86.3)"
+        ]
+      },
+      "field": {
+        "role": "primary",
+        "displayName": "Campo de marca",
+        "canonical": "#176344",
+        "cssVar": "--field",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.062 161.3)",
+          "oklch(26% 0.089 161.3)",
+          "oklch(38% 0.089 161.3)",
+          "oklch(50% 0.089 161.3)",
+          "oklch(62% 0.089 161.3)",
+          "oklch(74% 0.089 161.3)",
+          "oklch(85% 0.089 161.3)",
+          "oklch(95% 0.044 161.3)"
+        ]
+      },
+      "field-foreground": {
+        "role": "primary",
+        "displayName": "Texto sobre campo",
+        "canonical": "#F4FBF7",
+        "cssVar": "--field-foreground",
+        "theme": "both",
+        "tonalRamp": [
+          "oklch(15% 0.006 161.4)",
+          "oklch(26% 0.009 161.4)",
+          "oklch(38% 0.009 161.4)",
+          "oklch(50% 0.009 161.4)",
+          "oklch(62% 0.009 161.4)",
+          "oklch(74% 0.009 161.4)",
+          "oklch(85% 0.009 161.4)",
+          "oklch(95% 0.005 161.4)"
+        ]
+      },
+      "field-muted": {
+        "role": "primary",
+        "displayName": "Texto secundário sobre campo",
+        "canonical": "#CFE9DA",
+        "cssVar": "--field-muted",
+        "theme": "light",
+        "tonalRamp": [
+          "oklch(15% 0.024 160.4)",
+          "oklch(26% 0.034 160.4)",
+          "oklch(38% 0.034 160.4)",
+          "oklch(50% 0.034 160.4)",
+          "oklch(62% 0.034 160.4)",
+          "oklch(74% 0.034 160.4)",
+          "oklch(85% 0.034 160.4)",
+          "oklch(95% 0.017 160.4)"
+        ]
+      },
+      "canvas-dark": {
+        "role": "neutral",
+        "displayName": "Canvas (escuro)",
+        "canonical": "#131A17",
+        "cssVar": "--background",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.008 167.3)",
+          "oklch(26% 0.012 167.3)",
+          "oklch(38% 0.012 167.3)",
+          "oklch(50% 0.012 167.3)",
+          "oklch(62% 0.012 167.3)",
+          "oklch(74% 0.012 167.3)",
+          "oklch(85% 0.012 167.3)",
+          "oklch(95% 0.006 167.3)"
+        ]
+      },
+      "surface-dark": {
+        "role": "neutral",
+        "displayName": "Superfície (escuro)",
+        "canonical": "#1A231E",
+        "cssVar": "--card",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.011 160.6)",
+          "oklch(26% 0.016 160.6)",
+          "oklch(38% 0.016 160.6)",
+          "oklch(50% 0.016 160.6)",
+          "oklch(62% 0.016 160.6)",
+          "oklch(74% 0.016 160.6)",
+          "oklch(85% 0.016 160.6)",
+          "oklch(95% 0.008 160.6)"
+        ]
+      },
+      "surface-2-dark": {
+        "role": "neutral",
+        "displayName": "Superfície secundária (escuro)",
+        "canonical": "#232E27",
+        "cssVar": "--secondary",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.014 157.0)",
+          "oklch(26% 0.020 157.0)",
+          "oklch(38% 0.020 157.0)",
+          "oklch(50% 0.020 157.0)",
+          "oklch(62% 0.020 157.0)",
+          "oklch(74% 0.020 157.0)",
+          "oklch(85% 0.020 157.0)",
+          "oklch(95% 0.010 157.0)"
+        ]
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Texto (escuro)",
+        "canonical": "#EAF1EC",
+        "cssVar": "--foreground",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.007 155.1)",
+          "oklch(26% 0.010 155.1)",
+          "oklch(38% 0.010 155.1)",
+          "oklch(50% 0.010 155.1)",
+          "oklch(62% 0.010 155.1)",
+          "oklch(74% 0.010 155.1)",
+          "oklch(85% 0.010 155.1)",
+          "oklch(95% 0.005 155.1)"
+        ]
+      },
+      "ink-2-dark": {
+        "role": "neutral",
+        "displayName": "Texto secundário (escuro)",
+        "canonical": "#AFBEB4",
+        "cssVar": "--muted-foreground",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.015 156.7)",
+          "oklch(26% 0.022 156.7)",
+          "oklch(38% 0.022 156.7)",
+          "oklch(50% 0.022 156.7)",
+          "oklch(62% 0.022 156.7)",
+          "oklch(74% 0.022 156.7)",
+          "oklch(85% 0.022 156.7)",
+          "oklch(95% 0.011 156.7)"
+        ]
+      },
+      "action-dark": {
+        "role": "primary",
+        "displayName": "Ação (escuro, menta)",
+        "canonical": "#86D6AD",
+        "cssVar": "--primary",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.069 160.8)",
+          "oklch(26% 0.099 160.8)",
+          "oklch(38% 0.099 160.8)",
+          "oklch(50% 0.099 160.8)",
+          "oklch(62% 0.099 160.8)",
+          "oklch(74% 0.099 160.8)",
+          "oklch(85% 0.099 160.8)",
+          "oklch(95% 0.049 160.8)"
+        ]
+      },
+      "on-action-dark": {
+        "role": "primary",
+        "displayName": "Texto sobre ação (escuro)",
+        "canonical": "#14261C",
+        "cssVar": "--primary-foreground",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.022 158.8)",
+          "oklch(26% 0.031 158.8)",
+          "oklch(38% 0.031 158.8)",
+          "oklch(50% 0.031 158.8)",
+          "oklch(62% 0.031 158.8)",
+          "oklch(74% 0.031 158.8)",
+          "oklch(85% 0.031 158.8)",
+          "oklch(95% 0.015 158.8)"
+        ]
+      },
+      "accent-dark": {
+        "role": "primary",
+        "displayName": "Seleção suave (escuro)",
+        "canonical": "#233E2F",
+        "cssVar": "--accent",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.030 158.7)",
+          "oklch(26% 0.043 158.7)",
+          "oklch(38% 0.043 158.7)",
+          "oklch(50% 0.043 158.7)",
+          "oklch(62% 0.043 158.7)",
+          "oklch(74% 0.043 158.7)",
+          "oklch(85% 0.043 158.7)",
+          "oklch(95% 0.021 158.7)"
+        ]
+      },
+      "border-dark": {
+        "role": "neutral",
+        "displayName": "Divisória de superfície (escuro)",
+        "canonical": "#3B4C40",
+        "cssVar": "--border",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.021 154.2)",
+          "oklch(26% 0.029 154.2)",
+          "oklch(38% 0.029 154.2)",
+          "oklch(50% 0.029 154.2)",
+          "oklch(62% 0.029 154.2)",
+          "oklch(74% 0.029 154.2)",
+          "oklch(85% 0.029 154.2)",
+          "oklch(95% 0.015 154.2)"
+        ]
+      },
+      "input-dark": {
+        "role": "neutral",
+        "displayName": "Limite de input (escuro)",
+        "canonical": "#6A8172",
+        "cssVar": "--input",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.025 156.6)",
+          "oklch(26% 0.035 156.6)",
+          "oklch(38% 0.035 156.6)",
+          "oklch(50% 0.035 156.6)",
+          "oklch(62% 0.035 156.6)",
+          "oklch(74% 0.035 156.6)",
+          "oklch(85% 0.035 156.6)",
+          "oklch(95% 0.018 156.6)"
+        ]
+      },
+      "error-dark": {
+        "role": "status",
+        "displayName": "Erro (escuro)",
+        "canonical": "#FFB1A7",
+        "cssVar": "--destructive",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.065 27.3)",
+          "oklch(26% 0.093 27.3)",
+          "oklch(38% 0.093 27.3)",
+          "oklch(50% 0.093 27.3)",
+          "oklch(62% 0.093 27.3)",
+          "oklch(74% 0.093 27.3)",
+          "oklch(85% 0.093 27.3)",
+          "oklch(95% 0.047 27.3)"
+        ]
+      },
+      "error-surface-dark": {
+        "role": "status",
+        "displayName": "Superfície de erro (escuro)",
+        "canonical": "#3B2624",
+        "cssVar": "--error-surface",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.023 25.3)",
+          "oklch(26% 0.032 25.3)",
+          "oklch(38% 0.032 25.3)",
+          "oklch(50% 0.032 25.3)",
+          "oklch(62% 0.032 25.3)",
+          "oklch(74% 0.032 25.3)",
+          "oklch(85% 0.032 25.3)",
+          "oklch(95% 0.016 25.3)"
+        ]
+      },
+      "warning-dark": {
+        "role": "status",
+        "displayName": "Atenção (escuro)",
+        "canonical": "#F2CC82",
+        "cssVar": "--warning",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.071 83.2)",
+          "oklch(26% 0.102 83.2)",
+          "oklch(38% 0.102 83.2)",
+          "oklch(50% 0.102 83.2)",
+          "oklch(62% 0.102 83.2)",
+          "oklch(74% 0.102 83.2)",
+          "oklch(85% 0.102 83.2)",
+          "oklch(95% 0.051 83.2)"
+        ]
+      },
+      "warning-surface-dark": {
+        "role": "status",
+        "displayName": "Superfície de atenção (escuro)",
+        "canonical": "#3A2E18",
+        "cssVar": "--warning-surface",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.027 81.6)",
+          "oklch(26% 0.039 81.6)",
+          "oklch(38% 0.039 81.6)",
+          "oklch(50% 0.039 81.6)",
+          "oklch(62% 0.039 81.6)",
+          "oklch(74% 0.039 81.6)",
+          "oklch(85% 0.039 81.6)",
+          "oklch(95% 0.020 81.6)"
+        ]
+      },
+      "field-dark": {
+        "role": "primary",
+        "displayName": "Campo de marca (escuro)",
+        "canonical": "#145A3D",
+        "cssVar": "--field",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.059 160.9)",
+          "oklch(26% 0.084 160.9)",
+          "oklch(38% 0.084 160.9)",
+          "oklch(50% 0.084 160.9)",
+          "oklch(62% 0.084 160.9)",
+          "oklch(74% 0.084 160.9)",
+          "oklch(85% 0.084 160.9)",
+          "oklch(95% 0.042 160.9)"
+        ]
+      },
+      "field-muted-dark": {
+        "role": "primary",
+        "displayName": "Texto secundário sobre campo (escuro)",
+        "canonical": "#C4E3D1",
+        "cssVar": "--field-muted",
+        "theme": "dark",
+        "tonalRamp": [
+          "oklch(15% 0.029 160.0)",
+          "oklch(26% 0.041 160.0)",
+          "oklch(38% 0.041 160.0)",
+          "oklch(50% 0.041 160.0)",
+          "oklch(62% 0.041 160.0)",
+          "oklch(74% 0.041 160.0)",
+          "oklch(85% 0.041 160.0)",
+          "oklch(95% 0.020 160.0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Relógio",
+        "purpose": "Hora em exibição na página inicial: Geist Medium, algarismos tabulares, 60–112 px no topo e até 288 px às 09:30. Nunca Geist Mono."
+      },
+      "headline": {
+        "displayName": "Títulos da página inicial",
+        "purpose": "Geist SemiBold, 44–76 px no topo, 36–56 px nas seções, até 88 px no encerramento; entrelinha 1–1,04; tracking −0,032 a −0,038 em."
+      },
+      "title": {
+        "displayName": "Documento e página do app",
+        "purpose": "Geist SemiBold: documento 26 px, página 32 px, seções 16–18 px."
+      },
+      "body": {
+        "displayName": "Leitura",
+        "purpose": "Geist 15 px no app; 17–18 px como texto de apoio na página inicial, 36–56 caracteres por linha."
+      },
+      "label": {
+        "displayName": "Controles e metadados",
+        "purpose": "Geist 13–14 px em controles, 12 px em metadados e rótulos de dados fictícios."
+      },
+      "mono": {
+        "displayName": "Geist Mono",
+        "purpose": "Código, editor Markdown, hashes, horas registradas e trilho de horários (13 px, tabular)."
+      }
+    },
+    "shadows": [
+      {
+        "name": "exhibit-document",
+        "value": "0 34px 70px -30px rgb(4 28 17 / 0.6)",
+        "purpose": "Documento real exibido sobre o campo verde no topo da página inicial (borda transparente)."
+      },
+      {
+        "name": "exhibit-command",
+        "value": "0 40px 80px -40px rgb(10 30 20 / 0.5)",
+        "purpose": "Janela de comandos da seção open source."
+      },
+      {
+        "name": "exhibit-toast",
+        "value": "0 18px 40px -18px rgb(12 40 26 / 0.35)",
+        "purpose": "Aviso de texto copiado no passo 09:29 da contagem. Superfícies estruturais são planas; no app, sombra só em tooltip e diálogo."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Curva única: --ease-out-expo (CSS), EASE_OUT (Motion), expo.out (padrão GSAP)."
+      },
+      {
+        "name": "duration-control",
+        "value": "0.15s–0.2s",
+        "purpose": "Cor de botões e itens de navegação, troca de ícone ao copiar."
+      },
+      {
+        "name": "duration-state",
+        "value": "0.2s–0.4s",
+        "purpose": "Troca de área no app (0,38 s, 10 px), banners do documento (0,32 s), escolhas (0,28 s), cabeçalho que recolhe (0,4 s)."
+      },
+      {
+        "name": "duration-entrance",
+        "value": "0.6s–1.5s",
+        "purpose": "Entrada do topo (rolos do relógio 1,5 s, campo 1,3 s, linhas do título 1,15 s), Reveal (0,9 s), chegada de rascunho (0,75 s, intervalo 0,045 s)."
+      },
+      {
+        "name": "press-scale",
+        "value": "scale(0.97) 0.16s",
+        "purpose": "Pressão de qualquer botão habilitado; desligada com movimento reduzido."
+      },
+      {
+        "name": "nav-pill-spring",
+        "value": "spring stiffness 460, damping 36",
+        "purpose": "Pílula do item ativo da sidebar (Motion layoutId)."
+      },
+      {
+        "name": "lenis",
+        "value": "lerp 0.11 no ticker do GSAP",
+        "purpose": "Rolagem suave global; pausa com data-scroll-locked do Radix; 1:1 com movimento reduzido."
+      },
+      {
+        "name": "countdown-pin",
+        "value": "pin de 5,4 × altura da janela, scrub 0.9",
+        "purpose": "Contagem 09:12 → 09:30 em cinco passos; só ≥1024 px sem movimento reduzido. Às 09:30 um círculo cresce do relógio até o campo cobrir a tela."
+      },
+      {
+        "name": "data-flow-scrub",
+        "value": "scrub 0.6",
+        "purpose": "Linha do caminho dos dados acompanha a rolagem e acende cada etapa."
+      },
+      {
+        "name": "closing-mark-scrub",
+        "value": "rotate −38° → 0°, scrub 0.8",
+        "purpose": "Símbolo Daily aberto gira até a posição de repouso no encerramento."
+      },
+      {
+        "name": "reveal",
+        "value": "0.9s, y 28px, blur 6px, intervalo 0.08s",
+        "purpose": "Entrada ao rolar, só no bento de princípios e nos painéis da contagem empilhada."
+      },
+      {
+        "name": "intro-fallback",
+        "value": "2.6s",
+        "purpose": "Revela o topo por CSS se o GSAP não assumir; só esconde com html.js."
+      },
+      {
+        "name": "colon-blink",
+        "value": "2s steps(1, end) × 2",
+        "purpose": "Dois pontos do relógio piscam dois ciclos e param."
+      },
+      {
+        "name": "loading-pulse",
+        "value": "1.1s infinito",
+        "purpose": "Indicador de carregamento enquanto a geração dura."
+      },
+      {
+        "name": "skeleton-sheen",
+        "value": "1.6s linear infinito",
+        "purpose": "Brilho do skeleton do documento."
+      },
+      {
+        "name": "mark-in",
+        "value": "0.9s",
+        "purpose": "Entrada do símbolo no estado vazio do documento."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "app-single-column",
+        "value": "700px",
+        "purpose": "Abaixo: app em uma coluna, geração depois dos controles."
+      },
+      {
+        "name": "md",
+        "value": "768px",
+        "purpose": "Margens de 32 px; passos da contagem empilhados em 5/12 + 7/12."
+      },
+      {
+        "name": "app-horizontal-nav",
+        "value": "900px",
+        "purpose": "Até aqui a navegação do app é horizontal."
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "Palco fixo da contagem, caminho dos dados horizontal, grade de 12 colunas do topo."
+      },
+      {
+        "name": "short-viewport",
+        "value": "max-height: 820px",
+        "purpose": "Painel do palco reduzido (zoom 0,86)."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal; 44 px de alvo mínimo, 48 px e 15 px de texto como CTA da página inicial.",
+      "html": "<button class=\"ds-btn-primary\">Abrir o app <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 8px; font-family: var(--font-geist-sans), sans-serif; font-size: 0.8125rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid transparent; background: var(--primary, #176344); color: var(--primary-foreground, #ffffff); } .ds-btn-primary:hover { background: color-mix(in srgb, var(--primary, #176344) 90%, transparent); } .ds-btn-primary:focus-visible { outline: 2px solid var(--ring, #257e59); outline-offset: 4px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring, #257e59) 50%, transparent); } .ds-btn-primary:active { transform: scale(0.97); } @media (prefers-reduced-motion: reduce) { .ds-btn-primary { transition: none; } .ds-btn-primary:active { transform: none; } }"
+    },
+    {
+      "name": "Botão contorno",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ação secundária (Ver no GitHub, Manter minhas edições).",
+      "html": "<button class=\"ds-btn-outline\">Manter minhas edições</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 8px; font-family: var(--font-geist-sans), sans-serif; font-size: 0.8125rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid var(--border, #d8e0db); background: var(--background, #f5f7f6); color: var(--foreground, #192820); } .ds-btn-outline:hover { background: var(--accent, #e5f2ea); } .ds-btn-outline:focus-visible { outline: 2px solid var(--ring, #257e59); outline-offset: 4px; } .ds-btn-outline:active { transform: scale(0.97); } @media (prefers-reduced-motion: reduce) { .ds-btn-outline { transition: none; } .ds-btn-outline:active { transform: none; } }"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Input de formulário com label acima; limite com contraste maior que divisórias.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Organização</span><input class=\"ds-input\" placeholder=\"aurora-tech\" /></label>",
+      "css": ".ds-field { display: grid; gap: 8px; font-family: var(--font-geist-sans), sans-serif; } .ds-field-label { font-size: 0.8125rem; font-weight: 600; color: var(--foreground, #192820); } .ds-input { min-height: 44px; padding: 4px 12px; border: 1px solid var(--input, #809184); border-radius: 8px; background: var(--card, #ffffff); color: var(--foreground, #192820); caret-color: var(--primary, #176344); font: inherit; font-size: 0.875rem; transition: color 0.15s ease, box-shadow 0.15s ease; } .ds-input::placeholder { color: var(--muted-foreground, #58655e); opacity: 1; } .ds-input:focus-visible { outline: 2px solid var(--ring, #257e59); outline-offset: 4px; border-color: var(--ring, #257e59); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring, #257e59) 50%, transparent); }"
+    },
+    {
+      "name": "Navegação do app",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Itens da sidebar; o ativo é marcado por uma pílula em Seleção suave que desliza entre itens (Motion layoutId).",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item\" aria-current=\"page\" href=\"#daily\"><span class=\"ds-nav-pill\"></span>Daily</a><a class=\"ds-nav-item\" href=\"#history\">Histórico</a><a class=\"ds-nav-item\" href=\"#integrations\">Integrações</a></nav>",
+      "css": ".ds-nav { display: grid; gap: 4px; width: 204px; font-family: var(--font-geist-sans), sans-serif; } .ds-nav-item { position: relative; isolation: isolate; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; color: var(--muted-foreground, #58655e); font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: background-color 0.15s ease, color 0.15s ease; } .ds-nav-item:hover { background: var(--secondary, #edf1ef); color: var(--foreground, #192820); } .ds-nav-item[aria-current=\"page\"] { color: var(--primary, #176344); font-weight: 600; } .ds-nav-item[aria-current=\"page\"]:hover { background: transparent; } .ds-nav-pill { position: absolute; inset: 0; z-index: -1; border-radius: 8px; background: var(--accent, #e5f2ea); } .ds-nav-item:focus-visible { outline: 2px solid var(--ring, #257e59); outline-offset: 4px; }"
+    },
+    {
+      "name": "Chip de registro sobre o campo",
+      "kind": "chip",
+      "refersTo": "field-chip",
+      "description": "Registro consultado (hash ou horas em Geist Mono) sobre o campo verde do topo.",
+      "html": "<div class=\"ds-field-stage\"><span class=\"ds-field-chip\"><span class=\"ds-field-chip-lead\">3f9c2a7</span><span class=\"ds-field-chip-text\">valida CEP antes de calcular o frete</span></span></div>",
+      "css": ".ds-field-stage { padding: 20px; border-radius: 16px; background: var(--field, #176344); } .ds-field-chip { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px 12px; border: 1px solid var(--field-line, rgb(244 251 247 / 0.2)); border-radius: 12px; background: color-mix(in srgb, var(--field-foreground, #f4fbf7) 7%, transparent); color: var(--field-foreground, #f4fbf7); font-family: var(--font-geist-sans), sans-serif; font-size: 0.8125rem; } .ds-field-chip-lead { flex-shrink: 0; font-family: var(--font-geist-mono), monospace; font-size: 0.75rem; font-variant-numeric: tabular-nums; color: var(--field-muted, #cfe9da); } .ds-field-chip-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }"
+    },
+    {
+      "name": "Linha pendente no documento",
+      "kind": "custom",
+      "refersTo": "report-pending",
+      "description": "Trecho que as fontes não comprovam, marcado em âmbar para revisão antes de compartilhar.",
+      "html": "<div class=\"ds-report\"><h4 class=\"ds-report-h\">Próximos passos</h4><ul class=\"ds-report-list\"><li class=\"ds-report-pending\">Não informado nos dados consultados; revisar antes de compartilhar.</li></ul></div>",
+      "css": ".ds-report { padding: 20px 26px; border: 1px solid var(--border, #d8e0db); border-radius: 12px; background: var(--card, #ffffff); color: var(--foreground, #192820); font-family: var(--font-geist-sans), sans-serif; font-size: 0.9375rem; line-height: 1.6; } .ds-report-h { margin: 0 0 4px; font-size: 1rem; font-weight: 600; } .ds-report-list { margin: 0; padding-left: 20px; } .ds-report-pending { color: var(--warning, #805000); background: var(--warning-surface, #fff4dc); border-radius: 4px; padding: 1px 6px; margin-inline: -6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; } .ds-report-pending::marker { color: var(--warning, #805000); }"
+    },
+    {
+      "name": "Janela de comandos",
+      "kind": "custom",
+      "refersTo": "command-window",
+      "description": "Bloco de comandos escuro nos dois temas, com valores do tema escuro e sombra de objeto exibido.",
+      "html": "<div class=\"ds-cmd\"><div class=\"ds-cmd-bar\"><span class=\"ds-cmd-tab\" data-active>bash</span><span class=\"ds-cmd-tab\">PowerShell</span><button class=\"ds-cmd-copy\">Copiar</button></div><pre class=\"ds-cmd-pre\"><span class=\"ds-cmd-prompt\">$ </span>npm ci\n<span class=\"ds-cmd-comment\"># defina HUGGINGFACE_API_KEY no .env</span>\n<span class=\"ds-cmd-prompt\">$ </span>npm run dev</pre></div>",
+      "css": ".ds-cmd { overflow: hidden; border: 1px solid #2c3a32; border-radius: 16px; background: #131a17; color: #eaf1ec; box-shadow: 0 40px 80px -40px rgb(10 30 20 / 0.5); font-family: var(--font-geist-sans), sans-serif; } .ds-cmd-bar { display: flex; align-items: center; gap: 4px; padding: 8px 12px; border-bottom: 1px solid #2c3a32; } .ds-cmd-tab { display: inline-flex; align-items: center; min-height: 40px; padding: 0 12px; border: 1px solid transparent; border-radius: 8px; color: #8fa699; font-size: 0.8125rem; } .ds-cmd-tab[data-active] { color: #eaf1ec; background: #232e27; border-color: #2c3a32; } .ds-cmd-copy { margin-left: auto; min-height: 40px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: #afbeb4; font: inherit; font-size: 0.8125rem; cursor: pointer; transition: background-color 0.18s ease, color 0.18s ease; } .ds-cmd-copy:hover { background: #232e27; color: #eaf1ec; } .ds-cmd-copy:focus-visible { outline: 2px solid #86d6ad; outline-offset: 4px; } .ds-cmd-pre { margin: 0; padding: 20px 24px; font-family: var(--font-geist-mono), monospace; font-size: 0.8125rem; line-height: 2; white-space: pre; overflow-x: auto; } .ds-cmd-prompt { color: #86d6ad; user-select: none; } .ds-cmd-comment { color: #8fa699; }"
+    },
+    {
+      "name": "Relógio em rolos",
+      "kind": "custom",
+      "refersTo": "clock-reels",
+      "description": "Hora em exibição em Geist Medium tabular; os dois pontos piscam dois ciclos e param.",
+      "html": "<span class=\"ds-clock\" role=\"img\" aria-label=\"09:12\"><span>0</span><span>9</span><span class=\"ds-clock-colon\" aria-hidden=\"true\">:</span><span>1</span><span>2</span></span>",
+      "css": ".ds-clock { display: inline-flex; align-items: center; font-family: var(--font-geist-sans), sans-serif; font-size: 96px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; color: var(--foreground, #192820); } .ds-clock > * + * { margin-left: -0.045em; } .ds-clock-colon { display: inline-block; margin-inline: 0.01em; transform: translateY(-0.07em); animation: ds-colon-blink 2s steps(1, end) 2; } @keyframes ds-colon-blink { 50% { opacity: 0.22; } } @media (prefers-reduced-motion: reduce) { .ds-clock-colon { animation: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Clareza de trabalho",
+    "overview": "Implementação: **Clareza de trabalho**. Aplicativo para operar; guia para compreender. Documento principal, preparação lateral e fontes sob demanda. A composição foi validada em desktop/mobile, com dados fictícios; não representa homologação de integrações. A página inicial pública (`/`) aplica o mesmo sistema com composição mais expressiva; o aplicativo fica em `/app`.",
+    "keyCharacteristics": [
+      "Aplicativo para operar; guia para compreender.",
+      "Verde é identidade; vermelho e âmbar descrevem estado.",
+      "Bordas organizam; sem halo, glassmorphism ou cartões aninhados como estrutura.",
+      "Movimento explica estado e ritmo; nunca esconde conteúdo.",
+      "Componentes reais do app são a imagem: documento, fontes, seletores, editor e evidências aparecem funcionando, nunca como captura estática."
+    ],
+    "rules": [
+      {
+        "name": "Regra do campo verde",
+        "body": "O campo (`--field`) é a única superfície de cor plena do sistema e pertence à página inicial: atrás do documento no topo, em um cartão dos princípios e na tela inteira das 09:30. O app não o usa. No escuro ele aprofunda em vez de virar menta, porque é superfície, não ação. Sobre o campo, texto em `--field-foreground` (6,9:1 claro; 7,8:1 escuro) e apoio em `--field-muted` (5,6:1; 6,0:1). `--field-line` divide e contorna chips; nunca delimita controle. Botão sobre o campo inverte: fundo `--field-foreground`, texto `--field`.",
+        "section": "colors"
+      },
+      {
+        "name": "Regra da hora em Geist",
+        "body": "Hora em exibição usa Geist com algarismos tabulares, nunca Geist Mono: o zero cortado do Mono lê como Ø em tamanho grande e os dois pontos abrem um vão largo. O relógio é um odômetro de rolos (`ClockReels`); o HTML do servidor já mostra a hora correta e a animação só move as fitas.",
+        "section": "typography"
+      },
+      {
+        "name": "Regra do conteúdo visível",
+        "body": "O HTML do servidor já mostra tudo. Entradas só escondem conteúdo com JavaScript ativo (classe `js` no `html`), e o topo tem um fallback CSS que revela tudo em 2,6 s se o GSAP não assumir. `Reveal` só arma elementos ainda abaixo da dobra.",
+        "section": "motion"
+      },
+      {
+        "name": "Regra do movimento reduzido",
+        "body": "Com movimento reduzido não há palco fixo (a contagem vira pilha), entrada do topo, scrub nem atração magnética; o Lenis acompanha o dispositivo 1:1; animações e transições CSS são desligadas e o Motion segue `reducedMotion=\"user\"`.",
+        "section": "motion"
+      },
+      {
+        "name": "Regra das duas piscadas",
+        "body": "Nada pisca por mais de 5 s: os dois pontos do relógio piscam dois ciclos e param. Indicadores contínuos (carregamento, skeleton) existem só enquanto o estado dura.",
+        "section": "motion"
+      }
+    ],
+    "dos": [
+      "Reutilizar Button/Input/Textarea/Radix existentes.",
+      "Seletores devem usar exclusivamente o componente `Select` de `src/components/ui/select.tsx` (shadcn/ui sobre Radix).",
+      "Manter foco explícito, caret e seleção derivados dos tokens."
+    ],
+    "donts": [
+      "Não implementar selects HTML nativos ou imitações próprias.",
+      "Não adicionar gráficos de produtividade, provas comerciais, depoimentos, números de adoção, integrações ou garantias que o produto ainda não oferece."
+    ]
+  }
+}

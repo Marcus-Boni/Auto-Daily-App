@@ -1,6 +1,7 @@
 "use client";
 import { AlertCircle, ArrowRight, Check, Copy, FileText } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { isValidElement, useEffect, useRef, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import { toast } from "sonner";
 import { BrandMark } from "@/components/brand-mark";
@@ -9,29 +10,85 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { DailyGeneration } from "@/hooks/use-daily-generation";
 import { TIME_PERIODS } from "@/lib/constants";
+import { EASE_OUT, gsap, useGSAP } from "@/lib/gsap";
 
 interface DailyProps {
   daily: DailyGeneration;
   onNavigate: (view: "daily" | "integrations" | "guide") => void;
 }
-const markdownComponents: Components = {
+
+/** Texto padrão das regras de evidência para trechos sem dados; marcado para revisão. */
+const PENDING_MARK = "Não informado nos dados consultados";
+
+function plainText(node: React.ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(plainText).join("");
+  if (isValidElement<{ children?: React.ReactNode }>(node)) return plainText(node.props.children);
+  return "";
+}
+
+export const markdownComponents: Components = {
   h1: ({ children }) => <h3>{children}</h3>,
   h2: ({ children }) => <h3>{children}</h3>,
   h3: ({ children }) => <h4>{children}</h4>,
-  a: ({ children, ...props }) => (
+  li: ({ children, node: _node, ...props }) => (
+    <li {...props} data-pending={plainText(children).includes(PENDING_MARK) || undefined}>
+      {children}
+    </li>
+  ),
+  p: ({ children, node: _node, ...props }) => (
+    <p {...props} data-pending={plainText(children).includes(PENDING_MARK) || undefined}>
+      {children}
+    </p>
+  ),
+  a: ({ children, node: _node, ...props }) => (
     <a {...props} target="_blank" rel="noopener noreferrer">
       {children}
     </a>
   ),
 };
+
+const feedbackMotion = {
+  initial: { opacity: 0, y: -6 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, transition: { duration: 0.15 } },
+  transition: { duration: 0.32, ease: EASE_OUT },
+} as const;
+
 export function ReportDocument({
   daily,
   onNavigate,
   hasAnySource,
-}: DailyProps & { hasAnySource: boolean }) {
+  animateArrival = true,
+}: DailyProps & { hasAnySource: boolean; animateArrival?: boolean }) {
   const { state } = daily;
   const [copied, setCopied] = useState(false);
   const editor = useRef<HTMLTextAreaElement>(null);
+  const body = useRef<HTMLDivElement>(null);
+  const generatedAt = state.result?.generatedAt;
+  // Um rascunho novo chega em sequência; edições e trocas de modo não repetem a entrada.
+  useGSAP(
+    () => {
+      if (!animateArrival || !generatedAt || !body.current) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const preview = body.current.querySelector(".report-preview");
+      const lines = [
+        ...body.current.querySelectorAll(
+          ":scope > .report-meta, :scope > h2, :scope > .report-intro"
+        ),
+        ...(preview ? Array.from(preview.children) : []),
+      ];
+      gsap.from(lines, {
+        autoAlpha: 0,
+        y: 14,
+        filter: "blur(5px)",
+        duration: 0.75,
+        stagger: 0.045,
+        clearProps: "opacity,visibility,transform,filter",
+      });
+    },
+    { dependencies: [generatedAt], scope: body }
+  );
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
     () => () => {
@@ -105,7 +162,18 @@ export function ReportDocument({
                   disabled={!state.result || !state.content.trim()}
                   onClick={() => void copy()}
                 >
-                  {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={copied ? "copied" : "copy"}
+                      className="inline-flex"
+                      initial={{ opacity: 0, scale: 0.4, rotate: -45 }}
+                      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                      exit={{ opacity: 0, scale: 0.4 }}
+                      transition={{ duration: 0.2, ease: EASE_OUT }}
+                    >
+                      {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                    </motion.span>
+                  </AnimatePresence>
                   {copied ? "Texto copiado" : "Copiar texto"}
                 </Button>
               </span>
@@ -120,65 +188,83 @@ export function ReportDocument({
           </Tooltip>
         </div>
       </div>
-      {state.loading && (
-        <div className="generation-feedback" role="status">
-          <span className="loading-mark" aria-hidden="true" />
-          <span>
-            Consultando as fontes e preparando o rascunho.{" "}
-            {state.result
-              ? "Seu texto anterior continua disponível."
-              : "Isso pode levar alguns instantes."}
-          </span>
-        </div>
-      )}
-      {state.error && (
-        <div className="generation-feedback" data-tone="error" role="alert">
-          <AlertCircle aria-hidden="true" />
-          <div>
-            <p>{state.error}</p>
-            {state.failedSources && (
-              <ul className="failed-sources">
-                {Object.entries(state.failedSources)
-                  .filter(([, status]) => status.status !== "success")
-                  .map(([provider, status]) => (
-                    <li key={provider}>
-                      <strong>
-                        {provider === "azure" ? "Azure DevOps" : "OptSolv Time Tracker"}:
-                      </strong>{" "}
-                      {status.status === "empty"
-                        ? "Nenhum registro no período."
-                        : status.message || "Fonte indisponível."}
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      )}
-      {partial && (
-        <div className="generation-feedback" data-tone="warning">
-          <AlertCircle aria-hidden="true" />
-          <p>
-            Uma fonte selecionada não pôde ser consultada. Confira abaixo quais registros foram
-            usados neste rascunho.
-          </p>
-        </div>
-      )}
-      {state.pending && (
-        <div className="draft-choice" role="status">
-          <p>Um novo rascunho está pronto. Suas edições permanecem no documento atual.</p>
-          <div>
-            <Button type="button" onClick={daily.accept}>
-              Usar novo rascunho
-            </Button>
-            <Button type="button" variant="outline" onClick={daily.keep}>
-              Manter minhas edições
-            </Button>
-          </div>
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {state.loading && (
+          <motion.div
+            key="loading"
+            className="generation-feedback"
+            role="status"
+            {...feedbackMotion}
+          >
+            <span className="loading-mark" aria-hidden="true" />
+            <span>
+              Consultando as fontes e preparando o rascunho.{" "}
+              {state.result
+                ? "Seu texto anterior continua disponível."
+                : "Isso pode levar alguns instantes."}
+            </span>
+          </motion.div>
+        )}
+        {state.error && (
+          <motion.div
+            key="error"
+            className="generation-feedback"
+            data-tone="error"
+            role="alert"
+            {...feedbackMotion}
+          >
+            <AlertCircle aria-hidden="true" />
+            <div>
+              <p>{state.error}</p>
+              {state.failedSources && (
+                <ul className="failed-sources">
+                  {Object.entries(state.failedSources)
+                    .filter(([, status]) => status.status !== "success")
+                    .map(([provider, status]) => (
+                      <li key={provider}>
+                        <strong>
+                          {provider === "azure" ? "Azure DevOps" : "OptSolv Time Tracker"}:
+                        </strong>{" "}
+                        {status.status === "empty"
+                          ? "Nenhum registro no período."
+                          : status.message || "Fonte indisponível."}
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
+          </motion.div>
+        )}
+        {partial && (
+          <motion.div
+            key="partial"
+            className="generation-feedback"
+            data-tone="warning"
+            {...feedbackMotion}
+          >
+            <AlertCircle aria-hidden="true" />
+            <p>
+              Uma fonte selecionada não pôde ser consultada. Confira abaixo quais registros foram
+              usados neste rascunho.
+            </p>
+          </motion.div>
+        )}
+        {state.pending && (
+          <motion.div key="pending" className="draft-choice" role="status" {...feedbackMotion}>
+            <p>Um novo rascunho está pronto. Suas edições permanecem no documento atual.</p>
+            <div>
+              <Button type="button" onClick={daily.accept}>
+                Usar novo rascunho
+              </Button>
+              <Button type="button" variant="outline" onClick={daily.keep}>
+                Manter minhas edições
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {state.result ? (
-        <div className="document-body">
+        <div className="document-body" ref={body}>
           <div className="report-meta">
             <span>{period}</span>
             <span>Gerado {formatDate(state.result.generatedAt)}</span>

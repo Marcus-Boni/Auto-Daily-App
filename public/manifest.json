@@ -2,7 +2,7 @@
   "name": "Auto Daily",
   "short_name": "Auto Daily",
   "description": "Prepare, revise e compartilhe sua daily a partir de commits do Azure DevOps e registros do OptSolv Time Tracker, com apoio de IA.",
-  "start_url": "/",
+  "start_url": "/app",
   "display": "standalone",
   "background_color": "#f5f7f6",
   "theme_color": "#176344",

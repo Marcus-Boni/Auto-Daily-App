@@ -44,7 +44,7 @@ npm run dev
 
 Na hospedagem pública, configure também `SITE_URL` com a URL real do aplicativo **antes do build**. Ela determina canonical e os URLs de compartilhamento Open Graph/Twitter. Sem essa configuração, os metadados de desenvolvimento usam `http://localhost:3000` e não declaram canonical.
 
-Abra a URL exibida pelo servidor. A chave do provedor fica no servidor; PAT e token das fontes são configurados na área **Integrações**.
+Abra a URL exibida pelo servidor. A página inicial fica em `/` e o aplicativo em `/app`. A chave do provedor fica no servidor; PAT e token das fontes são configurados na área **Integrações**.
 
 ### Configurar uma fonte
 
@@ -85,6 +85,8 @@ Para validar a interface com respostas fictícias, use o servidor descrito em [e
 
 ```text
 src/app/                      páginas, layout e APIs
+src/components/home/          página inicial e demonstração com dados fictícios
+src/components/motion/        rolagem suave (Lenis) e entradas compartilhadas (Motion)
 src/components/daily/         preparação, documento e fontes
 src/components/integrations/  formulários de integração
 src/components/ui/            primitivas compartilhadas
@@ -95,7 +97,11 @@ tests/                        regressões sem dependências adicionais
 docs/redesign/                proposta, implementação e evidências
 ```
 
-O [sistema visual](DESIGN.md) documenta a implementação atual. O aplicativo permanece em `/`; a homepage de apresentação será uma etapa posterior, com migração de rotas planejada separadamente.
+O [sistema visual](DESIGN.md) documenta a implementação atual. A página inicial ocupa `/` e o aplicativo, `/app`; links antigos como `/#history` seguem para `/app#history`.
+
+### Movimento
+
+Lenis cuida da rolagem suave em todo o projeto e roda no ticker do GSAP, que coreografa as sequências presas à rolagem da página inicial (ScrollTrigger, SplitText). Motion (`motion/react`) cuida de estados da interface: troca de áreas, indicador da navegação, avisos do documento e entradas ao rolar. Com movimento reduzido, a página inicial usa um layout empilhado sem rolagem presa e o Lenis acompanha o dispositivo sem suavização.
 
 ## Contribuir e publicar
 
