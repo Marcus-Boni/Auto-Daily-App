@@ -3,18 +3,19 @@
 import { useLenis } from "lenis/react";
 import {
   BookOpen,
-  Code2,
   FileText,
   Github,
   History,
   PanelLeftClose,
   PanelLeftOpen,
   Plug,
+  Sparkles,
 } from "lucide-react";
 import { motion, useAnimate, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { UserMenu } from "@/components/auth/user-menu";
 import { BrandLogo } from "@/components/brand-logo";
+import { ChangelogModal } from "@/components/changelog-modal";
 import { GenerationAction } from "@/components/daily/generation-controls";
 import { DailyGenerator } from "@/components/daily-generator";
 import { GuidePanel } from "@/components/guide-panel";
@@ -27,6 +28,7 @@ import { useDailyGeneration } from "@/hooks/use-daily-generation";
 import { useUserConfig } from "@/hooks/use-user-config";
 import brand from "@/lib/brand.json";
 import { EASE_OUT } from "@/lib/gsap";
+import { APP_VERSION } from "@/lib/version";
 
 type View = "daily" | "history" | "integrations" | "guide";
 const navigation = [
@@ -117,6 +119,7 @@ function AppWorkspace() {
   const daily = useDailyGeneration();
   const { validation } = useUserConfig();
   const [view, setView] = useState<View>("daily");
+  const [changelogOpen, setChangelogOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -304,11 +307,24 @@ function AppWorkspace() {
               Compartilhe com clareza.
             </span>
           </div>
-          <NavTooltip label="Código e documentação" isCollapsed={isSidebarCollapsed}>
-            <div className="sidebar-bottom" tabIndex={isSidebarCollapsed ? 0 : undefined}>
-              <Code2 aria-hidden="true" />
-              <span className="sidebar-bottom-label">Código e documentação</span>
-            </div>
+          <NavTooltip label={`Versão v${APP_VERSION} (Novidades)`} isCollapsed={isSidebarCollapsed}>
+            <button
+              type="button"
+              onClick={() => setChangelogOpen(true)}
+              className="sidebar-bottom w-full text-left cursor-pointer hover:text-foreground transition-colors group"
+              aria-label={`Versão ${APP_VERSION} - Ver novidades da versão`}
+            >
+              <Sparkles
+                className="size-4 shrink-0 text-primary group-hover:scale-110 transition-transform"
+                aria-hidden="true"
+              />
+              <div className="sidebar-bottom-label flex items-center justify-between flex-1 gap-2">
+                <span>Versão</span>
+                <span className="font-mono font-semibold text-[10px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  v{APP_VERSION}
+                </span>
+              </div>
+            </button>
           </NavTooltip>
         </aside>
         <main id="main" className="app-main" ref={main} tabIndex={-1}>
@@ -347,6 +363,7 @@ function AppWorkspace() {
             <GuidePanel onNavigate={navigate} />
           </ViewPanel>
         </main>
+        <ChangelogModal open={changelogOpen} onOpenChange={setChangelogOpen} />
       </div>
     </TooltipProvider>
   );

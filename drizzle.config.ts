@@ -10,6 +10,7 @@ export default defineConfig({
   dialect: "turso",
   dbCredentials: {
     url: process.env.TURSO_DATABASE_URL || "file:local.db",
-    authToken: process.env.TURSO_AUTH_TOKEN,
+    // Vazio no .env.example: um banco local (file:) não usa token.
+    authToken: process.env.TURSO_AUTH_TOKEN || undefined,
   },
 });
