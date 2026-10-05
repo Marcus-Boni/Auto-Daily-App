@@ -17,11 +17,14 @@
     <a href="https://auto-daily-app.vercel.app"><strong>Website</strong></a> ·
     <a href="https://auto-daily-app.vercel.app/app"><strong>Open the app</strong></a> ·
     <a href="#getting-started">Getting started</a> ·
+    <a href="CHANGELOG.md">Changelog</a> ·
     <a href="https://github.com/Marcus-Boni/Auto-Daily-App/issues/new">Report an issue</a> ·
     <a href="README.md">Português</a>
   </p>
 
   <p>
+    <a href="https://github.com/Marcus-Boni/Auto-Daily-App/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Marcus-Boni/Auto-Daily-App/ci.yml?branch=main&style=flat-square&label=CI" alt="Continuous integration status"></a>
+    <a href="CHANGELOG.md"><img src="https://img.shields.io/github/package-json/v/Marcus-Boni/Auto-Daily-App?style=flat-square&color=176344&label=version" alt="Current version"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-176344?style=flat-square" alt="MIT license"></a>
     <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16-131a17?style=flat-square&logo=nextdotjs" alt="Next.js 16"></a>
     <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-131a17?style=flat-square&logo=react" alt="React 19"></a>
@@ -52,6 +55,8 @@
 - [Scripts](#scripts)
 - [Project structure](#project-structure)
 - [Design and motion](#design-and-motion)
+- [Continuous integration](#continuous-integration)
+- [Versioning and changelog](#versioning-and-changelog)
 - [FAQ](#faq)
 - [Contributing](#contributing)
 - [Security](#security)
@@ -109,6 +114,7 @@ flowchart LR
 - Public homepage with an interactive demo (synthetic data); the app lives at `/app`.
 - Light and dark themes, responsive layout and a collapsible sidebar (`Ctrl+B`).
 - Smooth scrolling and choreographed motion, with a complete alternative for reduced-motion users.
+- The current version and release notes are one click away in the sidebar footer.
 
 ## Overview
 
@@ -260,10 +266,12 @@ The generation route declares `maxDuration = 60` seconds. For hosting outside Ve
 | `npm run build` | Production build |
 | `npm run start` | Local production server (`next start`) |
 | `npm run check` | Biome lint and format, applying fixes |
+| `npm run check:ci` | Lint and format without changing files (CI and pre-commit) |
 | `npm run lint` | Biome lint without changing files |
 | `npm run type-check` | TypeScript type check |
 | `npm test` | `node:test` suite, no external services |
 | `npm run brand:build` | Regenerates brand assets from `src/lib/brand.json` |
+| `npm run release` | Cuts a release (see [Versioning and changelog](#versioning-and-changelog)) |
 | `npx drizzle-kit migrate` | Applies database migrations |
 
 ## Project structure
@@ -287,6 +295,8 @@ src/
 ├── lib/                      services (AI, Azure, OptSolv), database, auth, vault and prompts
 └── types/                    contracts
 drizzle/                      SQL migrations
+.github/workflows/            CI and legacy Azure deployment
+.husky/                       commit hooks
 tests/                        regression tests
 docs/                         brand, redesign, media and deployment
 ```
@@ -296,6 +306,60 @@ docs/                         brand, redesign, media and deployment
 The visual system is documented in [DESIGN.md](DESIGN.md) (Portuguese), and the identity (the "Daily aberto" mark and the Geist signature) in [docs/brand](docs/brand/README.md).
 
 Lenis smooth scrolling runs on the GSAP ticker, which choreographs the homepage's scroll-pinned sequences. Motion handles interface state: area switches, the navigation indicator, document notices and scroll entrances. With `prefers-reduced-motion`, the homepage uses a stacked layout without pinned scrolling, and content never depends on JavaScript to appear.
+
+## Continuous integration
+
+[![CI](https://img.shields.io/github/actions/workflow/status/Marcus-Boni/Auto-Daily-App/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/Marcus-Boni/Auto-Daily-App/actions/workflows/ci.yml)
+
+The **CI Quality Gate** workflow ([.github/workflows/ci.yml](.github/workflows/ci.yml)) runs on every push and pull request to `main`, on Node.js 20:
+
+1. `npm ci`
+2. `npm run check:ci` (Biome in check mode: fails instead of fixing)
+3. `npm run type-check`
+4. `npm test`
+5. `npm run build`, with placeholder variables so the build does not depend on real services
+
+New runs on the same branch cancel older ones. The `azure-appservice.yml` workflow keeps the legacy Azure deployment pipeline, described in [docs/AZURE_DEPLOY.md](docs/AZURE_DEPLOY.md).
+
+### Commit hooks
+
+[Husky](https://typicode.github.io/husky) is installed by `npm ci` (the `prepare` script) and runs two local hooks:
+
+| Hook | What it does |
+| --- | --- |
+| `pre-commit` | `npm run check:ci`, `npm run type-check` and `npm test`. If Biome flags something, run `npm run check` to fix it |
+| `commit-msg` | Validates the message with [commitlint](https://commitlint.js.org) against [Conventional Commits](https://www.conventionalcommits.org) |
+
+Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore` and `revert`. Example: `feat(daily): add weekly summary format`.
+
+## Versioning and changelog
+
+[![Version](https://img.shields.io/github/package-json/v/Marcus-Boni/Auto-Daily-App?style=flat-square&color=176344&label=version)](CHANGELOG.md)
+
+The project follows [Semantic Versioning](https://semver.org). Each version's changes are listed in [CHANGELOG.md](CHANGELOG.md) (Portuguese), generated from Conventional Commits, and published versions live under [Releases](https://github.com/Marcus-Boni/Auto-Daily-App/releases).
+
+### Cutting a release
+
+For maintainers, with [release-it](https://github.com/release-it/release-it):
+
+| Command | When to use it |
+| --- | --- |
+| `npm run release` | Interactive: suggests the next version from the commits |
+| `npm run release:patch` | Backward-compatible fixes (`1.0.0` to `1.0.1`) |
+| `npm run release:minor` | Backward-compatible features (`1.0.0` to `1.1.0`) |
+| `npm run release:major` | Breaking changes (`1.0.0` to `2.0.0`) |
+| `npm run release:ci` | Non-interactive release, for automation |
+
+Each release:
+
+1. bumps the version in `package.json`;
+2. writes the new `CHANGELOG.md` section from the commits since the last tag (`feat`, `fix`, `perf` and `revert`, with Portuguese section titles);
+3. creates the `chore(release): vX.Y.Z` commit and the annotated `vX.Y.Z` tag;
+4. publishes the `vX.Y.Z` GitHub Release (nothing is published to npm).
+
+Requirements: a clean working directory, at least one commit since the last tag and a `GITHUB_TOKEN` variable allowed to create releases in the repository.
+
+In the app, the current version shows in the sidebar footer and opens the release notes panel. The version comes from `package.json` at build time, and the panel shows the newest `CHANGELOG.md` section: after a release, the next deploy shows the new notes with no manual edits.
 
 ## FAQ
 
@@ -339,8 +403,9 @@ Not yet. The interface and the generated drafts are in Brazilian Portuguese.
 Contributions are welcome. Before you start, read the [contributing guide](CONTRIBUTING.md) and the workspace instructions in [AGENTS.md](AGENTS.md).
 
 1. Fork the repository and create a branch from `main`.
-2. Run `npm run check`, `npm run type-check`, `npm test` and `npm run build` before opening a PR.
-3. Use synthetic data in tests, screenshots and docs; never include tokens or private activity.
+2. Write Conventional Commits messages; the commit hooks validate the message and run lint, types and tests.
+3. Run `npm run build` before opening a PR. CI repeats every check.
+4. Use synthetic data in tests, screenshots and docs; never include tokens or private activity.
 
 To exercise the UI with synthetic responses, use the server described in [docs/redesign/IMPLEMENTATION-VALIDATION.md](docs/redesign/IMPLEMENTATION-VALIDATION.md) (Portuguese). It is a development tool and not part of the published product.
 

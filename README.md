@@ -17,11 +17,14 @@
     <a href="https://auto-daily-app.vercel.app"><strong>Site</strong></a> ·
     <a href="https://auto-daily-app.vercel.app/app"><strong>Abrir o app</strong></a> ·
     <a href="#começando">Começando</a> ·
+    <a href="CHANGELOG.md">Changelog</a> ·
     <a href="https://github.com/Marcus-Boni/Auto-Daily-App/issues/new">Reportar um problema</a> ·
     <a href="README.en.md">English</a>
   </p>
 
   <p>
+    <a href="https://github.com/Marcus-Boni/Auto-Daily-App/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Marcus-Boni/Auto-Daily-App/ci.yml?branch=main&style=flat-square&label=CI" alt="Status da integração contínua"></a>
+    <a href="CHANGELOG.md"><img src="https://img.shields.io/github/package-json/v/Marcus-Boni/Auto-Daily-App?style=flat-square&color=176344&label=vers%C3%A3o" alt="Versão atual"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-MIT-176344?style=flat-square" alt="Licença MIT"></a>
     <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16-131a17?style=flat-square&logo=nextdotjs" alt="Next.js 16"></a>
     <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-131a17?style=flat-square&logo=react" alt="React 19"></a>
@@ -50,6 +53,8 @@
 - [Scripts](#scripts)
 - [Estrutura do projeto](#estrutura-do-projeto)
 - [Design e movimento](#design-e-movimento)
+- [Integração contínua](#integração-contínua)
+- [Versões e changelog](#versões-e-changelog)
 - [Perguntas frequentes](#perguntas-frequentes)
 - [Contribuindo](#contribuindo)
 - [Segurança](#segurança)
@@ -107,6 +112,7 @@ flowchart LR
 - Página inicial pública com uma demonstração interativa (dados fictícios); o aplicativo fica em `/app`.
 - Temas claro e escuro, layout responsivo e barra lateral retrátil (`Ctrl+B`).
 - Rolagem suave e movimento coreografado, com alternativa completa para quem prefere movimento reduzido.
+- Versão atual e novidades acessíveis no rodapé da barra lateral.
 
 ## Visão geral
 
@@ -258,10 +264,12 @@ A rota de geração declara `maxDuration = 60` segundos. Para hospedar fora da V
 | `npm run build` | Build de produção |
 | `npm run start` | Servidor de produção local (`next start`) |
 | `npm run check` | Lint e formatação com Biome, aplicando correções |
+| `npm run check:ci` | Lint e formatação sem alterar arquivos (CI e pre-commit) |
 | `npm run lint` | Lint com Biome, sem alterar arquivos |
 | `npm run type-check` | Verificação de tipos do TypeScript |
 | `npm test` | Testes com `node:test`, sem serviços externos |
 | `npm run brand:build` | Regenera os assets da marca a partir de `src/lib/brand.json` |
+| `npm run release` | Publica uma versão (veja [Versões e changelog](#versões-e-changelog)) |
 | `npx drizzle-kit migrate` | Aplica as migrações do banco |
 
 ## Estrutura do projeto
@@ -285,6 +293,8 @@ src/
 ├── lib/                      serviços (IA, Azure, OptSolv), banco, auth, cofre e prompts
 └── types/                    contratos
 drizzle/                      migrações SQL
+.github/workflows/            CI e deploy legado no Azure
+.husky/                       hooks de commit
 tests/                        testes de regressão
 docs/                         marca, redesign, mídia e deploy
 ```
@@ -294,6 +304,60 @@ docs/                         marca, redesign, mídia e deploy
 O sistema visual está documentado em [DESIGN.md](DESIGN.md), e a identidade (símbolo "Daily aberto" e assinatura em Geist) em [docs/brand](docs/brand/README.md).
 
 A rolagem suave do Lenis roda no ticker do GSAP, que coreografa as sequências presas à rolagem da página inicial. O Motion cuida dos estados da interface: troca de áreas, indicador da navegação, avisos do documento e entradas ao rolar. Com `prefers-reduced-motion`, a página inicial usa um layout empilhado sem rolagem presa, e o conteúdo nunca depende de JavaScript para aparecer.
+
+## Integração contínua
+
+[![CI](https://img.shields.io/github/actions/workflow/status/Marcus-Boni/Auto-Daily-App/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/Marcus-Boni/Auto-Daily-App/actions/workflows/ci.yml)
+
+O workflow **CI Quality Gate** ([.github/workflows/ci.yml](.github/workflows/ci.yml)) roda a cada push e pull request na `main`, em Node.js 20:
+
+1. `npm ci`
+2. `npm run check:ci` (Biome em modo de verificação: falha em vez de corrigir)
+3. `npm run type-check`
+4. `npm test`
+5. `npm run build`, com variáveis fictícias para o build não depender de serviços reais
+
+Execuções novas no mesmo branch cancelam as anteriores. O workflow `azure-appservice.yml` mantém o pipeline legado de deploy no Azure, descrito em [docs/AZURE_DEPLOY.md](docs/AZURE_DEPLOY.md).
+
+### Hooks de commit
+
+O [Husky](https://typicode.github.io/husky) é instalado pelo `npm ci` (script `prepare`) e roda dois hooks locais:
+
+| Hook | O que faz |
+| --- | --- |
+| `pre-commit` | `npm run check:ci`, `npm run type-check` e `npm test`. Se o Biome apontar algo, rode `npm run check` para corrigir |
+| `commit-msg` | Valida a mensagem com [commitlint](https://commitlint.js.org) no padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/) |
+
+Tipos aceitos: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore` e `revert`. Exemplo: `feat(daily): adiciona formato de resumo semanal`.
+
+## Versões e changelog
+
+[![Versão](https://img.shields.io/github/package-json/v/Marcus-Boni/Auto-Daily-App?style=flat-square&color=176344&label=vers%C3%A3o)](CHANGELOG.md)
+
+O projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/). As mudanças de cada versão ficam no [CHANGELOG.md](CHANGELOG.md), gerado a partir dos Conventional Commits, e as versões publicadas em [Releases](https://github.com/Marcus-Boni/Auto-Daily-App/releases).
+
+### Publicar uma versão
+
+Para mantenedores, com o [release-it](https://github.com/release-it/release-it):
+
+| Comando | Quando usar |
+| --- | --- |
+| `npm run release` | Interativo: sugere a próxima versão a partir dos commits |
+| `npm run release:patch` | Correções compatíveis (`1.0.0` para `1.0.1`) |
+| `npm run release:minor` | Funcionalidades compatíveis (`1.0.0` para `1.1.0`) |
+| `npm run release:major` | Mudanças incompatíveis (`1.0.0` para `2.0.0`) |
+| `npm run release:ci` | Versão não interativa, para automação |
+
+Cada versão:
+
+1. atualiza a versão no `package.json`;
+2. gera a seção nova do `CHANGELOG.md` a partir dos commits desde a última tag (`feat`, `fix`, `perf` e `revert`, com títulos em português);
+3. cria o commit `chore(release): vX.Y.Z` e a tag anotada `vX.Y.Z`;
+4. publica a GitHub Release `vX.Y.Z` (nada é publicado no npm).
+
+Requisitos: diretório de trabalho limpo, ao menos um commit desde a última tag e a variável `GITHUB_TOKEN` com permissão no repositório para criar a release.
+
+No app, a versão atual aparece no rodapé da barra lateral e abre o painel de novidades. A versão vem do `package.json` no build, e o painel mostra a seção mais recente do `CHANGELOG.md`: depois de uma release, o próximo deploy já exibe as notas novas, sem edição manual.
 
 ## Perguntas frequentes
 
@@ -330,8 +394,9 @@ Só para contas, histórico e cofre. Localmente, um arquivo SQLite é criado aut
 Contribuições são bem-vindas. Antes de começar, leia o [guia de contribuição](CONTRIBUTING.md) e as instruções do workspace em [AGENTS.md](AGENTS.md).
 
 1. Faça um fork e crie um branch a partir da `main`.
-2. Rode `npm run check`, `npm run type-check`, `npm test` e `npm run build` antes de abrir o PR.
-3. Use dados fictícios em testes, screenshots e documentação; nunca inclua tokens ou atividades privadas.
+2. Escreva mensagens no padrão Conventional Commits; os hooks de commit validam a mensagem e rodam lint, tipos e testes.
+3. Rode `npm run build` antes de abrir o PR. A CI repete todas as verificações.
+4. Use dados fictícios em testes, screenshots e documentação; nunca inclua tokens ou atividades privadas.
 
 Para validar a interface com respostas fictícias, use o servidor descrito em [docs/redesign/IMPLEMENTATION-VALIDATION.md](docs/redesign/IMPLEMENTATION-VALIDATION.md). Ele é uma ferramenta de desenvolvimento e não faz parte do produto publicado.
 
