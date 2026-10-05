@@ -1,0 +1,1 @@
+São 09:12 e a daily é às 09:30. O Auto Daily junta seus commits do Azure DevOps e as horas do OptSolv num rascunho de daily, marca o que não está nos dados e deixa a palavra final com você. Código aberto: github.com/Marcus-Boni/Auto-Daily-App
