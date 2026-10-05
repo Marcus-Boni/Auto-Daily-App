@@ -29,7 +29,7 @@ jobs:
         run: npm ci
 
       - name: Check code formatting & linting (Biome)
-        run: npm run check
+        run: npm run check:ci
 
       - name: Verify TypeScript types
         run: npm run type-check
