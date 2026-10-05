@@ -17,7 +17,60 @@
   "plugins": {
     "@release-it/conventional-changelog": {
       "preset": {
-        "name": "conventionalcommits"
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "feat",
+            "section": "Novas funcionalidades"
+          },
+          {
+            "type": "fix",
+            "section": "Correções"
+          },
+          {
+            "type": "perf",
+            "section": "Desempenho"
+          },
+          {
+            "type": "revert",
+            "section": "Reversões"
+          },
+          {
+            "type": "docs",
+            "section": "Documentação",
+            "effect": "hidden"
+          },
+          {
+            "type": "style",
+            "section": "Estilo",
+            "effect": "hidden"
+          },
+          {
+            "type": "refactor",
+            "section": "Refatoração",
+            "effect": "hidden"
+          },
+          {
+            "type": "test",
+            "section": "Testes",
+            "effect": "hidden"
+          },
+          {
+            "type": "build",
+            "section": "Build",
+            "effect": "hidden"
+          },
+          {
+            "type": "ci",
+            "section": "Integração contínua",
+            "effect": "hidden"
+          },
+          {
+            "type": "chore",
+            "section": "Manutenção",
+            "effect": "hidden"
+          }
+        ]
       },
       "infile": "CHANGELOG.md"
     }

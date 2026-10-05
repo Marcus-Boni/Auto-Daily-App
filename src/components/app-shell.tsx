@@ -27,6 +27,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useDailyGeneration } from "@/hooks/use-daily-generation";
 import { useUserConfig } from "@/hooks/use-user-config";
 import brand from "@/lib/brand.json";
+import type { ReleaseNotes } from "@/lib/changelog";
 import { EASE_OUT } from "@/lib/gsap";
 import { APP_VERSION } from "@/lib/version";
 
@@ -102,7 +103,7 @@ function ViewPanel({
   );
 }
 
-export function AppShell() {
+export function AppShell({ releaseNotes = null }: { releaseNotes?: ReleaseNotes | null }) {
   const { isHydrated } = useUserConfig();
   if (!isHydrated)
     return (
@@ -112,10 +113,10 @@ export function AppShell() {
         <Skeleton className="mt-8 h-80 w-full" />
       </div>
     );
-  return <AppWorkspace />;
+  return <AppWorkspace releaseNotes={releaseNotes} />;
 }
 
-function AppWorkspace() {
+function AppWorkspace({ releaseNotes }: { releaseNotes: ReleaseNotes | null }) {
   const daily = useDailyGeneration();
   const { validation } = useUserConfig();
   const [view, setView] = useState<View>("daily");
@@ -363,7 +364,7 @@ function AppWorkspace() {
             <GuidePanel onNavigate={navigate} />
           </ViewPanel>
         </main>
-        <ChangelogModal open={changelogOpen} onOpenChange={setChangelogOpen} />
+        <ChangelogModal open={changelogOpen} onOpenChange={setChangelogOpen} notes={releaseNotes} />
       </div>
     </TooltipProvider>
   );

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { version } from "./package.json";
 
 const nextConfig: NextConfig = {
   // Enable standalone output for Azure App Service deployment
@@ -12,6 +13,11 @@ const nextConfig: NextConfig = {
 
   // Production optimizations
   poweredByHeader: false, // Remove X-Powered-By header for security
+
+  // Versão exibida no app vem do package.json, atualizado pelo release-it
+  env: {
+    NEXT_PUBLIC_APP_VERSION: version,
+  },
 
   // Experimental features for better performance
   experimental: {

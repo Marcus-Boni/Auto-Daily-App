@@ -1428,6 +1428,46 @@ input[type="radio"] {
     padding-inline: 9px;
   }
 }
+/* Notas da versão (painel de novidades), renderizadas do CHANGELOG.md */
+.release-notes {
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+.release-notes :where(h3) {
+  margin: 20px 0 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.release-notes :where(h3):first-child {
+  margin-top: 0;
+}
+.release-notes :where(ul) {
+  padding-left: 18px;
+  list-style: disc;
+}
+.release-notes :where(li, p) {
+  color: var(--muted-foreground);
+}
+.release-notes :where(li + li) {
+  margin-top: 6px;
+}
+.release-notes :where(li)::marker {
+  color: var(--primary);
+}
+.release-notes :where(strong) {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.release-notes :where(a) {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.release-notes :where(code) {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.75rem;
+}
+
 /* ------------------------------------------------------------------ */
 /* Página inicial                                                      */
 /* ------------------------------------------------------------------ */
